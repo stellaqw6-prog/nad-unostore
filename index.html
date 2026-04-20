@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnoTech Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #101018;
+  --bg3: #16161f;
+  --purple: #7c3aed;
+  --purple-light: #a855f7;
+  --purple-glow: rgba(124,58,237,0.3);
+  --accent: #d946ef;
+  --text: #e2e8f0;
+  --muted: #8892a4;
+  --border: rgba(124,58,237,0.18);
+  --gold: #f59e0b;
+  --green: #22c55e;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; font-size:14px; }
+
+/* NAV */
+nav { position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:rgba(10,10,15,0.93);backdrop-filter:blur(18px);border-bottom:1px solid var(--border); }
+.nav-logo { display:flex;align-items:center;gap:9px;font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;letter-spacing:.3px;color:#fff;text-decoration:none; }
+.nav-logo .avatar { width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff; }
+.nav-right { display:flex;gap:8px;align-items:center; }
+.btn-cs { padding:6px 13px;border-radius:7px;border:1px solid var(--purple-light);background:transparent;color:var(--purple-light);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s; }
+.btn-cs:hover { background:var(--purple-glow); }
+.hamburger { width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer; }
+.hamburger span { display:block;width:15px;height:1.5px;background:var(--muted);border-radius:2px; }
+
+/* MARQUEE */
+.marquee-bar { background:linear-gradient(90deg,var(--purple),var(--accent));padding:6px 0;overflow:hidden;white-space:nowrap; }
+.marquee-inner { display:inline-flex;gap:32px;animation:marquee 20s linear infinite;font-size:11px;font-weight:500;letter-spacing:.3px;color:#fff; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.marquee-dot { color:rgba(255,255,255,.4); }
+
+/* HERO SLIDER */
+.hero-slider { position:relative;min-height:270px;overflow:hidden; }
+.hero-slides { display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1);will-change:transform; }
+.hero-slide { min-width:100%;position:relative;min-height:270px;display:flex;align-items:flex-end;overflow:hidden;flex-shrink:0; }
+.hero-anime-bg {
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 80% 35%, rgba(120,40,220,0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 85%, rgba(200,50,220,0.22) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 10%, rgba(80,20,160,0.4) 0%, transparent 50%),
+    linear-gradient(160deg, #08040f 0%, #130828 40%, #0e0520 100%);
+}
+.hero-anime-bg.bg2 {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(70,100,235,0.65) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 75%, rgba(90,40,200,0.35) 0%, transparent 45%),
+    linear-gradient(160deg, #020a20 0%, #080f30 40%, #030816 100%);
+}
+.hero-anime-bg.bg3 {
+  background:
+    radial-gradient(ellipse at 75% 25%, rgba(170,100,255,0.65) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(200,55,235,0.35) 0%, transparent 44%),
+    linear-gradient(160deg, #07021a 0%, #1e0840 40%, #050110 100%);
+}
+.hero-anime-bg.bg-img {
+  background-size:cover;background-position:center;
+}
+/* Subtle scan lines for atmosphere */
+.hero-anime-bg::after {
+  content:'';position:absolute;inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(80,0,140,0.03) 3px,rgba(80,0,140,0.03) 4px);
+  pointer-events:none;
+}
+.hero-content { position:relative;z-index:3;padding:26px 18px 30px;max-width:210px; }
+.hero-badge { display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;border:1px solid rgba(168,85,247,0.45);background:rgba(124,58,237,0.12);font-size:9px;font-weight:600;letter-spacing:1.5px;color:var(--purple-light);text-transform:uppercase;margin-bottom:9px; }
+.hero-slide h1 { font-family:'Poppins',sans-serif;font-weight:600;font-size:19px;line-height:1.2;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.7);margin-bottom:7px; }
+.hero-slide p { color:rgba(226,232,240,.6);font-size:11px;line-height:1.55;margin-bottom:16px;font-weight:300; }
+.btn-hero { display:inline-flex;align-items:center;gap:5px;padding:8px 18px;border-radius:8px;background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s; }
+.btn-hero:hover { background:rgba(255,255,255,0.16); }
+.hero-title-overlay { position:absolute;bottom:0;left:0;right:0;z-index:4;padding:8px 16px;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 100%);font-family:'Poppins',sans-serif;font-weight:700;font-size:12px;letter-spacing:.8px;color:rgba(255,255,255,.7);text-transform:uppercase;text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.9); }
+/* Slider dots */
+.hero-dots { position:absolute;bottom:28px;right:14px;z-index:10;display:flex;gap:5px;align-items:center; }
+.hero-dot { width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s; }
+.hero-dot.active { width:18px;border-radius:3px;background:var(--purple-light); }
+/* Hero floating orbs */
+@keyframes floatOrb { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+/* TABS */
+.tabs-section { padding:14px 14px 0; }
+.tabs { display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:3px; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { padding:5px 14px;border-radius:20px;white-space:nowrap;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--muted);transition:all .2s; }
+.tab.active { background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(124,58,237,.28); }
+
+/* PRODUCTS */
+.products-section { padding:12px 14px 110px; }
+.section-label { font-size:10px;font-weight:500;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:11px; }
+.products-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+.product-card { background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .22s;position:relative; }
+.product-card:hover { border-color:rgba(124,58,237,.5);transform:translateY(-2px);box-shadow:0 6px 22px rgba(124,58,237,.18); }
+.product-card.featured { grid-column:1/-1; }
+
+/* Card image with anime dark atmosphere per category */
+.card-img { width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:10px; }
+.product-card.featured .card-img { aspect-ratio:21/9; }
+
+/* Bot WA — purple forest dark */
+.card-img.bot {
+  background:
+    linear-gradient(to top, rgba(4,1,12,.95) 0%, rgba(4,1,12,.45) 55%, rgba(4,1,12,.08) 100%),
+    radial-gradient(ellipse at 72% 28%, rgba(145,50,240,.72) 0%, transparent 52%),
+    radial-gradient(ellipse at 18% 78%, rgba(100,20,200,.4) 0%, transparent 45%),
+    linear-gradient(135deg,#0d0520,#200840,#090218);
+}
+/* Panel — blue deep */
+.card-img.panel {
+  background:
+    linear-gradient(to top, rgba(2,4,16,.95) 0%, rgba(2,4,16,.45) 55%, rgba(2,4,16,.08) 100%),
+    radial-gradient(ellipse at 70% 25%, rgba(70,100,235,.72) 0%, transparent 52%),
+    radial-gradient(ellipse at 20% 80%, rgba(90,40,200,.38) 0%, transparent 45%),
+    linear-gradient(135deg,#040a28,#0d1850,#030818);
+}
+/* SC — deep premium */
+.card-img.sc {
+  background:
+    linear-gradient(to top, rgba(4,1,10,.97) 0%, rgba(4,1,10,.5) 48%, rgba(4,1,10,.08) 100%),
+    radial-gradient(ellipse at 65% 22%, rgba(170,100,255,.68) 0%, transparent 50%),
+    radial-gradient(ellipse at 22% 82%, rgba(200,55,235,.38) 0%, transparent 44%),
+    radial-gradient(ellipse at 88% 82%, rgba(80,35,185,.3) 0%, transparent 42%),
+    linear-gradient(135deg,#080218,#260a58,#060112);
+}
+.orb { position:absolute;border-radius:50%;animation:floatOrb 4s ease-in-out infinite;z-index:1;pointer-events:none; }
+.card-img-label { position:relative;z-index:2; }
+.card-title-img { font-family:'Poppins',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:#fff;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.9);line-height:1.3;margin-bottom:2px; }
+.card-sub-img { font-size:7.5px;font-weight:500;letter-spacing:2px;color:rgba(200,170,255,.7);text-transform:uppercase; }
+.badge-new { position:absolute;top:8px;left:8px;z-index:3;background:var(--purple);color:#fff;font-size:8px;font-weight:700;letter-spacing:.6px;padding:2px 6px;border-radius:4px;text-transform:uppercase; }
+.badge-type { position:absolute;top:8px;right:8px;z-index:3;background:rgba(0,0,0,.5);color:rgba(200,200,220,.8);border:1px solid rgba(255,255,255,.1);font-size:8px;font-weight:600;letter-spacing:.6px;padding:2px 6px;border-radius:4px;text-transform:uppercase;backdrop-filter:blur(4px); }
+.card-body { padding:10px 11px 12px; }
+.card-name { font-weight:600;font-size:13px;color:#fff;margin-bottom:1px; }
+.card-category { font-size:9px;font-weight:500;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px; }
+.stars { display:flex;align-items:center;gap:3px;margin-bottom:5px; }
+.star-icons { color:var(--gold);font-size:10px; }
+.star-count { font-size:10px;font-weight:600;color:var(--gold); }
+.star-review { font-size:10px;color:var(--muted); }
+.card-price { font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:#fff; }
+.stock-info { font-size:9px;color:var(--green);margin-top:3px;display:flex;align-items:center;gap:3px; }
+.stock-dot { width:5px;height:5px;border-radius:50%;background:var(--green); }
+
+/* MODAL */
+.overlay { position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:none;align-items:flex-end; }
+.overlay.open { display:flex; }
+.sheet { width:100%;max-height:92vh;background:var(--bg2);border-radius:20px 20px 0 0;overflow-y:auto;animation:slideUp .28s ease;position:relative;border-top:1.5px solid var(--purple); }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sheet-handle { width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0; }
+.sheet-close { position:absolute;top:13px;right:15px;width:27px;height:27px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10; }
+.modal-img { width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:14px; }
+.modal-img.bot { background:linear-gradient(to top,rgba(4,1,12,.96) 0%,rgba(4,1,12,.42) 58%,rgba(4,1,12,.08) 100%),radial-gradient(ellipse at 70% 25%,rgba(145,50,240,.75) 0%,transparent 55%),linear-gradient(135deg,#0d0520,#200840,#090218); }
+.modal-img.panel { background:linear-gradient(to top,rgba(2,4,16,.96) 0%,rgba(2,4,16,.42) 58%,rgba(2,4,16,.08) 100%),radial-gradient(ellipse at 70% 25%,rgba(70,100,235,.75) 0%,transparent 55%),linear-gradient(135deg,#040a28,#0d1850,#030818); }
+.modal-img.sc { background:linear-gradient(to top,rgba(4,1,10,.97) 0%,rgba(4,1,10,.48) 52%,rgba(4,1,10,.08) 100%),radial-gradient(ellipse at 65% 22%,rgba(170,100,255,.72) 0%,transparent 52%),radial-gradient(ellipse at 25% 80%,rgba(200,55,235,.38) 0%,transparent 44%),linear-gradient(135deg,#080218,#260a58,#060112); }
+.modal-img-text { position:relative;z-index:2; }
+.modal-img-title { font-family:'Poppins',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.5px;color:#fff;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.9); }
+.modal-img-sub { font-size:9px;font-weight:500;letter-spacing:2px;color:rgba(200,170,255,.65);text-transform:uppercase;margin-top:2px; }
+.modal-body { padding:16px 15px 26px; }
+.modal-title { font-family:'Poppins',sans-serif;font-weight:600;font-size:17px;color:#fff;margin-bottom:3px; }
+.modal-price { font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--purple-light);margin-bottom:3px; }
+.modal-avail { font-size:11px;color:var(--muted);margin-bottom:16px;font-weight:300; }
+.vlabel { font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px; }
+.vgrid { display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:15px; }
+.vbtn { padding:9px 6px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text);cursor:pointer;text-align:center;transition:all .18s; }
+.vbtn.active { border-color:var(--purple);background:var(--purple-glow);color:#fff; }
+.vbtn-name { font-size:12px;font-weight:500; }
+.vbtn-price { font-size:11px;color:var(--purple-light);margin-top:1px; }
+.mactions { display:flex;gap:8px;margin-bottom:18px; }
+.btn-buy { flex:1;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(124,58,237,.3); }
+.btn-cek { padding:12px 14px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:12px;font-weight:400; }
+.fdesc { margin-bottom:16px; }
+.fdesc-title { font-size:13px;font-weight:600;color:#fff;margin-bottom:5px; }
+.fdesc-text { font-size:12px;color:var(--muted);line-height:1.6;font-weight:300; }
+.fgrid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px; }
+.fcard { background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px; }
+.fcard-icon { font-size:17px;margin-bottom:4px; }
+.fcard-name { font-size:12px;font-weight:600;color:#fff; }
+.fcard-desc { font-size:10px;color:var(--muted);margin-top:2px;font-weight:300; }
+
+/* ORDER FORM */
+.order-overlay { position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);display:none;align-items:flex-end; }
+.order-overlay.open { display:flex; }
+.order-sheet { width:100%;max-height:95vh;background:var(--bg2);border-radius:20px 20px 0 0;border-top:1.5px solid var(--accent);overflow-y:auto;animation:slideUp .28s ease; }
+.o-handle { width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 5px; }
+.o-header { padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+.o-title { font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:#fff; }
+.o-sub { font-size:11px;color:var(--purple-light);font-weight:400;margin-top:1px; }
+.o-close { width:27px;height:27px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center; }
+.o-body { padding:15px; }
+.o-summary { background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between; }
+.o-sum-name { font-size:13px;font-weight:600;color:#fff; }
+.o-sum-var { font-size:11px;color:var(--muted);margin-top:1px;font-weight:300; }
+.o-sum-price { font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;color:var(--purple-light); }
+.fg { margin-bottom:13px; }
+.fl { font-size:10px;font-weight:600;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px; }
+.fi,.fta { width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s; }
+.fi:focus,.fta:focus { border-color:var(--purple); }
+.fi::placeholder,.fta::placeholder { color:#2e3140; }
+.fta { resize:vertical;min-height:65px;line-height:1.5; }
+.fhint { font-size:10px;color:#3a3d4a;margin-top:4px;line-height:1.4; }
+.fhint code { background:rgba(124,58,237,.1);color:var(--purple-light);padding:1px 4px;border-radius:3px;font-size:9px; }
+.fsec { font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(--purple-light);text-transform:uppercase;margin-bottom:11px;margin-top:2px;display:flex;align-items:center;gap:7px; }
+.fsec::after { content:'';flex:1;height:1px;background:var(--border); }
+.btn-order { width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;letter-spacing:.3px;box-shadow:0 4px 18px rgba(124,58,237,.3);transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:7px; }
+.btn-order:hover { transform:translateY(-2px); }
+.wa-note { text-align:center;font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5;font-weight:300; }
+.wa-note strong { color:var(--green); }
+.alert-box { background:rgba(124,58,237,.06);border:1px solid var(--border);border-radius:7px;padding:8px 10px;margin-bottom:13px;font-size:11px;color:var(--muted);line-height:1.6;font-weight:300; }
+
+/* DRAWER */
+.drawer-overlay { position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.65);display:none; }
+.drawer-overlay.open { display:block; }
+.drawer { position:fixed;top:0;right:0;bottom:0;width:70%;max-width:270px;background:var(--bg2);z-index:151;border-left:1px solid var(--border);padding:16px;transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column; }
+.drawer.open { transform:translateX(0); }
+.drawer-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:22px; }
+.drawer-title { font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);text-transform:uppercase; }
+.drawer-close { width:27px;height:27px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px; }
+.drawer-menu { list-style:none;flex:1; }
+.drawer-menu li { border-bottom:1px solid var(--border); }
+.drawer-menu li a { display:flex;align-items:center;gap:11px;padding:13px 2px;color:var(--text);text-decoration:none;font-size:13px;font-weight:400;transition:color .2s; }
+.drawer-menu li a:hover { color:var(--purple-light); }
+.mi { font-size:15px;width:20px;text-align:center; }
+.drawer-footer { margin-top:16px;display:flex;flex-direction:column;gap:8px; }
+.btn-wa { padding:10px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);color:var(--purple-light);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px; }
+
+/* LIVE CHAT */
+#chat-fab { position:fixed;bottom:20px;right:16px;z-index:400;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 4px 18px rgba(124,58,237,.5);transition:transform .2s;animation:fabPulse 3s ease-in-out infinite; }
+#chat-fab:hover { transform:scale(1.08); }
+.chat-badge { position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:#ef4444;border-radius:50%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg); }
+@keyframes fabPulse { 0%,100%{box-shadow:0 4px 18px rgba(124,58,237,.5)} 50%{box-shadow:0 4px 28px rgba(124,58,237,.8),0 0 0 5px rgba(124,58,237,.07)} }
+#chat-window { position:fixed;bottom:80px;right:12px;z-index:401;width:calc(100vw - 24px);max-width:330px;background:var(--bg2);border:1px solid var(--border);border-radius:15px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 14px 44px rgba(0,0,0,.7);animation:chatIn .22s ease; }
+#chat-window.open { display:flex; }
+@keyframes chatIn { from{opacity:0;transform:translateY(10px) scale(.97)} to{opacity:1;transform:none} }
+.chat-head { background:linear-gradient(135deg,var(--purple),var(--accent));padding:12px 13px;display:flex;align-items:center;justify-content:space-between; }
+.chat-head-info { display:flex;align-items:center;gap:8px; }
+.chat-avatar { width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;border:1.5px solid rgba(255,255,255,.28); }
+.chat-head-name { font-size:12px;font-weight:600;color:#fff; }
+.chat-head-status { font-size:9px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:4px;margin-top:1px; }
+.chat-status-dot { width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.chat-close-btn { width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);border:none;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center; }
+.chat-messages { flex:1;max-height:240px;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent; }
+.chat-msg { max-width:80%;padding:8px 11px;border-radius:11px;font-size:12px;line-height:1.5;word-break:break-word;font-weight:400; }
+.chat-msg.admin { background:var(--bg3);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px;align-self:flex-start; }
+.chat-msg.user { background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-bottom-right-radius:3px;align-self:flex-end; }
+.chat-msg-time { font-size:9px;opacity:.45;margin-top:3px;text-align:right; }
+.chat-typing { display:flex;gap:3px;align-items:center;padding:8px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:11px;border-bottom-left-radius:3px;align-self:flex-start;width:48px; }
+.chat-typing span { width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typingDot 1.2s ease-in-out infinite; }
+.chat-typing span:nth-child(2){animation-delay:.2s} .chat-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+.chat-wa-cta { padding:7px 11px;background:rgba(34,197,94,.05);border-top:1px solid rgba(34,197,94,.14); }
+.chat-wa-btn { width:100%;padding:7px;border-radius:7px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s; }
+.chat-wa-btn:hover { background:rgba(34,197,94,.18); }
+.chat-input-row { padding:9px 11px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:flex-end;background:var(--bg2); }
+.chat-input { flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:7px 11px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;outline:none;resize:none;line-height:1.4;max-height:65px;transition:border-color .2s; }
+.chat-input:focus { border-color:var(--purple); }
+.chat-input::placeholder { color:#2e3140; }
+.chat-send { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:transform .15s;box-shadow:0 2px 8px rgba(124,58,237,.3); }
+.chat-send:hover { transform:scale(1.08); }
+
+/* IN-APP MODALS */
+.inapp-overlay { position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);display:none;align-items:flex-end; }
+.inapp-overlay.open { display:flex; }
+.inapp-sheet { width:100%;max-height:94vh;background:var(--bg2);border-radius:22px 22px 0 0;border-top:2px solid var(--purple);overflow-y:auto;animation:slideUp .28s ease; }
+.inapp-handle { width:36px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0; }
+.inapp-header { padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+.inapp-header-left { display:flex;align-items:center;gap:11px; }
+.inapp-icon { width:36px;height:36px;border-radius:10px;background:var(--purple-glow);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px; }
+.inapp-title { font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;color:#fff; }
+.inapp-sub { font-size:11px;color:var(--muted);margin-top:1px; }
+.inapp-close { width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center; }
+.inapp-body { padding:16px 16px 32px; }
+.result-card { background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px; }
+.result-row { display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px; }
+.result-row:last-child { border-bottom:none; }
+.result-label { color:var(--muted); }
+.result-val { color:#fff;font-weight:500;text-align:right; }
+.result-val.ok { color:var(--green); }
+.result-val.warn { color:#f59e0b; }
+.result-val.expired { color:#ef4444; }
+.inapp-result-icon { font-size:28px;text-align:center;margin-bottom:6px; }
+.ulasan-stat { background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:14px; }
+.ulasan-score { font-family:'Poppins',sans-serif;font-size:36px;font-weight:700;color:#fff;line-height:1; }
+.ulasan-stars-big { color:var(--gold);font-size:16px;letter-spacing:1px; }
+.ulasan-total { font-size:11px;color:var(--muted);margin-top:3px; }
+.ulasan-card { background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:10px; }
+.ulasan-card-head { display:flex;align-items:center;gap:9px;margin-bottom:7px; }
+.ulasan-av { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0; }
+.ulasan-meta { flex:1; }
+.ulasan-nm { font-size:12px;font-weight:600;color:#fff;display:flex;align-items:center;gap:6px; }
+.ulasan-verified { font-size:9px;font-weight:600;padding:1px 6px;border-radius:4px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green); }
+.ulasan-time { font-size:10px;color:var(--muted);margin-top:1px; }
+.ulasan-stars { color:var(--gold);font-size:11px; }
+.ulasan-text { font-size:12px;color:var(--text);line-height:1.6; }
+.ulasan-like { display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:8px;background:none;border:none;cursor:pointer;padding:0; }
+.ulasan-like:hover { color:var(--purple-light); }
+.btn-tulis { width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 14px rgba(124,58,237,.3); }
+.star-picker { display:flex;gap:8px;margin:8px 0 14px;font-size:28px;cursor:pointer;justify-content:center; }
+.star-picker span { transition:transform .15s;user-select:none;opacity:.3; }
+.star-picker span.lit { opacity:1; }
+.star-picker span:hover { transform:scale(1.15); }
+.inapp-divider { text-align:center;font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:16px 0;position:relative; }
+.inapp-divider::before,.inapp-divider::after { content:'';position:absolute;top:50%;width:30%;height:1px;background:var(--border); }
+.inapp-divider::before{left:0}.inapp-divider::after{right:0}
+.inapp-empty { text-align:center;padding:28px 16px;color:var(--muted);font-size:12px; }
+/* PAYMENT OVERLAY */
+.pay-overlay { position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.93);backdrop-filter:blur(14px);display:none;align-items:flex-end; }
+.pay-overlay.open { display:flex; }
+.pay-sheet { width:100%;max-height:95vh;background:#0e0e18;border-radius:20px 20px 0 0;border-top:2px solid #a855f7;overflow-y:auto;animation:slideUp .28s ease; }
+.pay-handle { width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0; }
+.pay-header { padding:14px 16px 10px;border-bottom:1px solid rgba(124,58,237,.18); }
+.pay-title { font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:#fff; }
+.pay-sub { font-size:11px;color:#8892a4;margin-top:2px; }
+.pay-body { padding:14px 16px 30px; }
+.pay-summary { background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between; }
+.pay-summary-left { font-size:12px;color:#e2e8f0; }
+.pay-summary-price { font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:#a855f7; }
+.pay-method-label { font-size:10px;font-weight:600;letter-spacing:1.2px;color:#8892a4;text-transform:uppercase;margin-bottom:10px; }
+.pay-methods { display:flex;flex-direction:column;gap:8px;margin-bottom:18px; }
+.pay-method-btn { background:#16161f;border:1.5px solid rgba(124,58,237,.18);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s; }
+.pay-method-btn.selected { border-color:#a855f7;background:rgba(124,58,237,.1); }
+.pay-method-icon { width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+.pay-method-info { flex:1; }
+.pay-method-name { font-weight:600;font-size:13px;color:#fff; }
+.pay-method-no { font-size:11px;color:#8892a4;margin-top:1px;font-family:monospace; }
+.pay-radio { width:18px;height:18px;border-radius:50%;border:2px solid #8892a4;flex-shrink:0;transition:all .2s;position:relative; }
+.pay-method-btn.selected .pay-radio { border-color:#a855f7;background:#a855f7; }
+.pay-method-btn.selected .pay-radio::after { content:'';position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;top:50%;left:50%;transform:translate(-50%,-50%); }
+.pay-instruct { background:#16161f;border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:14px;margin-bottom:16px;display:none; }
+.pay-instruct.show { display:block; }
+.pay-instruct-title { font-size:11px;font-weight:600;letter-spacing:.8px;color:#a855f7;text-transform:uppercase;margin-bottom:10px; }
+.pay-step { display:flex;gap:10px;align-items:flex-start;margin-bottom:10px; }
+.pay-step:last-child { margin-bottom:0; }
+.pay-step-num { width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#d946ef);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px; }
+.pay-step-text { font-size:12px;color:#e2e8f0;line-height:1.55; }
+.pay-step-text strong { color:#fff; }
+.pay-copy-box { background:#0a0a14;border:1px solid rgba(124,58,237,.25);border-radius:8px;padding:9px 12px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.pay-copy-val { font-family:monospace;font-size:14px;color:#a855f7;font-weight:600; }
+.pay-copy-btn { background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);border-radius:6px;color:#a855f7;font-size:10px;font-weight:600;padding:5px 10px;cursor:pointer;white-space:nowrap;transition:all .2s; }
+.pay-copy-btn:active { background:rgba(124,58,237,.3); }
+.qris-wrap { display:flex;flex-direction:column;align-items:center;margin-top:10px; }
+.qris-img { width:160px;height:160px;border-radius:12px;object-fit:contain;background:#fff;padding:6px;border:2px solid rgba(124,58,237,.3); }
+.qris-label { font-size:10px;color:#8892a4;margin-top:7px;text-align:center; }
+.btn-pay-confirm { width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#d946ef);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;box-shadow:0 4px 18px rgba(124,58,237,.3);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px; }
+.btn-pay-confirm:hover { transform:translateY(-2px); }
+.pay-after-msg { background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#8892a4;line-height:1.6;margin-top:12px;display:none; }
+.pay-after-msg.show { display:block;color:#22c55e; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="avatar">U</div><span class="store-name-text">UnoTech Store</span>
+  </a>
+  <div class="nav-right">
+    <button class="btn-cs" onclick="contactAdmin()">Hubungi CS</button>
+    <div class="hamburger" onclick="openDrawer()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="marquee-bar">
+  <div class="marquee-inner">
+    <span>Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+    <span>SC Evernight Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>Sewa Bot — Rp5.000</span><span class="marquee-dot">•</span>
+    <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+    <span>Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+    <span>SC Evernight Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>Sewa Bot — Rp5.000</span><span class="marquee-dot">•</span>
+    <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+  </div>
+</div>
+
+<div class="hero-slider" id="hero-slider">
+  <div class="hero-slides" id="hero-slides">
+    <!-- Slides generated by JS -->
+  </div>
+  <div class="hero-dots" id="hero-dots"></div>
+</div>
+
+<div class="tabs-section">
+  <div class="tabs">
+    <button class="tab active" onclick="filterTab(this,'semua')">Semua</button>
+    <button class="tab" onclick="filterTab(this,'bot-wa')">Bot WA</button>
+    <button class="tab" onclick="filterTab(this,'panel')">Panel</button>
+    <button class="tab" onclick="filterTab(this,'source-code')">Source Code</button>
+  </div>
+</div>
+
+<div class="products-section">
+  <div class="section-label" id="prod-count">3 Produk</div>
+  <div class="products-grid" id="products-grid">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="overlay" id="prod-overlay" onclick="closeProdBg(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeProd()">×</button>
+    <div class="modal-img bot" id="m-modal-img">
+      <div class="orb" style="width:70px;height:70px;top:10%;right:18%;background:radial-gradient(circle,rgba(167,100,255,.42),transparent 70%)"></div>
+      <div class="modal-img-text">
+        <div id="m-img-title" class="modal-img-title"></div>
+        <div class="modal-img-sub">UnoTech Store</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-price" id="m-price"></div>
+      <div class="modal-avail" id="m-avail"></div>
+      <div class="vlabel">Pilih Varian</div>
+      <div class="vgrid" id="m-varians"></div>
+      <div class="mactions">
+        <button class="btn-buy" onclick="openOrderForm()">🛒 Beli Sekarang</button>
+        <button class="btn-cek" onclick="contactAdmin()">Cek Order</button>
+      </div>
+      <div class="fdesc">
+        <div class="fdesc-title">Deskripsi</div>
+        <div class="fdesc-text" id="m-desc"></div>
+      </div>
+      <div class="vlabel">Keunggulan Produk</div>
+      <div class="fgrid" id="m-features"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER FORM -->
+<div class="order-overlay" id="order-overlay" onclick="closeOrderBg(event)">
+  <div class="order-sheet">
+    <div class="o-handle"></div>
+    <div class="o-header">
+      <div>
+        <div class="o-title">Form Pembelian</div>
+        <div class="o-sub" id="of-sub">Isi data dengan benar</div>
+      </div>
+      <button class="o-close" onclick="closeOrder()">×</button>
+    </div>
+    <div class="o-body">
+      <div class="o-summary">
+        <div><div class="o-sum-name" id="of-name"></div><div class="o-sum-var" id="of-var"></div></div>
+        <div class="o-sum-price" id="of-price"></div>
+      </div>
+      <div id="f-sewa">
+        <div class="fsec">Data Sewa Bot</div>
+        <div class="fg"><label class="fl">Nama Grup</label><input class="fi" id="sb-grup" placeholder="Contoh: Grup Gaming Squad" type="text"></div>
+        <div class="fg"><label class="fl">Link Grup WhatsApp</label><input class="fi" id="sb-link" placeholder="https://chat.whatsapp.com/..." type="url"></div>
+        <div class="fg"><label class="fl">Nomor WA Kamu</label><input class="fi" id="sb-wa" placeholder="628xxxxxxxxxx" type="tel"></div>
+      </div>
+      <div id="f-panel" style="display:none">
+        <div class="fsec">Data Panel</div>
+        <div class="fg"><label class="fl">Nama Panel</label><input class="fi" id="p-nama" placeholder="Contoh: BotKu Panel" type="text"></div>
+        <div class="fg"><label class="fl">Password Panel</label><input class="fi" id="p-pass" placeholder="Buat password yang kuat" type="text"></div>
+      </div>
+      <div id="f-script" style="display:none">
+        <div class="alert-box">⚠️ Isi di tengah tanda <code>"..."</code> atau <code>'...'</code></div>
+        <div class="fsec">Konfigurasi Script</div>
+        <div class="fg"><label class="fl">global.owner</label><input class="fi" id="sc-owner" placeholder="628xxxxxxxxxx" type="tel"><div class="fhint">Nomor WA owner bot (tanpa +)</div></div>
+        <div class="fg"><label class="fl">global.namaOwner</label><input class="fi" id="sc-namaowner" placeholder="Nama kamu" type="text"></div>
+        <div class="fg"><label class="fl">global.packname</label><input class="fi" id="sc-packname" placeholder="Nama pack stiker" type="text"></div>
+        <div class="fg"><label class="fl">global.author</label><input class="fi" id="sc-author" placeholder="Nama author stiker" type="text"></div>
+        <div class="fg"><label class="fl">global.botname</label><input class="fi" id="sc-botname" placeholder="Nama bot utama" type="text"></div>
+        <div class="fg"><label class="fl">global.botname2</label><input class="fi" id="sc-botname2" placeholder="Nama bot alternatif" type="text"></div>
+        <div class="fg"><label class="fl">Nomer Bot (WA)</label><input class="fi" id="sc-nomerbot" placeholder="628xxxxxxxxxx" type="tel"><div class="fhint">Nomor WhatsApp yang dijadikan bot</div></div>
+      </div>
+      <button class="btn-order" onclick="goToPayment()"><span>💳</span> Lanjut ke Pembayaran</button>
+      <div class="wa-note">Pilih metode pembayaran, lalu kirim konfirmasi ke admin via WhatsApp ✅</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAYMENT OVERLAY ====== -->
+<div class="pay-overlay" id="pay-overlay" onclick="if(event.target===this)closePayOverlay()">
+  <div class="pay-sheet">
+    <div class="pay-handle"></div>
+    <div class="pay-header">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="pay-title">💳 Pilih Pembayaran</div>
+          <div class="pay-sub">Selesaikan pembayaran lalu kirim bukti ke admin</div>
+        </div>
+        <button style="width:28px;height:28px;border-radius:50%;background:#16161f;border:1px solid rgba(124,58,237,.2);color:#8892a4;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closePayOverlay()">×</button>
+      </div>
+    </div>
+    <div class="pay-body">
+      <div class="pay-summary">
+        <div class="pay-summary-left" id="pay-sum-text">-</div>
+        <div class="pay-summary-price" id="pay-sum-price">-</div>
+      </div>
+      <div class="pay-method-label">Metode Pembayaran</div>
+      <div class="pay-methods" id="pay-methods-list">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="pay-instruct" id="pay-instruct">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="pay-after-msg" id="pay-after-msg-el"></div>
+      <button class="btn-pay-confirm" onclick="confirmPayAndSendWA()">📲 Sudah Bayar — Kirim ke Admin WA</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-top">
+    <span class="drawer-title">Menu</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <ul class="drawer-menu" id="drawer-menu-list">
+    <!-- Rendered by JS -->
+  </ul>
+  <div class="drawer-footer">
+    <button class="btn-cs" style="padding:11px;font-size:12px" onclick="contactAdmin();closeDrawer()">💬 Hubungi CS</button>
+    <button class="btn-wa" id="btn-channel-wa" onclick="openChannelWa()">📲 Channel WhatsApp</button>
+  </div>
+</div>
+
+<!-- LIVE CHAT -->
+<button id="chat-fab" onclick="toggleChat()">
+  💬<span class="chat-badge" id="chat-notif">1</span>
+</button>
+<div id="chat-window">
+  <div class="chat-head">
+    <div class="chat-head-info">
+      <div class="chat-avatar">U</div>
+      <div>
+        <div class="chat-head-name">UnoTech Store</div>
+        <div class="chat-head-status"><span class="chat-status-dot"></span>Admin Online</div>
+      </div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-wa-cta">
+    <button class="chat-wa-btn" onclick="lanjutWhatsApp()">📲 Lanjut Chat via WhatsApp</button>
+  </div>
+  <div class="chat-input-row">
+    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ketik pesan..." onkeydown="chatKeydown(event)" oninput="autoResizeChat(this)"></textarea>
+    <button class="chat-send" onclick="sendChatMsg()">➤</button>
+  </div>
+</div>
+
+<!-- ====== MODAL: PERPANJANG PANEL ====== -->
+<div class="inapp-overlay" id="renew-overlay" onclick="if(event.target===this)closeRenewModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <div class="inapp-header">
+      <div class="inapp-header-left">
+        <div class="inapp-icon">🔄</div>
+        <div>
+          <div class="inapp-title">Perpanjang Panel</div>
+          <div class="inapp-sub">Tambah durasi panel Pterodactyl aktif</div>
+        </div>
+      </div>
+      <button class="inapp-close" onclick="closeRenewModal()">×</button>
+    </div>
+    <div class="inapp-body" id="renew-body">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: TRACK ORDER ====== -->
+<div class="inapp-overlay" id="track-overlay" onclick="if(event.target===this)closeTrackModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <div class="inapp-header">
+      <div class="inapp-header-left">
+        <div class="inapp-icon">🔍</div>
+        <div>
+          <div class="inapp-title">Cek Order</div>
+          <div class="inapp-sub">Masukkan nomor WA atau ID transaksi</div>
+        </div>
+      </div>
+      <button class="inapp-close" onclick="closeTrackModal()">×</button>
+    </div>
+    <div class="inapp-body" id="track-body">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: ULASAN ====== -->
+<div class="inapp-overlay" id="ulasan-overlay" onclick="if(event.target===this)closeUlasanModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <div class="inapp-header">
+      <div class="inapp-header-left">
+        <div class="inapp-icon">💬</div>
+        <div>
+          <div class="inapp-title">Ulasan</div>
+          <div class="inapp-sub">Rating & testimoni pelanggan</div>
+        </div>
+      </div>
+      <button class="inapp-close" onclick="closeUlasanModal()">×</button>
+    </div>
+    <div class="inapp-body" id="ulasan-body">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================================================
+   FIREBASE CONFIG
+   ==================================================== */
+const FIREBASE_URL_STORE = 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+const FIREBASE_TOKEN_STORE = '';
+
+async function dbGetStore(key) {
+  try {
+    const url = `${FIREBASE_URL_STORE}/store/${key}.json${FIREBASE_TOKEN_STORE ? '?auth=' + FIREBASE_TOKEN_STORE : ''}`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const d = await r.json();
+    return d !== null && d !== undefined ? d : null;
+  } catch { return null; }
+}
+async function dbSetStore(key, value) {
+  try {
+    const url = `${FIREBASE_URL_STORE}/store/${key}.json${FIREBASE_TOKEN_STORE ? '?auth=' + FIREBASE_TOKEN_STORE : ''}`;
+    const r = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value)
+    });
+    return r.ok;
+  } catch (e) { console.error('dbSetStore error:', e); return false; }
+}
+
+let ADMIN_WA='628132988940';
+let GRUP_BUYER='https://chat.whatsapp.com/FSYs8eRrhtTC3INZ9gnv4D?mode=gi_t';
+let STORE_NAME='UnoTech Store';
+let PAYMENT_CFG = {
+  dana:  { active:true,  no:'628132988940', name:'' },
+  gopay: { active:true,  no:'628132988940', name:'' },
+  ovo:   { active:true,  no:'628132988940', name:'' },
+  qris:  { active:true,  url:'https://img2.pixhost.to/images/7311/716701404_alip-1776667419907.jpg', name:'' },
+  bank:  { active:false, bankName:'', no:'', name:'' },
+  'wa-confirm': true,
+  'show-all': true,
+  afterMsg: '',
+};
+let selectedPayMethod = null;
+let pendingOrderMsg = '';
+
+const DEFAULT_PRODUCTS=[
+  {id:'sewa-bot',cat:'bot-wa',title:'Sewa Bot',imgClass:'bot',imgTitle:'SEWA BOT EVERNIGHT MULTIDEVICE',imgUrl:'',price:'Rp5.000',available:'Tersedia hingga Rp90.000',desc:'Sewa bot untuk jaga grup anda yang memiliki 1800+ fitur aktif.',
+   varians:[{name:'1 minggu',price:'Rp5.000'},{name:'2 minggu',price:'Rp9.000'},{name:'1 bulan',price:'Rp15.000'},{name:'2 bulan',price:'Rp22.000'},{name:'Permanen',price:'Rp90.000'}],
+   features:[{icon:'💬',name:'Bot WhatsApp',desc:'Bot aktif langsung di grup kamu'},{icon:'🔄',name:'Aktivasi Otomatis',desc:'Bot masuk grup setelah bayar'},{icon:'⚡',name:'Fitur Lengkap',desc:'1800+ command aktif'},{icon:'🛡️',name:'Support 24/7',desc:'CS siap bantu kapan saja'}]},
+  {id:'panel',cat:'panel',title:'Panel Bot WA',imgClass:'panel',imgTitle:'PANEL PTERO PREMIUM',imgUrl:'',price:'Rp2.000',available:'Tersedia hingga Rp50.000',desc:'Panel pterodactyl premium menggunakan VPS legal, aktif hingga 1 bulan penuh.',
+   varians:[{name:'1 minggu',price:'Rp2.000'},{name:'2 minggu',price:'Rp4.000'},{name:'1 bulan',price:'Rp7.000'},{name:'2 bulan',price:'Rp12.000'},{name:'Permanen',price:'Rp50.000'}],
+   features:[{icon:'🖥️',name:'VPS Legal',desc:'VPS berlisensi resmi'},{icon:'⚡',name:'Performa Tinggi',desc:'Uptime 99.9% dijamin'},{icon:'🔒',name:'Aman & Stabil',desc:'Tidak pernah down sembarangan'},{icon:'🛡️',name:'Support 24/7',desc:'CS siap bantu kapan saja'}]},
+  {id:'script',cat:'source-code',title:'SC Evernight Ai',imgClass:'sc',imgTitle:'EVERNIGHT MULTIDEVICE V10.5 — PREMIUM',imgUrl:'',price:'Rp75.000',available:'Tersedia: Unlimited',desc:'Source code bot WhatsApp Evernight AI versi premium dengan 1800+ fitur lengkap siap pakai.',
+   varians:[{name:'Download',price:'Rp75.000'}],
+   features:[{icon:'📦',name:'Full Source Code',desc:'Kode lengkap tanpa enkripsi'},{icon:'🔄',name:'Update Gratis',desc:'Dapat update versi terbaru'},{icon:'⚙️',name:'1800+ Fitur',desc:'Menu all, game, fun, search, sticker'},{icon:'🛡️',name:'Support Setup',desc:'Bantuan instalasi oleh CS'}]}
+];
+let products=DEFAULT_PRODUCTS;
+let heroSlides=null; // custom slides from admin
+
+/* ====================================================
+   HERO SLIDER
+   ==================================================== */
+let currentSlide=0;let sliderInterval=null;
+const BG_CLASSES=['','bg2','bg3'];
+
+function buildHeroSlides(){
+  const slidesEl=document.getElementById('hero-slides');
+  const dotsEl=document.getElementById('hero-dots');
+  slidesEl.innerHTML='';dotsEl.innerHTML='';
+  // Use custom heroSlides from admin or build from products
+  const slides=heroSlides&&heroSlides.length?heroSlides:products.map((p,i)=>({
+    badge:p.cat==='bot-wa'?'Sewa Bot':p.cat==='panel'?'Panel':p.cat==='source-code'?'Source Code':p.cat||'Produk',
+    title:p.title,
+    subtitle:p.desc?p.desc.split('.')[0]:p.title,
+    btnLabel:'Lihat →',
+    prodIdx:i,
+    imgUrl:p.imgUrl||'',
+    bgClass:BG_CLASSES[i%3],
+    titleOverlay:p.imgTitle||p.title,
+  }));
+
+  slides.forEach((s,i)=>{
+    const slide=document.createElement('div');
+    slide.className='hero-slide';
+
+    // Background
+    const bg=document.createElement('div');
+    bg.className='hero-anime-bg'+(s.bgClass?' '+s.bgClass:'');
+    if(s.imgUrl){
+      bg.classList.add('bg-img');
+      bg.style.backgroundImage=`linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),url('${s.imgUrl}')`;
+    }
+    slide.appendChild(bg);
+
+    // Orbs (decorative)
+    if(!s.imgUrl){
+      const orb1=document.createElement('div');
+      orb1.style.cssText='position:absolute;top:18%;right:8%;width:85px;height:85px;border-radius:50%;background:radial-gradient(circle,rgba(140,50,240,.42),transparent 70%);z-index:1;pointer-events:none;animation:floatOrb 5s ease-in-out infinite';
+      slide.appendChild(orb1);
+      const orb2=document.createElement('div');
+      orb2.style.cssText='position:absolute;top:38%;right:28%;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle,rgba(210,70,240,.28),transparent 70%);z-index:1;pointer-events:none;animation:floatOrb 4s ease-in-out infinite;animation-delay:1.5s';
+      slide.appendChild(orb2);
+    }
+
+    // Content
+    const content=document.createElement('div');
+    content.className='hero-content';
+    content.innerHTML=`
+      <div class="hero-badge">${s.badge}</div>
+      <h1>${s.title}</h1>
+      <p>${s.subtitle}</p>
+      <button class="btn-hero" onclick="openModal(${s.prodIdx!=null?s.prodIdx:0})">${s.btnLabel||'Lihat →'}</button>`;
+    slide.appendChild(content);
+
+    // Title overlay
+    const overlay=document.createElement('div');
+    overlay.className='hero-title-overlay';
+    overlay.textContent=s.titleOverlay||s.title;
+    slide.appendChild(overlay);
+
+    slidesEl.appendChild(slide);
+
+    // Dot
+    const dot=document.createElement('div');
+    dot.className='hero-dot'+(i===0?' active':'');
+    dot.onclick=()=>goToSlide(i);
+    dotsEl.appendChild(dot);
+  });
+
+  // Touch/swipe support
+  let touchStartX=0;
+  slidesEl.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
+  slidesEl.addEventListener('touchend',e=>{
+    const diff=touchStartX-e.changedTouches[0].clientX;
+    if(Math.abs(diff)>50){diff>0?nextSlide():prevSlide();}
+  });
+
+  startSlider(slides.length);
+}
+
+function goToSlide(idx){
+  const slides=document.getElementById('hero-slides');
+  const dots=document.querySelectorAll('.hero-dot');
+  currentSlide=idx;
+  slides.style.transform=`translateX(-${idx*100}%)`;
+  dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+function nextSlide(){const n=document.querySelectorAll('.hero-dot').length;goToSlide((currentSlide+1)%n);}
+function prevSlide(){const n=document.querySelectorAll('.hero-dot').length;goToSlide((currentSlide-1+n)%n);}
+function startSlider(count){if(sliderInterval)clearInterval(sliderInterval);if(count>1)sliderInterval=setInterval(nextSlide,3500);}
+
+/* ====================================================
+   DYNAMIC PRODUCT GRID
+   ==================================================== */
+function renderProductGrid(){
+  const grid=document.getElementById('products-grid');
+  grid.innerHTML='';
+  const catMap={'bot-wa':'bot','panel':'panel','source-code':'sc'};
+  products.forEach((p,i)=>{
+    const featured=(i===products.length-1&&products.length%2!==0)||p.featured;
+    const card=document.createElement('div');
+    card.className='product-card'+(featured?' featured':'');
+    card.dataset.cat=p.cat||'semua';
+    card.onclick=()=>openModal(i);
+
+    // Card image
+    let cardImgStyle='';
+    if(p.imgUrl){
+      cardImgStyle=`background-image:linear-gradient(to top,rgba(4,1,12,.92) 0%,rgba(4,1,12,.4) 58%,rgba(4,1,12,.05) 100%),url('${p.imgUrl}');background-size:cover;background-position:center;`;
+    }
+    const imgClass=catMap[p.cat]||'bot';
+    card.innerHTML=`
+      <div class="card-img ${p.imgUrl?'':imgClass}" style="${cardImgStyle}">
+        ${!p.imgUrl?`
+        <div class="orb" style="width:${featured?'65':'52'}px;height:${featured?'65':'52'}px;top:9%;right:11%;background:radial-gradient(circle,rgba(160,60,255,.52),transparent 70%)"></div>
+        <div class="orb" style="width:32px;height:32px;bottom:22%;left:14%;background:radial-gradient(circle,rgba(200,60,240,.38),transparent 70%);animation-delay:2s"></div>`:''}
+        <div class="card-img-label">
+          <div class="card-title-img">${(p.imgTitle||p.title).replace(/<[^>]+>/g,'')}</div>
+          <div class="card-sub-img">${STORE_NAME}</div>
+        </div>
+      </div>
+      <span class="badge-new">Baru</span>
+      <span class="badge-type">${p.cat==='bot-wa'?'Sewa Bot':p.cat==='panel'?'Panel':p.cat==='source-code'?'Download':p.cat||'Produk'}</span>
+      <div class="card-body">
+        <div class="card-name">${p.title}</div>
+        <div class="card-category">${p.cat==='bot-wa'?'Bot WA':p.cat==='panel'?'Panel':p.cat==='source-code'?'Source Code':p.cat||'Lainnya'}</div>
+        <div class="stars"><span class="star-icons">★★★★★</span><span class="star-count"> 5.0</span><span class="star-review"> (3)</span></div>
+        <div class="card-price">${p.price||'Rp0'}</div>
+        <div class="stock-info"><span class="stock-dot"></span>Stok Unlimited</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  document.getElementById('prod-count').textContent=`${products.length} Produk`;
+}
+
+/* ====================================================
+   LOAD DATA FROM DB
+   ==================================================== */
+async function loadStoreData(){
+  try{
+    const [info,kontak,prods,imgCfg,heroCfg,payCfg]=await Promise.all([
+      dbGetStore('store-info'),
+      dbGetStore('store-kontak'),
+      dbGetStore('store-produk'),
+      dbGetStore('store-img-produk'),
+      dbGetStore('store-hero-slides'),
+      dbGetStore('store-payment'),
+    ]);
+
+    if(kontak?.adminWa)ADMIN_WA=kontak.adminWa;
+    if(kontak?.grupBuyer)GRUP_BUYER=kontak.grupBuyer;
+    if(info?.nama)STORE_NAME=info.nama;
+    if(payCfg)PAYMENT_CFG={...PAYMENT_CFG,...payCfg};
+
+    // Merge products (hanya update jika ada data dari server)
+    let needRerender=false;
+    if(prods&&prods.length){
+      products=prods.map(p=>{
+        const imgOverride=imgCfg?.[p.id];
+        return{...p,imgUrl:imgOverride||p.imgUrl||''};
+      });
+      needRerender=true;
+    } else if(imgCfg){
+      products=products.map(p=>({...p,imgUrl:imgCfg[p.id]||''}));
+      needRerender=true;
+    }
+
+    // Hero slides
+    if(heroCfg&&heroCfg.length){heroSlides=heroCfg;needRerender=true;}
+
+    // Apply store name di navbar
+    if(info?.nama){
+      const avatarEl=document.querySelector('.nav-logo .avatar');
+      if(avatarEl)avatarEl.textContent=(info.nama||'U').charAt(0).toUpperCase();
+      const nameEl=document.querySelector('.nav-logo .store-name-text');
+      if(nameEl)nameEl.textContent=info.nama;
+      document.title=info.nama;
+    }
+
+    // Marquee
+    const marquee=await dbGetStore('store-marquee');
+    if(marquee&&marquee.length){
+      const inner=document.querySelector('.marquee-inner');
+      if(inner){
+        const doubled=[...marquee,...marquee];
+        inner.innerHTML=doubled.map((t,i)=>`<span>${t}</span>${i<doubled.length-1?'<span class="marquee-dot">•</span>':''}`).join('');
+      }
+    }
+
+    // Drawer
+    const drawer=await dbGetStore('store-drawer');
+    renderDrawer(drawer&&drawer.length?drawer:null);
+
+    // Hanya re-render jika ada perubahan dari server
+    if(needRerender){
+      renderProductGrid();
+      buildHeroSlides();
+    }
+  }catch(e){
+    console.error('loadStoreData error:',e);
+    // Produk default sudah di-render di initStore(), tidak perlu action lagi
+  }
+}
+
+/* Smart Drawer Renderer — handles URL, WA deeplinks, # anchors */
+let CHANNEL_WA_URL='';
+function renderDrawer(items){
+  const ul=document.getElementById('drawer-menu-list');
+  if(!ul)return;
+  // Default items — Beli OTP & cPanel dihapus
+  const defaults=[
+    {label:'🏠 Home',url:'#top'},
+    {label:'🔄 Perpanjang Panel',url:'#renew'},
+    {label:'🔍 Track Order',url:'#track'},
+    {label:'💬 Ulasan',url:'#ulasan'},
+    {label:'📞 Live Chat',url:'#chat'},
+  ];
+  const list=items&&items.length?items:defaults;
+  ul.innerHTML='';
+  list.forEach(it=>{
+    const li=document.createElement('li');
+    const a=document.createElement('a');
+    a.href='#';
+    const url=(it.url||'#').trim();
+    if(url==='#top'||url==='#'){
+      a.onclick=e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});closeDrawer();};
+    } else if(url==='#chat'){
+      a.onclick=e=>{e.preventDefault();closeDrawer();setTimeout(()=>toggleChat(),220);};
+    } else if(url==='#renew'){
+      a.onclick=e=>{e.preventDefault();closeDrawer();setTimeout(()=>openRenewModal(),200);};
+    } else if(url==='#track'){
+      a.onclick=e=>{e.preventDefault();closeDrawer();setTimeout(()=>openTrackModal(),200);};
+    } else if(url==='#ulasan'){
+      a.onclick=e=>{e.preventDefault();closeDrawer();setTimeout(()=>openUlasanModal(),200);};
+    } else if(url.startsWith('wa:')){
+      const msg=url.slice(3);
+      a.onclick=e=>{e.preventDefault();window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`,'_blank');closeDrawer();};
+    } else if(url.startsWith('http')){
+      a.href=url;a.target='_blank';a.onclick=()=>closeDrawer();
+    } else {
+      a.onclick=e=>e.preventDefault();
+    }
+    const parts=it.label.match(/^(\S+)\s(.+)$/);
+    if(parts){a.innerHTML=`<span class="mi">${parts[1]}</span>${parts[2]}`;}
+    else{a.textContent=it.label;}
+    li.appendChild(a);ul.appendChild(li);
+  });
+}
+
+function openChannelWa(){
+  const url=CHANNEL_WA_URL||`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent('Halo Admin UnoTech Store!')}`;
+  window.open(url,'_blank');
+}
+
+let activeIdx=null,activeVar=0;
+
+function openModal(idx){
+  activeIdx=idx;activeVar=0;
+  const p=products[idx];
+  const catMap={'bot-wa':'bot','panel':'panel','source-code':'sc'};
+  const imgEl=document.getElementById('m-modal-img');
+  imgEl.className='modal-img '+(catMap[p.cat]||'bot');
+  if(p.imgUrl){
+    imgEl.style.backgroundImage=`linear-gradient(to top,rgba(4,1,12,.96) 0%,rgba(4,1,12,.42) 58%,rgba(4,1,12,.08) 100%),url('${p.imgUrl}')`;
+    imgEl.style.backgroundSize='cover';imgEl.style.backgroundPosition='center';
+  } else {
+    imgEl.style.backgroundImage='';imgEl.style.backgroundSize='';
+  }
+  document.getElementById('m-img-title').textContent=p.imgTitle||p.title;
+  document.getElementById('m-title').textContent=p.title;
+  document.getElementById('m-price').textContent=p.price;
+  document.getElementById('m-avail').textContent=p.available;
+  document.getElementById('m-desc').textContent=p.desc;
+  const vg=document.getElementById('m-varians');vg.innerHTML='';
+  p.varians.forEach((v,i)=>{
+    const b=document.createElement('button');
+    b.className='vbtn'+(i===0?' active':'');
+    b.innerHTML=`<div class="vbtn-name">${v.name}</div><div class="vbtn-price">${v.price}</div>`;
+    b.onclick=()=>{document.querySelectorAll('.vbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeVar=i;document.getElementById('m-price').textContent=v.price;};
+    vg.appendChild(b);
+  });
+  const fg=document.getElementById('m-features');fg.innerHTML='';
+  p.features.forEach(f=>{fg.innerHTML+=`<div class="fcard"><div class="fcard-icon">${f.icon}</div><div class="fcard-name">${f.name}</div><div class="fcard-desc">${f.desc}</div></div>`;});
+  document.getElementById('prod-overlay').classList.add('open');
+}
+function closeProdBg(e){if(e.target===document.getElementById('prod-overlay'))closeProd();}
+function closeProd(){document.getElementById('prod-overlay').classList.remove('open');}
+
+function openOrderForm(){
+  if(activeIdx===null)return;
+  const p=products[activeIdx];const v=p.varians[activeVar];
+  document.getElementById('of-sub').textContent=p.title+' — '+v.name;
+  document.getElementById('of-name').textContent=p.title;
+  document.getElementById('of-var').textContent=v.name;
+  document.getElementById('of-price').textContent=v.price;
+  // Hide all form sections first
+  ['f-sewa','f-panel','f-script'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display='none';
+  });
+  // Map product id to form section
+  const formMap={'sewa-bot':'f-sewa','panel':'f-panel','script':'f-script'};
+  const targetForm=formMap[p.id];
+  if(targetForm){
+    const el=document.getElementById(targetForm);
+    if(el)el.style.display='block';
+  } else {
+    // Unknown product type - show sewa form as default
+    const el=document.getElementById('f-sewa');
+    if(el)el.style.display='block';
+  }
+  closeProd();document.getElementById('order-overlay').classList.add('open');
+}
+function closeOrderBg(e){if(e.target===document.getElementById('order-overlay'))closeOrder();}
+function closeOrder(){document.getElementById('order-overlay').classList.remove('open');}
+
+function goToPayment(){
+  if(activeIdx===null)return;
+  const p=products[activeIdx];const v=p.varians[activeVar];let msg='';
+  if(p.id==='sewa-bot'){
+    const grup=document.getElementById('sb-grup').value.trim();
+    const link=document.getElementById('sb-link').value.trim();
+    const wa=document.getElementById('sb-wa').value.trim();
+    if(!grup||!link||!wa){showInappToast('⚠️ Lengkapi semua data!');return;}
+    msg=`🤖 *ORDER SEWA BOT EVERNIGHT*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Sewa Bot\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PEMBELIAN:*\nNama grup : ${grup}\nLink grup : ${link}\nNomer wa  : ${wa}\n\n🔗 Link grup buyer :\n${GRUP_BUYER}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+  } else if(p.id==='panel'){
+    const nama=document.getElementById('p-nama').value.trim();
+    const pass=document.getElementById('p-pass').value.trim();
+    if(!nama||!pass){showInappToast('⚠️ Lengkapi semua data!');return;}
+    msg=`🖥️ *ORDER PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Panel Bot WA\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PANEL:*\nNama panel     : ${nama}\nPassword panel : ${pass}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+  } else if(p.id==='script'){
+    const owner=document.getElementById('sc-owner').value.trim();
+    const namaOwn=document.getElementById('sc-namaowner').value.trim();
+    const packname=document.getElementById('sc-packname').value.trim();
+    const author=document.getElementById('sc-author').value.trim();
+    const botname=document.getElementById('sc-botname').value.trim();
+    const botname2=document.getElementById('sc-botname2').value.trim();
+    const nomerbot=document.getElementById('sc-nomerbot').value.trim();
+    if(!owner||!namaOwn||!botname||!nomerbot){showInappToast('⚠️ Data wajib: Owner, Nama Owner, Botname, Nomer Bot!');return;}
+    msg=`📦 *ORDER SC EVERNIGHT AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk : SC Evernight Ai v10.5 Premium\n💰 Harga  : ${v.price}\n\n📋 *KONFIGURASI SCRIPT:*\nglobal.owner = '${owner}'\nglobal.namaOwner = "${namaOwn}"\nglobal.packname = '${packname}'\nglobal.author = '${author}'\nglobal.botname = '${botname}'\nglobal.botname2 = "${botname2}"\n\nNomer bot : ${nomerbot}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+  } else {
+    const wa=document.getElementById('sb-wa')?.value?.trim()||'';
+    if(!wa){showInappToast('⚠️ Lengkapi nomor WA!');return;}
+    msg=`🛒 *ORDER ${p.title.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : ${p.title}\n⏱️ Varian  : ${v.name}\n💰 Harga   : ${v.price}\nNomor WA  : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via ${STORE_NAME}_`;
+  }
+  pendingOrderMsg = msg;
+  closeOrder();
+  setTimeout(()=>openPayOverlay(p.title, v.name, v.price), 250);
+}
+
+function openPayOverlay(prodTitle, varName, price){
+  selectedPayMethod = null;
+  document.getElementById('pay-sum-text').textContent = `${prodTitle} — ${varName}`;
+  document.getElementById('pay-sum-price').textContent = price;
+  // Build methods
+  const list = document.getElementById('pay-methods-list');
+  list.innerHTML = '';
+  const methods = [];
+  const pc = PAYMENT_CFG;
+  if(pc.dana?.active !== false) methods.push({ id:'dana', icon:'💙', bg:'linear-gradient(135deg,#118EEA,#0066CC)', name:'DANA', no: pc.dana?.no || '628132988940', ownerName: pc.dana?.name || '' });
+  if(pc.gopay?.active !== false) methods.push({ id:'gopay', icon:'💚', bg:'linear-gradient(135deg,#00AED6,#00875A)', name:'GoPay', no: pc.gopay?.no || '628132988940', ownerName: pc.gopay?.name || '' });
+  if(pc.ovo?.active !== false) methods.push({ id:'ovo', icon:'💜', bg:'linear-gradient(135deg,#4B2D8E,#7B4FCC)', name:'OVO', no: pc.ovo?.no || '628132988940', ownerName: pc.ovo?.name || '' });
+  if(pc.qris?.active !== false) methods.push({ id:'qris', icon:'⬛', bg:'linear-gradient(135deg,#E44034,#C0392B)', name:'QRIS (Semua Bank)', no: 'Scan QR Code', isQris:true, qrisUrl: pc.qris?.url || '', ownerName: pc.qris?.name || '' });
+  if(pc.bank?.active === true) methods.push({ id:'bank', icon:'🏦', bg:'linear-gradient(135deg,#F39C12,#D35400)', name: pc.bank?.bankName || 'Transfer Bank', no: pc.bank?.no || '', ownerName: pc.bank?.name || '' });
+  if(!methods.length){
+    list.innerHTML = '<div style="text-align:center;padding:16px;color:#8892a4;font-size:12px">Tidak ada metode pembayaran aktif.<br>Hubungi admin.</div>';
+  } else {
+    methods.forEach(m => {
+      const btn = document.createElement('div');
+      btn.className = 'pay-method-btn';
+      btn.dataset.id = m.id;
+      btn.innerHTML = `
+        <div class="pay-method-icon" style="background:${m.bg}">${m.icon}</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">${m.name}</div>
+          <div class="pay-method-no">${m.isQris ? 'Scan QR Code' : m.no}${m.ownerName ? ' · ' + m.ownerName : ''}</div>
+        </div>
+        <div class="pay-radio"></div>`;
+      btn.onclick = () => selectPayMethod(m, btn);
+      list.appendChild(btn);
+    });
+    // Auto-select first
+    if(methods.length) selectPayMethod(methods[0], list.children[0]);
+  }
+  // After message
+  const afterEl = document.getElementById('pay-after-msg-el');
+  if(pc.afterMsg) { afterEl.textContent = '✅ ' + pc.afterMsg; afterEl.classList.add('show'); }
+  else afterEl.classList.remove('show');
+  document.getElementById('pay-overlay').classList.add('open');
+}
+
+function selectPayMethod(method, btnEl){
+  selectedPayMethod = method;
+  document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  renderPayInstruct(method);
+}
+
+function renderPayInstruct(m){
+  const box = document.getElementById('pay-instruct');
+  let html = `<div class="pay-instruct-title">📋 Cara Bayar via ${m.name}</div>`;
+  if(m.isQris){
+    html += `
+      <div class="pay-step"><div class="pay-step-num">1</div><div class="pay-step-text">Screenshot atau download QR Code di bawah ini</div></div>
+      <div class="qris-wrap">
+        <img class="qris-img" src="${m.qrisUrl}" alt="QRIS ${m.ownerName || STORE_NAME}" onerror="this.style.background='#222';this.alt='QR tidak dapat dimuat'">
+        <div class="qris-label">QRIS · ${m.ownerName || STORE_NAME}</div>
+      </div>
+      <div class="pay-step" style="margin-top:12px"><div class="pay-step-num">2</div><div class="pay-step-text">Buka aplikasi e-wallet atau m-banking apapun, pilih <strong>Bayar via QRIS</strong></div></div>
+      <div class="pay-step"><div class="pay-step-num">3</div><div class="pay-step-text">Scan QR Code di atas, masukkan nominal sesuai harga produk</div></div>
+      <div class="pay-step"><div class="pay-step-num">4</div><div class="pay-step-text">Klik tombol <strong>"Sudah Bayar"</strong> di bawah dan kirim bukti transfer ke admin WA</div></div>`;
+  } else {
+    html += `
+      <div class="pay-step"><div class="pay-step-num">1</div><div class="pay-step-text">Buka aplikasi <strong>${m.name}</strong> di HP kamu</div></div>
+      <div class="pay-step"><div class="pay-step-num">2</div><div class="pay-step-text">Pilih <strong>Transfer / Kirim Uang</strong>, masukkan nomor berikut:
+        <div class="pay-copy-box">
+          <span class="pay-copy-val" id="copy-no-${m.id}">${m.no}</span>
+          <button class="pay-copy-btn" onclick="copyPayNo('${m.no}','copy-no-${m.id}')">Salin</button>
+        </div>
+        ${m.ownerName ? `<div style="font-size:11px;color:#8892a4;margin-top:4px">a/n <strong style="color:#e2e8f0">${m.ownerName}</strong></div>` : ''}
+      </div></div>
+      <div class="pay-step"><div class="pay-step-num">3</div><div class="pay-step-text">Masukkan nominal sesuai harga produk, lalu konfirmasi pembayaran</div></div>
+      <div class="pay-step"><div class="pay-step-num">4</div><div class="pay-step-text">Klik tombol <strong>"Sudah Bayar"</strong> di bawah dan kirim bukti transfer ke admin WA</div></div>`;
+  }
+  box.innerHTML = html;
+  box.classList.add('show');
+}
+
+function copyPayNo(text, elId){
+  navigator.clipboard.writeText(text).catch(()=>{});
+  const el = document.getElementById(elId);
+  const btn = el?.nextElementSibling;
+  if(btn){ btn.textContent='✅ Disalin'; setTimeout(()=>{btn.textContent='Salin';},2000); }
+}
+
+function closePayOverlay(){ document.getElementById('pay-overlay').classList.remove('open'); }
+
+function confirmPayAndSendWA(){
+  if(!pendingOrderMsg){ showInappToast('⚠️ Data order tidak ditemukan!'); return; }
+  const m = selectedPayMethod;
+  let payInfo = '';
+  if(m){
+    if(m.isQris) payInfo = `\n\n💳 *METODE BAYAR:* QRIS`;
+    else payInfo = `\n\n💳 *METODE BAYAR:* ${m.name}\n📱 Nomor : ${m.no}${m.ownerName ? '\na/n    : ' + m.ownerName : ''}`;
+  }
+  const fullMsg = pendingOrderMsg + payInfo + '\n\n📸 *[Lampirkan bukti transfer]*';
+  window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(fullMsg)}`, '_blank');
+  closePayOverlay();
+}
+
+function submitOrder(){
+  // legacy fallback - redirect to goToPayment
+  goToPayment();
+}
+
+
+function contactAdmin(){window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent('Halo Admin UnoTech Store, saya ingin bertanya / memesan produk 🙏')}`,'_blank');}
+
+function filterTab(el,cat){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  let n=0;document.querySelectorAll('.product-card').forEach(c=>{const s=cat==='semua'||c.dataset.cat===cat;c.style.display=s?'':'none';if(s)n++;});
+  document.getElementById('prod-count').textContent=`${n} Produk`;
+}
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
+
+/* LIVE CHAT */
+const AUTO_REPLIES=[
+  {match:['halo','hai','hi','hello','hey'],reply:'Halo! Selamat datang di UnoTech Store 👋\nAda yang bisa kami bantu?'},
+  {match:['harga','berapa','price'],reply:'Harga produk kami:\n💬 Sewa Bot: mulai Rp5.000\n🖥️ Panel Bot WA: mulai Rp2.000\n📦 SC Evernight Ai: Rp75.000'},
+  {match:['bot','sewa'],reply:'Sewa Bot punya 1800+ fitur aktif! ⚡\nTersedia 1 minggu s/d Permanen. Mulai Rp5.000 🔥'},
+  {match:['panel','ptero','vps'],reply:'Panel Bot WA pakai VPS Legal berlisensi! 🖥️\nUptime 99.9% dijamin. Mulai Rp2.000/minggu'},
+  {match:['script','sc','source','evernight'],reply:'SC Evernight AI v10.5 Premium — 1800+ fitur! 📦\nFull source code + update gratis. Rp75.000.'},
+  {match:['beli','order','pesan'],reply:'Silakan pilih produk dan klik "Beli Sekarang" 🛒\nAtau chat admin langsung via WhatsApp!'},
+  {match:['wa','whatsapp','admin','cs'],reply:'Klik tombol "Lanjut Chat via WhatsApp" di bawah untuk chat langsung dengan admin! 📲'},
+  {match:['aman','terpercaya','legit'],reply:'UnoTech Store sudah terpercaya! ✅\nSemua produk bergaransi dan legal 🛡️'},
+];
+const FALLBACK=['Terima kasih pesannya! 😊 Untuk info lebih lanjut, hubungi admin via WhatsApp ya!','Kami catat! Untuk respon cepat, silakan chat admin via WhatsApp 🚀'];
+let chatOpen=false,chatHistory=[];
+
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chat-window').classList.toggle('open',chatOpen);
+  if(chatOpen){
+    document.getElementById('chat-notif').style.display='none';
+    if(!chatHistory.length)setTimeout(()=>addAdminMsg('Halo! Selamat datang di UnoTech Store 👋\nSilakan tanyakan apapun!'),500);
+    setTimeout(scrollBottom,80);
+  }
+}
+function addAdminMsg(text){const t=new Date();const time=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');chatHistory.push({from:'admin',text,time});renderChat();scrollBottom();}
+function addUserMsg(text){const t=new Date();const time=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');chatHistory.push({from:'user',text,time});renderChat();scrollBottom();}
+function renderChat(){const c=document.getElementById('chat-messages');c.innerHTML='';chatHistory.forEach(m=>{const d=document.createElement('div');d.className=`chat-msg ${m.from}`;d.innerHTML=m.text.replace(/\n/g,'<br>')+`<div class="chat-msg-time">${m.time}</div>`;c.appendChild(d);});}
+function showTyping(){const c=document.getElementById('chat-messages');const t=document.createElement('div');t.className='chat-typing';t.id='typ';t.innerHTML='<span></span><span></span><span></span>';c.appendChild(t);scrollBottom();}
+function hideTyping(){const t=document.getElementById('typ');if(t)t.remove();}
+function scrollBottom(){const c=document.getElementById('chat-messages');setTimeout(()=>{c.scrollTop=c.scrollHeight;},50);}
+function sendChatMsg(){
+  const inp=document.getElementById('chat-input');const text=inp.value.trim();if(!text)return;
+  inp.value='';inp.style.height='auto';addUserMsg(text);
+  const l=text.toLowerCase();let reply=null;
+  for(const r of AUTO_REPLIES){if(r.match.some(k=>l.includes(k))){reply=r.reply;break;}}
+  if(!reply)reply=FALLBACK[Math.floor(Math.random()*FALLBACK.length)];
+  showTyping();setTimeout(()=>{hideTyping();addAdminMsg(reply);},750+Math.random()*600);
+}
+function chatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}}
+function autoResizeChat(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,65)+'px';}
+function lanjutWhatsApp(){
+  const h=chatHistory.filter(m=>m.from==='user').map(m=>m.text).join('\n');
+  const msg=h?`Halo Admin UnoTech Store! Saya ingin bertanya:\n\n${h}`:'Halo Admin UnoTech Store, saya ingin bertanya / memesan produk 🙏';
+  window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* ====================================================
+   PERPANJANG PANEL — IN-APP
+   ==================================================== */
+function openRenewModal(){
+  renderRenewForm();
+  document.getElementById('renew-overlay').classList.add('open');
+}
+function closeRenewModal(){ document.getElementById('renew-overlay').classList.remove('open'); }
+
+function renderRenewForm(){
+  document.getElementById('renew-body').innerHTML=`
+    <div class="fg">
+      <label class="fl">Username Panel</label>
+      <input class="fi" id="rn-username" placeholder="contoh: botku123" type="text">
+      <div class="fhint">Masukkan username panel yang sudah aktif. Harus persis sama dengan saat beli.</div>
+    </div>
+    <div class="fg">
+      <label class="fl">Durasi Perpanjangan</label>
+      <select class="fi" id="rn-durasi" style="cursor:pointer">
+        <option value="1 minggu — Rp2.000">1 Minggu — Rp2.000</option>
+        <option value="2 minggu — Rp4.000">2 Minggu — Rp4.000</option>
+        <option value="1 bulan — Rp7.000">1 Bulan — Rp7.000</option>
+        <option value="2 bulan — Rp12.000">2 Bulan — Rp12.000</option>
+        <option value="Permanen — Rp50.000">Permanen — Rp50.000</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Nomor WA Kamu</label>
+      <input class="fi" id="rn-wa" placeholder="628xxxxxxxxxx" type="tel">
+    </div>
+    <button class="btn-order" style="margin-top:4px" onclick="submitRenew()">🔄 Perpanjang Sekarang</button>
+    <div class="wa-note" style="margin-top:10px">Kamu akan diarahkan ke <strong>WhatsApp Admin</strong> dengan data yang sudah terisi otomatis ✅</div>`;
+}
+
+function submitRenew(){
+  const username=document.getElementById('rn-username').value.trim();
+  const durasi=document.getElementById('rn-durasi').value;
+  const wa=document.getElementById('rn-wa').value.trim();
+  if(!username||!wa){showInappToast('⚠️ Lengkapi username dan nomor WA!');return;}
+  const msg=`🔄 *PERPANJANG PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📋 *DATA PERPANJANGAN:*\nUsername  : ${username}\nDurasi    : ${durasi}\nNomor WA  : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Via UnoTech Store_`;
+  window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* ====================================================
+   TRACK ORDER — IN-APP
+   ==================================================== */
+function openTrackModal(){
+  renderTrackForm();
+  document.getElementById('track-overlay').classList.add('open');
+}
+function closeTrackModal(){ document.getElementById('track-overlay').classList.remove('open'); }
+
+function renderTrackForm(result){
+  const body=document.getElementById('track-body');
+  body.innerHTML=`
+    <div class="fg">
+      <label class="fl">Nomor WA atau ID Transaksi</label>
+      <input class="fi" id="track-input" placeholder="0812xxxxxxxx  atau  TRX-xxxxxx" type="text" value="${result?result._query||'':''}">
+    </div>
+    <button class="btn-order" style="margin-top:0" onclick="submitTrack()">🔍 Cari Order</button>
+    ${result?renderTrackResult(result):''}
+    <div style="margin-top:16px"></div>
+    <div class="wa-note">Tidak menemukan order? <span style="color:var(--purple-light);cursor:pointer" onclick="contactAdmin()">Hubungi admin via WA</span></div>`;
+}
+
+async function submitTrack(){
+  const q=document.getElementById('track-input').value.trim();
+  if(!q){showInappToast('⚠️ Masukkan nomor WA atau ID transaksi!');return;}
+  document.getElementById('track-body').innerHTML=`<div style="text-align:center;padding:24px"><div style="font-size:22px;margin-bottom:8px">🔍</div><div style="font-size:12px;color:var(--muted)">Mencari order...</div></div>`;
+  // Try to fetch from DB
+  try {
+    const data=await dbGetStore('store-orders');
+    const orders=data||[];
+    // Search by WA number or transaction ID (case-insensitive)
+    const found=orders.filter(o=>
+      (o.wa&&o.wa.replace(/\D/g,'').includes(q.replace(/\D/g,'')))||
+      (o.id&&o.id.toLowerCase().includes(q.toLowerCase()))
+    );
+    if(found.length){
+      renderTrackForm({_query:q,found});
+    } else {
+      renderTrackForm({_query:q,found:[],notFound:true});
+    }
+  } catch {
+    renderTrackForm({_query:q,found:[],error:true});
+  }
+}
+
+function renderTrackResult(result){
+  if(result.error) return `<div class="result-card"><div class="inapp-empty">❌ Gagal mengambil data. Hubungi admin via WA.</div></div>`;
+  if(result.notFound||!result.found||!result.found.length) return `
+    <div class="result-card">
+      <div style="text-align:center;padding:16px 0">
+        <div style="font-size:26px;margin-bottom:8px">📭</div>
+        <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">Order tidak ditemukan</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.6">Pastikan nomor WA atau ID transaksi benar.<br>Atau hubungi admin untuk bantuan.</div>
+        <button class="btn-order" style="margin-top:14px;width:auto;padding:10px 20px;font-size:12px" onclick="contactAdmin()">💬 Hubungi Admin WA</button>
+      </div>
+    </div>`;
+  return result.found.map(o=>{
+    const statusClass=o.status==='aktif'?'ok':o.status==='expired'?'expired':'warn';
+    return `<div class="result-card">
+      <div class="result-row"><span class="result-label">ID Order</span><span class="result-val">${o.id||'-'}</span></div>
+      <div class="result-row"><span class="result-label">Produk</span><span class="result-val">${o.produk||'-'}</span></div>
+      <div class="result-row"><span class="result-label">Durasi</span><span class="result-val">${o.durasi||'-'}</span></div>
+      <div class="result-row"><span class="result-label">Tanggal</span><span class="result-val">${o.tanggal||'-'}</span></div>
+      <div class="result-row"><span class="result-label">Aktif s/d</span><span class="result-val">${o.expiry||'-'}</span></div>
+      <div class="result-row"><span class="result-label">Status</span><span class="result-val ${statusClass}">${o.status||'-'}</span></div>
+    </div>`;
+  }).join('');
+}
+
+/* ====================================================
+   ULASAN — IN-APP
+   ==================================================== */
+let ulasanData=[];
+let ulasanPage='list'; // 'list' | 'form'
+let selectedStars=5;
+const DB_KEY_ULASAN='store-ulasan';
+
+function openUlasanModal(){
+  ulasanPage='list';
+  document.getElementById('ulasan-overlay').classList.add('open');
+  loadUlasan();
+}
+function closeUlasanModal(){ document.getElementById('ulasan-overlay').classList.remove('open'); }
+
+async function loadUlasan(){
+  document.getElementById('ulasan-body').innerHTML=`<div style="text-align:center;padding:24px"><div style="font-size:22px;margin-bottom:8px">⭐</div><div style="font-size:12px;color:var(--muted)">Memuat ulasan...</div></div>`;
+  const data=await dbGetStore(DB_KEY_ULASAN);
+  ulasanData=data||[];
+  renderUlasanList();
+}
+
+function renderUlasanList(){
+  const total=ulasanData.length;
+  const avg=total?Math.round((ulasanData.reduce((s,u)=>s+(u.stars||5),0)/total)*10)/10:5.0;
+  const starsHtml='★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg));
+  const body=document.getElementById('ulasan-body');
+  body.innerHTML=`
+    <div class="ulasan-stat">
+      <div style="text-align:center">
+        <div class="ulasan-score">${avg.toFixed(1)}</div>
+        <div class="ulasan-stars-big">${starsHtml}</div>
+        <div class="ulasan-total">${total} ulasan</div>
+      </div>
+      <div style="flex:1">
+        ${[5,4,3,2,1].map(s=>{
+          const cnt=ulasanData.filter(u=>(u.stars||5)===s).length;
+          const pct=total?Math.round(cnt/total*100):0;
+          return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+            <span style="font-size:10px;color:var(--muted);width:12px">${s}</span>
+            <div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--gold);border-radius:3px"></div></div>
+            <span style="font-size:10px;color:var(--muted);width:14px">${cnt}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <button class="btn-tulis" onclick="showUlasanForm()">✏️ Tulis Ulasan</button>
+    <div class="inapp-divider">Ulasan Pembeli</div>
+    ${total===0?`<div class="inapp-empty">📭 Belum ada ulasan. Jadilah yang pertama!</div>`:''}
+    ${ulasanData.slice().reverse().map((u,i)=>`
+      <div class="ulasan-card">
+        <div class="ulasan-card-head">
+          <div class="ulasan-av">${(u.nama||'A').charAt(0).toUpperCase()}</div>
+          <div class="ulasan-meta">
+            <div class="ulasan-nm">${u.nama||'Anonim'} <span class="ulasan-verified">✓ Verified</span></div>
+            <div class="ulasan-time">${u.waktu||'Baru saja'}</div>
+          </div>
+          <div class="ulasan-stars">${'★'.repeat(u.stars||5)}</div>
+        </div>
+        <div class="ulasan-text">${u.teks||''}</div>
+        <button class="ulasan-like" onclick="likeUlasan(${ulasanData.length-1-i})">👍 Membantu ${u.likes||0}</button>
+      </div>`).join('')}`;
+}
+
+function showUlasanForm(){
+  selectedStars=5;
+  const body=document.getElementById('ulasan-body');
+  body.innerHTML=`
+    <button style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px" onclick="renderUlasanList()">← Kembali</button>
+    <div class="fg">
+      <label class="fl">Nama Kamu</label>
+      <input class="fi" id="ul-nama" placeholder="Nama kamu..." maxlength="30">
+    </div>
+    <div class="fg">
+      <label class="fl">Rating</label>
+      <div class="star-picker" id="star-picker">
+        <span onclick="setStars(1)">⭐</span>
+        <span onclick="setStars(2)">⭐</span>
+        <span onclick="setStars(3)">⭐</span>
+        <span onclick="setStars(4)">⭐</span>
+        <span onclick="setStars(5)" class="lit">⭐</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Ulasan</label>
+      <textarea class="fta" id="ul-teks" placeholder="Ceritakan pengalamanmu..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;outline:none;resize:vertical;min-height:80px;line-height:1.5"></textarea>
+    </div>
+    <button class="btn-order" onclick="submitUlasan()">📨 Kirim Ulasan</button>`;
+  updateStarPicker(5);
+}
+
+function setStars(n){ selectedStars=n; updateStarPicker(n); }
+function updateStarPicker(n){
+  document.querySelectorAll('#star-picker span').forEach((el,i)=>{
+    el.classList.toggle('lit',i<n);
+  });
+}
+
+async function submitUlasan(){
+  const nama=(document.getElementById('ul-nama').value||'').trim();
+  const teks=(document.getElementById('ul-teks').value||'').trim();
+  if(!nama||!teks){showInappToast('⚠️ Nama dan ulasan wajib diisi!');return;}
+  const now=new Date();
+  const waktu=`${now.getDate()} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][now.getMonth()]} ${now.getFullYear()}`;
+  const newU={nama,teks,stars:selectedStars,waktu,likes:0};
+  ulasanData.push(newU);
+  // Save to DB
+  const saved=await dbSetStore(DB_KEY_ULASAN,ulasanData);
+  if(saved){showInappToast('✅ Ulasan berhasil dikirim!');}
+  else{showInappToast('⚠️ Gagal menyimpan, coba lagi.');}
+  setTimeout(()=>{renderUlasanList();},400);
+}
+
+async function likeUlasan(idx){
+  if(idx<0||idx>=ulasanData.length)return;
+  ulasanData[idx].likes=(ulasanData[idx].likes||0)+1;
+  await dbSetStore(DB_KEY_ULASAN,ulasanData);
+  renderUlasanList();
+}
+
+/* Toast for in-app modals */
+function showInappToast(msg){
+  let t=document.getElementById('inapp-toast');
+  if(!t){t=document.createElement('div');t.id='inapp-toast';t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text);z-index:9000;transition:all .3s;opacity:0;white-space:nowrap;pointer-events:none';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(10px)';},2800);
+}
+
+/* APPLY BG FROM ADMIN — Firebase */
+const MESH_CSS={purple:'radial-gradient(ellipse at 20% 20%,rgba(124,58,237,.6) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(217,70,239,.5) 0%,transparent 50%),linear-gradient(135deg,#05050f,#0d0520)',cyan:'radial-gradient(ellipse at 20% 20%,rgba(0,229,255,.4) 0%,transparent 50%),linear-gradient(135deg,#020d12,#061220)',fire:'radial-gradient(ellipse at 20% 20%,rgba(239,68,68,.5) 0%,transparent 50%),linear-gradient(135deg,#0f0505,#1a0a05)',ocean:'radial-gradient(ellipse at 20% 20%,rgba(6,182,212,.5) 0%,transparent 50%),linear-gradient(135deg,#020d10,#050d1a)'};
+async function applyBg(){
+  try{
+    const cfg = await dbGetStore('store-tampilan');
+    if(!cfg?.background)return;
+    const bg=cfg.background;
+    if(bg.type==='gradient'&&bg.value)document.body.style.background=bg.value;
+    else if(bg.type==='image'&&bg.url){const op=(bg.opacity||60)/100;document.body.style.backgroundImage=`linear-gradient(rgba(0,0,0,${op}),rgba(0,0,0,${op})),url('${bg.url}')`;document.body.style.backgroundSize='cover';document.body.style.backgroundAttachment='fixed';}
+    else if(bg.type==='mesh')document.body.style.background=MESH_CSS[bg.theme||'purple'];
+  }catch(e){}
+}
+// Pastikan DOM sudah siap sebelum menjalankan semua fungsi init
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',initStore);
+} else {
+  initStore();
+}
+
+function initStore(){
+  // Render produk default dulu agar halaman tidak blank saat API lambat/gagal
+  renderProductGrid();
+  buildHeroSlides();
+  // Lalu load data dari server (akan override jika berhasil)
+  applyBg();
+  loadStoreData();
+}
+</script>
+</body>
+</html>
