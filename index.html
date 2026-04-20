@@ -345,9 +345,12 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .pay-copy-box{background:#0a0a14;border:1px solid rgba(124,58,237,.22);border-radius:8px;padding:9px 12px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .pay-copy-val{font-family:monospace;font-size:14px;color:#a855f7;font-weight:600;}
 .pay-copy-btn{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.28);border-radius:6px;color:#a855f7;font-size:10px;font-weight:600;padding:5px 10px;cursor:pointer;white-space:nowrap;transition:all .2s;}
-.qris-wrap{display:flex;flex-direction:column;align-items:center;margin-top:10px;}
-.qris-img{width:160px;height:160px;border-radius:12px;object-fit:contain;background:#fff;padding:6px;border:2px solid rgba(124,58,237,.28);}
+.qris-wrap{display:flex;flex-direction:column;align-items:center;margin-top:12px;width:100%;}
+.qris-img{width:100%;max-width:260px;height:260px;border-radius:14px;object-fit:contain;background:#fff;padding:8px;border:2px solid rgba(124,58,237,.4);cursor:pointer;transition:transform .2s;}
 .qris-label{font-size:10px;color:#8892a4;margin-top:7px;text-align:center;}
+.qris-download-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:9px 20px;border-radius:9px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);color:#a855f7;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s;width:100%;max-width:260px;}
+.qris-download-btn:hover{background:rgba(124,58,237,.28);}
+.qris-hint{font-size:10px;color:#8892a4;margin-top:6px;text-align:center;}
 .btn-pay-confirm{width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#d946ef);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;box-shadow:0 4px 18px rgba(124,58,237,.3);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;}
 .btn-pay-confirm:hover{transform:translateY(-1px);}
 .pay-after-msg{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:8px;padding:9px 11px;font-size:11px;color:#8892a4;line-height:1.6;margin-top:11px;display:none;}
@@ -1170,7 +1173,12 @@ function renderPayInstruct(m){
   const box=document.getElementById('pay-instruct');let html=`<div class="pay-instruct-title">📋 Cara Bayar via ${m.name}</div>`;
   if(m.isQris){
     html+=`<div class="pay-step"><div class="pay-step-num">1</div><div class="pay-step-text">Screenshot atau download QR Code di bawah ini</div></div>
-    <div class="qris-wrap"><img class="qris-img" src="${m.qrisUrl}" alt="QRIS" onerror="this.style.background='#222'"><div class="qris-label">QRIS · ${m.ownerName||STORE_NAME}</div></div>
+    <div class="qris-wrap">
+      <img class="qris-img" id="qris-img-el" src="${m.qrisUrl}" alt="QRIS" onerror="this.style.background='#333'" onclick="openQrisFullscreen('${m.qrisUrl}')">
+      <div class="qris-label">QRIS · ${m.ownerName||STORE_NAME}</div>
+      <div class="qris-hint">💡 Ketuk gambar untuk perbesar · Atau download untuk scan</div>
+      <button class="qris-download-btn" onclick="downloadQris('${m.qrisUrl}')">⬇️ Download QRIS untuk Scan</button>
+    </div>
     <div class="pay-step" style="margin-top:12px"><div class="pay-step-num">2</div><div class="pay-step-text">Buka aplikasi e-wallet/m-banking, pilih <strong>Bayar via QRIS</strong></div></div>
     <div class="pay-step"><div class="pay-step-num">3</div><div class="pay-step-text">Scan QR Code, masukkan nominal sesuai harga produk</div></div>
     <div class="pay-step"><div class="pay-step-num">4</div><div class="pay-step-text">Klik <strong>"Sudah Bayar"</strong> lalu kirim bukti ke admin WA</div></div>`;
@@ -1188,6 +1196,29 @@ function copyPayNo(text,elId){
   if(btn){btn.textContent='✅ Disalin';setTimeout(()=>{btn.textContent='Salin';},2000);}
 }
 function closePayOverlay(){document.getElementById('pay-overlay').classList.remove('open');}
+
+function downloadQris(url){
+  if(!url){showToast('⚠️ URL QRIS tidak ditemukan!');return;}
+  const a=document.createElement('a');
+  a.href=url;a.download='QRIS-UnoTech.jpg';a.target='_blank';
+  // Try direct download, fallback to open in new tab
+  fetch(url).then(r=>r.blob()).then(blob=>{
+    const blobUrl=URL.createObjectURL(blob);
+    a.href=blobUrl;document.body.appendChild(a);a.click();
+    document.body.removeChild(a);URL.revokeObjectURL(blobUrl);
+    showToast('✅ QRIS berhasil didownload!');
+  }).catch(()=>{window.open(url,'_blank');showToast('💡 QRIS dibuka di tab baru, tekan & tahan untuk simpan.');});
+}
+
+function openQrisFullscreen(url){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;';
+  ov.innerHTML=`<img src="${url}" style="width:min(90vw,380px);height:min(90vw,380px);border-radius:16px;object-fit:contain;background:#fff;padding:10px;box-shadow:0 0 40px rgba(124,58,237,.4)">
+    <div style="font-size:12px;color:#8892a4">Ketuk di luar untuk tutup</div>
+    <button onclick="downloadQris('${url}')" style="padding:10px 24px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#d946ef);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:Sora,sans-serif">⬇️ Download QRIS</button>`;
+  ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
+  document.body.appendChild(ov);
+}
 function confirmPayAndSendWA(){
   if(!pendingOrderMsg){showToast('⚠️ Data order tidak ditemukan!');return;}
   const m=selectedPayMethod;let payInfo='';
