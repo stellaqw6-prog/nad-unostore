@@ -21,6 +21,7 @@
   --border2: rgba(255,255,255,0.06);
   --gold: #f59e0b;
   --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.12);
   --red: #ef4444;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -73,7 +74,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .tab.active{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(124,58,237,.25);}
 
 /* PRODUCTS */
-.products-section{padding:11px 13px 110px;}
+.products-section{padding:11px 13px 120px;}
 .section-label{font-size:10px;font-weight:500;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
 .products-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .product-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .22s;position:relative;}
@@ -230,11 +231,11 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .btn-wa{padding:10px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);color:var(--purple-light);font-size:12px;font-weight:500;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;}
 
 /* LIVE CHAT */
-#chat-fab{position:fixed;bottom:20px;right:15px;z-index:400;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 4px 18px rgba(124,58,237,.5);transition:transform .2s;animation:fabPulse 3s ease-in-out infinite;}
+#chat-fab{position:fixed;bottom:74px;right:15px;z-index:550;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 20px rgba(124,58,237,.6);transition:transform .2s;animation:fabPulse 3s ease-in-out infinite;color:#fff;}
 #chat-fab:hover{transform:scale(1.08);}
 .chat-badge{position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:#ef4444;border-radius:50%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
 @keyframes fabPulse{0%,100%{box-shadow:0 4px 18px rgba(124,58,237,.5)}50%{box-shadow:0 4px 28px rgba(124,58,237,.8),0 0 0 5px rgba(124,58,237,.07)}}
-#chat-window{position:fixed;bottom:80px;right:12px;z-index:401;width:calc(100vw - 24px);max-width:330px;background:var(--bg2);border:1px solid var(--border);border-radius:15px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 14px 44px rgba(0,0,0,.7);animation:chatIn .22s ease;}
+#chat-window{position:fixed;bottom:132px;right:12px;z-index:551;width:calc(100vw - 24px);max-width:330px;background:var(--bg2);border:1px solid var(--border);border-radius:15px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 14px 44px rgba(0,0,0,.7);animation:chatIn .22s ease;}
 #chat-window.open{display:flex;}
 @keyframes chatIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
 .chat-head{background:linear-gradient(135deg,var(--purple),var(--accent));padding:11px 13px;display:flex;align-items:center;justify-content:space-between;}
@@ -355,9 +356,152 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .btn-pay-confirm:hover{transform:translateY(-1px);}
 .pay-after-msg{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:8px;padding:9px 11px;font-size:11px;color:#8892a4;line-height:1.6;margin-top:11px;display:none;}
 .pay-after-msg.show{display:block;color:#22c55e;}
+/* BUKTI PEMBAYARAN */
+.pay-proof-section{margin-top:14px;margin-bottom:12px;}
+.pay-proof-label{font-size:12px;font-weight:600;color:#fff;margin-bottom:3px;}
+.pay-proof-sub{font-size:10px;color:var(--muted);margin-bottom:9px;line-height:1.5;}
+.pay-proof-dropzone{width:100%;border:2px dashed rgba(124,58,237,.35);border-radius:12px;background:var(--bg3);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;min-height:80px;display:flex;align-items:center;justify-content:center;}
+.pay-proof-dropzone:hover{border-color:var(--purple);background:var(--purple-glow);}
+.pay-proof-dropzone.has-img{border-style:solid;border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.04);}
+.pay-proof-dz-content{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 12px;}
+.pay-proof-dz-icon{font-size:24px;}
+.pay-proof-dz-text{font-size:12px;font-weight:500;color:var(--text);}
+.pay-proof-dz-hint{font-size:10px;color:var(--muted);}
+.pay-proof-preview{position:relative;width:100%;padding:8px;}
+.pay-proof-remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(239,68,68,.85);border:none;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;z-index:2;}
+.pay-proof-uploading{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-top:7px;padding:7px 10px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);}
+.pay-proof-success{font-size:11px;color:var(--green);margin-top:7px;padding:7px 10px;background:var(--green-dim);border-radius:8px;border:1px solid rgba(34,197,94,.25);}
+.pay-proof-err{font-size:11px;color:var(--red);margin-top:7px;padding:7px 10px;background:rgba(239,68,68,.08);border-radius:8px;border:1px solid rgba(239,68,68,.22);}
+.btn-pay-confirm:disabled{opacity:.5;cursor:not-allowed;transform:none !important;}
 
 /* TOAST */
-#toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 16px;font-size:12px;color:var(--text);z-index:9000;transition:all .3s;opacity:0;white-space:nowrap;pointer-events:none;}
+#toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 16px;font-size:12px;color:var(--text);z-index:9000;transition:all .3s;opacity:0;white-space:nowrap;pointer-events:none;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;display:flex;align-items:center;background:rgba(7,7,15,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 env(safe-area-inset-bottom,8px);}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;transition:all .2s;position:relative;}
+.bn-icon{font-size:20px;line-height:1;}
+.bn-label{font-size:9px;font-weight:500;color:var(--muted);letter-spacing:.3px;transition:color .2s;}
+.bn-item.active .bn-label{color:var(--purple-light);}
+.bn-item.active .bn-icon{filter:drop-shadow(0 0 6px rgba(168,85,247,.7));}
+.bn-badge{position:absolute;top:0;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:8px;font-weight:700;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+/* VIDEO DOWNLOADER */
+.vdl-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);display:none;align-items:flex-end;}
+.vdl-overlay.open{display:flex;}
+.vdl-sheet{width:100%;max-height:92vh;background:var(--bg2);border-radius:20px 20px 0 0;border-top:2px solid var(--purple);overflow-y:auto;animation:slideUp .28s ease;padding-bottom:20px;}
+.vdl-handle{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0;}
+.vdl-header{padding:12px 15px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.vdl-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff;display:flex;align-items:center;gap:8px;}
+.vdl-body{padding:14px 15px;}
+.vdl-platform-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.vdl-tab{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg3);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.vdl-tab.active{border-color:var(--purple);background:var(--purple-glow);color:#fff;}
+.vdl-tab .vdl-tab-icon{font-size:18px;}
+.vdl-input-row{display:flex;gap:8px;margin-bottom:12px;}
+.vdl-input{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-family:'Sora',sans-serif;font-size:12px;outline:none;transition:border-color .2s;}
+.vdl-input:focus{border-color:var(--purple);}
+.vdl-btn{padding:11px 16px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:transform .15s;}
+.vdl-btn:active{transform:scale(.97);}
+.vdl-result{background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:none;}
+.vdl-result.show{display:block;}
+.vdl-preview{width:100%;aspect-ratio:16/9;background:var(--bg4);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.vdl-preview img{width:100%;height:100%;object-fit:cover;}
+.vdl-preview-icon{font-size:40px;opacity:.4;}
+.vdl-info{padding:10px 13px;}
+.vdl-info-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px;line-height:1.4;}
+.vdl-info-meta{font-size:10px;color:var(--muted);}
+.vdl-dl-btns{padding:0 13px 13px;display:flex;flex-direction:column;gap:7px;}
+.vdl-dl-btn{width:100%;padding:10px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg4);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:9px;font-family:'Sora',sans-serif;transition:all .2s;}
+.vdl-dl-btn:hover{border-color:var(--purple);background:var(--purple-glow);}
+.vdl-dl-btn .dl-quality{font-size:10px;color:var(--muted);margin-left:auto;}
+.vdl-loading{text-align:center;padding:20px;display:none;}
+.vdl-loading.show{display:block;}
+.vdl-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 13px;font-size:11px;color:var(--red);margin-top:8px;display:none;}
+.vdl-err.show{display:block;}
+.vdl-history{margin-top:14px;}
+.vdl-history-title{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.vdl-hist-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.vdl-hist-icon{width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.vdl-hist-info{flex:1;min-width:0;}
+.vdl-hist-title{font-size:11px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vdl-hist-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+.vdl-hist-dl{padding:5px 10px;border-radius:7px;background:var(--purple-glow);border:1px solid var(--purple);color:var(--purple-light);font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* GLOBAL CHAT */
+.gchat-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);display:none;align-items:flex-end;}
+.gchat-overlay.open{display:flex;}
+.gchat-sheet{width:100%;height:92vh;background:var(--bg2);border-radius:20px 20px 0 0;border-top:2px solid var(--accent);display:flex;flex-direction:column;animation:slideUp .28s ease;}
+.gchat-handle{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0;flex-shrink:0;}
+.gchat-header{padding:10px 15px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.gchat-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#fff;display:flex;align-items:center;gap:7px;}
+.gchat-online-badge{font-size:10px;font-weight:500;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);padding:2px 7px;border-radius:20px;}
+.gchat-messages{flex:1;overflow-y:auto;padding:12px 13px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
+.gchat-messages::-webkit-scrollbar{width:3px;}
+.gchat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.gchat-msg{max-width:82%;animation:fadeInUp .2s ease;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.gchat-msg.me{align-self:flex-end;}
+.gchat-msg.other{align-self:flex-start;}
+.gchat-msg-name{font-size:9px;font-weight:600;color:var(--purple-light);margin-bottom:3px;}
+.gchat-msg.me .gchat-msg-name{display:none;}
+.gchat-bubble{padding:8px 11px;border-radius:12px;font-size:12px;line-height:1.5;color:var(--text);word-break:break-word;}
+.gchat-msg.me .gchat-bubble{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-radius:12px 12px 4px 12px;}
+.gchat-msg.other .gchat-bubble{background:var(--bg3);border:1px solid var(--border);border-radius:12px 12px 12px 4px;}
+.gchat-msg-time{font-size:9px;color:var(--muted);margin-top:2px;text-align:right;}
+.gchat-msg.other .gchat-msg-time{text-align:left;}
+.gchat-system{text-align:center;font-size:10px;color:var(--muted);padding:4px 0;}
+.gchat-input-row{flex-shrink:0;display:flex;gap:8px;padding:10px 13px;border-top:1px solid var(--border);background:var(--bg2);}
+.gchat-input{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;padding:9px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:12px;outline:none;resize:none;max-height:80px;transition:border-color .2s;}
+.gchat-input:focus{border-color:var(--purple);}
+.gchat-send{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s;}
+.gchat-send:active{transform:scale(.9);}
+.gchat-empty{text-align:center;padding:32px 14px;color:var(--muted);}
+.gchat-empty .ei{font-size:32px;margin-bottom:8px;}
+.gchat-nick-modal{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;}
+.gchat-nick-modal.open{display:flex;}
+.gchat-nick-box{background:var(--bg2);border:1px solid var(--purple);border-radius:18px;padding:24px 20px;width:90%;max-width:340px;text-align:center;}
+.gchat-nick-box h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:6px;}
+.gchat-nick-box p{font-size:12px;color:var(--muted);margin-bottom:14px;}
+
+/* SCRIPT DOWNLOAD MODAL */
+.dl-script-overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.93);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px;}
+.dl-script-overlay.open{display:flex;}
+.dl-script-box{background:var(--bg2);border:1px solid rgba(124,58,237,.4);border-radius:22px;padding:28px 22px 24px;width:100%;max-width:360px;text-align:center;position:relative;box-shadow:0 0 60px rgba(124,58,237,.2);}
+.dl-script-box::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,transparent,var(--purple),var(--accent),transparent);border-radius:0 0 4px 4px;}
+.dl-script-icon{font-size:52px;margin-bottom:14px;animation:dlBounce 1s ease-out;}
+@keyframes dlBounce{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.dl-script-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:6px;}
+.dl-script-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.dl-script-info{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:18px;text-align:left;}
+.dl-script-info-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-bottom:6px;}
+.dl-script-info-row:last-child{margin-bottom:0;}
+.dl-script-info-row span:first-child{font-size:14px;flex-shrink:0;}
+.dl-script-info-row strong{color:var(--text);}
+.btn-dl-mediafire{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;transition:all .2s;box-shadow:0 4px 20px rgba(59,130,246,.35);}
+.btn-dl-mediafire:hover{transform:translateY(-2px);box-shadow:0 6px 26px rgba(59,130,246,.5);}
+.btn-dl-mediafire:active{transform:translateY(0);}
+.btn-dl-close{width:100%;padding:10px;border-radius:10px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Sora',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;}
+.btn-dl-close:hover{border-color:var(--purple);color:var(--text);}
+.dl-script-note{font-size:10px;color:var(--muted);margin-top:12px;line-height:1.6;}
+
+/* KODE VERIFIKASI */
+.dl-code-wrap{margin-bottom:16px;}
+.dl-code-label{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5;}
+.dl-code-input-row{display:flex;gap:8px;}
+.dl-code-input{flex:1;background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Space Mono',monospace;font-size:16px;letter-spacing:4px;text-align:center;outline:none;transition:border-color .2s;text-transform:uppercase;}
+.dl-code-input:focus{border-color:var(--purple);}
+.dl-code-input.valid{border-color:var(--green);}
+.dl-code-input.invalid{border-color:var(--red);}
+.btn-verify-code{padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;transition:all .2s;}
+.btn-verify-code:active{transform:scale(.97);}
+.dl-code-err{font-size:11px;color:var(--red);margin-top:7px;display:none;}
+.dl-code-err.show{display:block;}
+.dl-verified-banner{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:10px 13px;font-size:12px;color:#4ade80;display:none;align-items:center;gap:8px;margin-bottom:14px;text-align:left;}
+.dl-verified-banner.show{display:flex;}
+/* Admin panel — generate kode */
+.code-gen-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
+.code-gen-result{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--cyan);letter-spacing:6px;text-align:center;padding:12px 0;word-break:break-all;}
 </style>
 </head>
 <body>
@@ -500,7 +644,34 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
       <div class="pay-methods" id="pay-methods-list"></div>
       <div class="pay-instruct" id="pay-instruct"></div>
       <div class="pay-after-msg" id="pay-after-msg-el"></div>
-      <button class="btn-pay-confirm" onclick="confirmPayAndSendWA()">📲 Sudah Bayar — Kirim ke Admin WA</button>
+
+      <!-- UPLOAD BUKTI PEMBAYARAN -->
+      <div class="pay-proof-section" id="pay-proof-section">
+        <div class="pay-proof-label">📸 Upload Bukti Pembayaran <span style="color:var(--red)">*</span></div>
+        <div class="pay-proof-sub">Foto bukti transfer/screenshot wajib dilampirkan sebelum konfirmasi</div>
+        <div class="pay-proof-dropzone" id="pay-proof-dropzone" onclick="document.getElementById('pay-proof-input').click()">
+          <div class="pay-proof-dz-content" id="pay-proof-dz-content">
+            <div class="pay-proof-dz-icon">📂</div>
+            <div class="pay-proof-dz-text">Ketuk untuk pilih foto</div>
+            <div class="pay-proof-dz-hint">JPG, PNG, JPEG — maks. 10MB</div>
+          </div>
+          <div class="pay-proof-preview" id="pay-proof-preview" style="display:none">
+            <img id="pay-proof-img" src="" alt="Bukti Pembayaran" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;">
+            <button class="pay-proof-remove" onclick="event.stopPropagation();removeProofImg()" title="Hapus foto">✕</button>
+          </div>
+        </div>
+        <input type="file" id="pay-proof-input" accept="image/*" style="display:none" onchange="handleProofFileSelect(event)">
+        <div class="pay-proof-uploading" id="pay-proof-uploading" style="display:none">
+          <div class="spinner" style="width:18px;height:18px;border-width:2px"></div>
+          <span>Mengupload foto...</span>
+        </div>
+        <div class="pay-proof-success" id="pay-proof-success" style="display:none">
+          ✅ Foto berhasil diupload
+        </div>
+        <div class="pay-proof-err" id="pay-proof-err" style="display:none"></div>
+      </div>
+
+      <button class="btn-pay-confirm" id="btn-pay-confirm" onclick="confirmPayAndSendWA()">📲 Konfirmasi Pesanan — Sudah Bayar</button>
     </div>
   </div>
 </div>
@@ -625,6 +796,7 @@ let PAYMENT_CFG={
 };
 let selectedPayMethod=null;
 let pendingOrderMsg='';
+let pendingIsScript=false;
 let activeIdx=null,activeVar=0;
 let selectedStars=5;
 let heroSlides=null;
@@ -1133,7 +1305,9 @@ function goToPayment(){
     if(!wa){showToast('⚠️ Lengkapi nomor WA!');return;}
     msg=`🛒 *ORDER ${p.title.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : ${p.title}\n⏱️ Varian  : ${v.name}\n💰 Harga   : ${v.price}\nNomor WA  : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via ${STORE_NAME}_`;
   }
-  pendingOrderMsg=msg;closeOrder();setTimeout(()=>openPayOverlay(p.title,v.name,v.price),250);
+  pendingOrderMsg=msg;
+  pendingIsScript=(p.id==='script'||p.cat==='source-code');
+  closeOrder();setTimeout(()=>openPayOverlay(p.title,v.name,v.price),250);
 }
 
 /* =====================================================
@@ -1143,6 +1317,15 @@ function openPayOverlay(prodTitle,varName,price){
   selectedPayMethod=null;
   document.getElementById('pay-sum-text').textContent=`${prodTitle} — ${varName}`;
   document.getElementById('pay-sum-price').textContent=price;
+  // Ubah teks tombol konfirmasi sesuai jenis produk
+  const confirmBtn=document.getElementById('btn-pay-confirm');
+  if(pendingIsScript){
+    confirmBtn.innerHTML='📲 Sudah Bayar — Lanjut Verifikasi & Download';
+    confirmBtn.style.background='linear-gradient(135deg,#1e40af,#7c3aed)';
+  }else{
+    confirmBtn.innerHTML='📲 Sudah Bayar — Kirim ke Admin WA';
+    confirmBtn.style.background='linear-gradient(135deg,#7c3aed,#d946ef)';
+  }
   const list=document.getElementById('pay-methods-list');list.innerHTML='';
   const methods=[];const pc=PAYMENT_CFG;
   if(pc.dana?.active!==false)methods.push({id:'dana',icon:'💙',bg:'linear-gradient(135deg,#118EEA,#0066CC)',name:'DANA',no:pc.dana?.no||'628132988940',ownerName:pc.dana?.name||''});
@@ -1195,7 +1378,17 @@ function copyPayNo(text,elId){
   const btn=document.getElementById(elId)?.nextElementSibling;
   if(btn){btn.textContent='✅ Disalin';setTimeout(()=>{btn.textContent='Salin';},2000);}
 }
-function closePayOverlay(){document.getElementById('pay-overlay').classList.remove('open');}
+function closePayOverlay(){
+  document.getElementById('pay-overlay').classList.remove('open');
+  // Reset bukti pembayaran
+  proofImgFile=null;proofImgUrl='';
+  document.getElementById('pay-proof-input').value='';
+  document.getElementById('pay-proof-img').src='';
+  document.getElementById('pay-proof-dz-content').style.display='flex';
+  document.getElementById('pay-proof-preview').style.display='none';
+  document.getElementById('pay-proof-dropzone').classList.remove('has-img');
+  hideProofStatus();
+}
 
 function downloadQris(url){
   if(!url){showToast('⚠️ URL QRIS tidak ditemukan!');return;}
@@ -1219,13 +1412,131 @@ function openQrisFullscreen(url){
   ov.onclick=e=>{if(e.target===ov)document.body.removeChild(ov);};
   document.body.appendChild(ov);
 }
-function confirmPayAndSendWA(){
+/* =====================================================
+   IMGBB UPLOAD BUKTI PEMBAYARAN
+   ===================================================== */
+const IMGBB_API_KEY='6faadb795960be644410c4211ebb0558';
+let proofImgFile=null;
+let proofImgUrl='';
+
+function handleProofFileSelect(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){showProofErr('⚠️ Hanya file gambar yang diizinkan!');return;}
+  if(file.size>10*1024*1024){showProofErr('⚠️ Ukuran file maksimal 10MB!');return;}
+  proofImgFile=file;proofImgUrl='';
+  // Show preview
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    document.getElementById('pay-proof-img').src=ev.target.result;
+    document.getElementById('pay-proof-dz-content').style.display='none';
+    document.getElementById('pay-proof-preview').style.display='block';
+    document.getElementById('pay-proof-dropzone').classList.add('has-img');
+    hideProofStatus();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeProofImg(){
+  proofImgFile=null;proofImgUrl='';
+  document.getElementById('pay-proof-input').value='';
+  document.getElementById('pay-proof-img').src='';
+  document.getElementById('pay-proof-dz-content').style.display='flex';
+  document.getElementById('pay-proof-preview').style.display='none';
+  document.getElementById('pay-proof-dropzone').classList.remove('has-img');
+  hideProofStatus();
+}
+
+function hideProofStatus(){
+  document.getElementById('pay-proof-uploading').style.display='none';
+  document.getElementById('pay-proof-success').style.display='none';
+  document.getElementById('pay-proof-err').style.display='none';
+}
+
+function showProofErr(msg){
+  hideProofStatus();
+  const el=document.getElementById('pay-proof-err');
+  el.textContent=msg;el.style.display='block';
+}
+
+async function uploadProofToImgbb(file){
+  const formData=new FormData();
+  formData.append('image',file);
+  const res=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,{method:'POST',body:formData});
+  const data=await res.json();
+  if(!data.success)throw new Error(data?.error?.message||'Upload gagal');
+  return data.data.url;
+}
+
+async function confirmPayAndSendWA(){
   if(!pendingOrderMsg){showToast('⚠️ Data order tidak ditemukan!');return;}
+
+  // Validasi: harus ada foto bukti pembayaran
+  if(!proofImgFile&&!proofImgUrl){
+    showProofErr('⚠️ Wajib upload foto bukti pembayaran terlebih dahulu!');
+    document.getElementById('pay-proof-section').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  const btn=document.getElementById('btn-pay-confirm');
+  btn.disabled=true;
+  btn.innerHTML='⏳ Memproses...';
+
+  // Upload ke imgbb jika belum diupload
+  if(proofImgFile&&!proofImgUrl){
+    hideProofStatus();
+    document.getElementById('pay-proof-uploading').style.display='flex';
+    try{
+      proofImgUrl=await uploadProofToImgbb(proofImgFile);
+      document.getElementById('pay-proof-uploading').style.display='none';
+      document.getElementById('pay-proof-success').style.display='block';
+    }catch(err){
+      showProofErr('❌ Gagal upload foto: '+err.message+'. Coba lagi!');
+      btn.disabled=false;
+      btn.innerHTML='📲 Konfirmasi Pesanan — Sudah Bayar';
+      return;
+    }
+  }
+
   const m=selectedPayMethod;let payInfo='';
   if(m){if(m.isQris)payInfo=`\n\n💳 *METODE BAYAR:* QRIS`;else payInfo=`\n\n💳 *METODE BAYAR:* ${m.name}\n📱 Nomor : ${m.no}${m.ownerName?'\na/n    : '+m.ownerName:''}`;}
-  const fullMsg=pendingOrderMsg+payInfo+'\n\n📸 *[Lampirkan bukti transfer]*';
+  const fullMsg=pendingOrderMsg+payInfo+`\n\n📸 *BUKTI PEMBAYARAN:*\n${proofImgUrl}`;
   window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(fullMsg)}`,'_blank');
+
+  btn.disabled=false;
+  btn.innerHTML='📲 Konfirmasi Pesanan — Sudah Bayar';
   closePayOverlay();
+
+  // Kalau SC → simpan order ke Firebase & buka modal tunggu konfirmasi admin
+  if(pendingIsScript){
+    await savePendingScriptOrder();
+    setTimeout(()=>openDlScriptModal(),400);
+  }
+}
+
+async function savePendingScriptOrder(){
+  try{
+    const p=products[activeIdx];const v=p.varians[activeVar];
+    const now=new Date();
+    const id='SC-'+now.getFullYear().toString().slice(-2)+
+      String(now.getMonth()+1).padStart(2,'0')+
+      String(now.getDate()).padStart(2,'0')+'-'+
+      Math.random().toString(36).slice(2,6).toUpperCase();
+    const nomerbot=document.getElementById('sc-nomerbot')?.value?.trim()||'-';
+    const namaOwner=document.getElementById('sc-namaowner')?.value?.trim()||'-';
+    const order={
+      id, produk:'SC Evernight Ai v11.0.0', cat:'source-code',
+      harga:v.price, wa:nomerbot, namaOwner,
+      tanggal:now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
+      waktu:now.toISOString(), status:'menunggu', lunas:false,
+      downloadSent:false
+    };
+    currentOrderId=id; // simpan untuk cek status nanti
+    const data=await dbGet('store-orders');
+    const orders=Array.isArray(data)?data:(data?Object.values(data):[]);
+    orders.push(order);
+    await dbSet('store-orders',orders);
+  }catch(e){console.error('savePendingScriptOrder:',e);}
 }
 
 /* =====================================================
@@ -1346,15 +1657,66 @@ function renderTrackResult(result){
 /* =====================================================
    LIVE CHAT
    ===================================================== */
+// Tiap keyword punya beberapa variasi balasan agar terasa natural
 const AUTO_REPLIES=[
-  {match:['halo','hai','hi','hello','hey'],reply:'Halo! Selamat datang di UnoTech Store 👋\nAda yang bisa kami bantu?'},
-  {match:['harga','berapa','cost','price'],reply:'Harga produk kami:\n• Sewa Bot: mulai Rp5.000\n• Panel Bot WA: mulai Rp2.000\n• SC Evernight Ai: Rp75.000\n\nAda yang ingin dibeli? 😊'},
-  {match:['bot','sewa'],reply:'Sewa Bot Evernight tersedia mulai Rp5.000/minggu dengan 1800+ fitur! Klik produk untuk melihat detail 🤖'},
-  {match:['panel','pterodactyl','ptero'],reply:'Panel Pterodactyl VPS Legal tersedia mulai Rp2.000/minggu. Uptime 99.9% dijamin! 🖥️'},
-  {match:['bayar','payment','transfer','dana','gopay','ovo','qris'],reply:'Metode pembayaran: DANA, GoPay, OVO, QRIS (semua bank).\nSetelah bayar, kirim bukti ke admin WA ya! 💳'},
-  {match:['order','beli','pesan'],reply:'Untuk order, klik produk yang diinginkan → pilih varian → Beli Sekarang → isi form → pilih pembayaran 🛒'},
-  {match:['sc','source','code','script'],reply:'SC Evernight Ai v10.5 Premium tersedia Rp75.000 dengan 1800+ fitur lengkap dan update gratis! 📦'},
+  {match:['halo','hai','hi','hello','hey','hei','p','ping'],replies:[
+    'Halo kak! 👋 Selamat datang di UnoTech Store, ada yang bisa dibantu?',
+    'Hai kak! Ada yang bisa admin bantu hari ini? 😊',
+    'Halo! Lagi cari produk apa kak? Bisa bantu pilihkan 🙏',
+  ]},
+  {match:['harga','berapa','cost','price','murah'],replies:[
+    'Harga produk kita:\n• 🤖 Sewa Bot: mulai Rp500/hari\n• 🖥️ Panel Bot WA: mulai Rp2.000/minggu\n• 📦 SC Evernight Ai: Rp75.000\n\nSemua stok unlimited kak, bisa langsung order 😊',
+    'Nih daftar harganya kak 👇\n• Sewa Bot → Rp500/hari s.d Rp40.000/tahun\n• Panel → Rp2.000/minggu s.d Rp50.000 permanen\n• Source Code → Rp75.000 (1x beli, update gratis)\n\nMau yang mana kak?',
+  ]},
+  {match:['bot','sewa bot','whatsapp bot','wa bot'],replies:[
+    'Sewa Bot Evernight AI kak 🤖 mulai Rp500/hari aja! 1800+ fitur aktif, langsung masuk grup setelah bayar. Klik produk "Sewa Bot" untuk order ya!',
+    'Bot WA kita punya 1800+ command kak — game, sticker, info, moderasi grup, dll. Mulai dari Rp500 aja 🔥 Mau sewa berapa lama?',
+  ]},
+  {match:['panel','pterodactyl','ptero','vps','hosting'],replies:[
+    'Panel Pterodactyl kita legal dan pakai VPS beneran kak 🖥️ Mulai Rp2.000/minggu, uptime 99.9%. Ada pilihan RAM 2GB sampai Unlimited. Mau coba yang mana?',
+    'Panel botnya stabil kak, VPS legal bukan gratisan 👍 Harga mulai Rp2.000/minggu. Ada yang mau ditanyain soal speknya?',
+  ]},
+  {match:['bayar','payment','transfer','dana','gopay','ovo','qris','briva','bni','bca'],replies:[
+    'Bisa bayar via DANA, GoPay, OVO, atau QRIS kak 💳 Setelah transfer, kirim bukti bayar ke admin WA ya supaya cepat diproses!',
+    'Metode bayarnya: DANA / GoPay / OVO / QRIS semua bank. Setelah bayar langsung WA admin sambil kirim bukti transfer kak 🙏',
+  ]},
+  {match:['order','beli','pesan','cara','gimana','bagaimana'],replies:[
+    'Gampang kak! Tinggal:\n1. Klik produk yang diinginkan\n2. Pilih varian/durasi\n3. Klik "Beli Sekarang"\n4. Isi data\n5. Pilih metode bayar\n6. Kirim bukti ke WA admin 😊',
+    'Cara ordernya: pilih produk → klik Beli Sekarang → isi form → bayar → kirim bukti ke WA. Prosesnya cepat kak, ga sampai 5 menit ✅',
+  ]},
+  {match:['sc','source','code','script','evernight','source code'],replies:[
+    'SC Evernight Ai v10.5 Premium kak 📦 Rp75.000 sekali beli, dapat:\n• 1800+ fitur lengkap\n• Full source tanpa enkripsi\n• Update gratis selamanya\n• Bantuan setup dari admin\n\nMinat kak?',
+    'Source code Evernight AI versi terbaru kak, 1800+ fitur. Bayar sekali, update gratis terus 🔥 Rp75.000 aja. Mau lanjut order?',
+  ]},
+  {match:['garansi','refund','jaminan','aman'],replies:[
+    'Aman kak, kita sudah buka sejak lama dan banyak pembeli setia 💪 Kalau ada masalah teknis kita bantu sampai beres via WA. Produk dijamin aktif setelah bayar!',
+    'Kita garansi aktif kak 👍 Kalau bot/panel bermasalah langsung WA admin, pasti dibantu. Sudah ratusan buyer dan alhamdulillah lancar semua!',
+  ]},
+  {match:['lama','proses','kapan','cepat','aktivasi'],replies:[
+    'Prosesnya cepat kak, biasanya dibawah 30 menit setelah bukti bayar diterima admin 🚀 Kalau butuh cepat langsung WA admin aja ya!',
+    'Aktivasi manual oleh admin kak, tapi rata-rata under 30 menit kok 😊 Pastikan kirim bukti bayar langsung ya supaya tidak ketinggalan!',
+  ]},
+  {match:['cs','admin','hubungi','kontak','wa','whatsapp'],replies:[
+    'Bisa langsung WA admin kak! Klik tombol "Lanjut Chat via WhatsApp" di bawah ya, admin siap bantu 📲',
+    'Admin WA siap melayani kak! Tekan tombol WhatsApp di bawah untuk chat langsung, lebih cepat direspons 😊',
+  ]},
+  {match:['update','versi','terbaru'],replies:[
+    'SC Evernight kita selalu update ke versi terbaru kak, dan pembelian lama tetap dapat update gratis 🔄 Sekarang sudah v10.5!',
+  ]},
+  {match:['terima kasih','makasih','thanks','thx','tq'],replies:[
+    'Sama-sama kak! 😊 Kalau ada pertanyaan lain jangan sungkan ya. Semoga puas dengan produknya 🙏',
+    'Siap kak, sama-sama! Jangan lupa kasih bintang 5 kalau puas ya ⭐⭐⭐⭐⭐',
+    'Makasih juga kak udah mampir ke UnoTech Store 🙏 Semoga bermanfaat!',
+  ]},
 ];
+
+// Pilih balasan random dari array replies
+function getAutoReply(lower){
+  const r=AUTO_REPLIES.find(r=>r.match.some(k=>lower.includes(k)));
+  if(!r)return null;
+  const arr=r.replies;
+  return arr[Math.floor(Math.random()*arr.length)];
+}
 let chatOpen=false;let chatInit=false;
 function toggleChat(){
   chatOpen=!chatOpen;
@@ -1365,7 +1727,23 @@ function initChat(){
   chatInit=true;
   const msgs=document.getElementById('chat-messages');
   msgs.innerHTML='';
-  addChatMsg('admin','Halo! Selamat datang di UnoTech Store 👋\nAda yang bisa kami bantu hari ini?');
+  const greets=[
+    'Halo kak! Selamat datang di UnoTech Store 👋',
+    'Hai kak! Ada yang bisa admin bantu? 😊',
+    'Halo! Selamat datang, ada yang bisa dibantu kak? 🙏',
+  ];
+  const followUps=[
+    'Lagi cari produk apa nih? Bisa bantu rekomendasiin 😊',
+    'Silakan tanya-tanya dulu kak, admin siap bantu!',
+    'Ada pertanyaan soal produk atau cara order? Tanya aja kak!',
+  ];
+  addChatMsg('admin',greets[Math.floor(Math.random()*greets.length)]);
+  // Admin kirim pesan kedua setelah jeda sebentar
+  addTyping();
+  setTimeout(()=>{
+    removeTyping();
+    addChatMsg('admin',followUps[Math.floor(Math.random()*followUps.length)]);
+  },1400+(Math.random()*600));
 }
 function addChatMsg(from,text){
   const msgs=document.getElementById('chat-messages');
@@ -1383,12 +1761,29 @@ function sendChatMsg(){
   const inp=document.getElementById('chat-input');const txt=inp.value.trim();if(!txt)return;
   addChatMsg('user',txt);inp.value='';inp.style.height='auto';
   const lower=txt.toLowerCase();
-  const reply=AUTO_REPLIES.find(r=>r.match.some(k=>lower.includes(k)));
+  const reply=getAutoReply(lower);
   addTyping();
-  setTimeout(()=>{removeTyping();addChatMsg('admin',reply?reply.reply:'Baik! Untuk info lebih lanjut, silakan hubungi admin via WhatsApp ya 😊');},1200+(Math.random()*800));
+  // Delay bervariasi biar kerasa admin lagi ngetik beneran
+  const delay=1000+(Math.random()*1400)+(txt.length*18);
+  setTimeout(()=>{
+    removeTyping();
+    addChatMsg('admin',reply||getDefaultReply(lower));
+  },Math.min(delay,3500));
 }
 function chatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}}
 function autoResizeChat(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,65)+'px';}
+function getDefaultReply(lower){
+  // Cek apakah terlihat seperti pertanyaan atau permintaan spesifik
+  if(lower.includes('?')||lower.includes('bisa')||lower.includes('mau')||lower.includes('minta'))
+    return 'Noted kak! 😊 Untuk penanganan lebih lanjut silakan langsung WA admin ya, lebih cepat direspons 📲';
+  const fallbacks=[
+    'Hm, admin perlu cek dulu nih kak 😅 Bisa langsung WA admin untuk jawaban lebih lengkap ya!',
+    'Baik kak, dicatat! Untuk info lebih detail silakan WA admin langsung 📲',
+    'Oke kak, kalau butuh bantuan lebih lanjut langsung chat WA admin ya, lebih cepat 😊',
+    'Siap kak! Kalau ada pertanyaan spesifik bisa langsung ke WA admin aja biar lebih jelas 🙏',
+  ];
+  return fallbacks[Math.floor(Math.random()*fallbacks.length)];
+}
 function lanjutWhatsApp(){window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent('Halo Admin UnoTech Store, saya mau tanya tentang produk 🙏')}`,'_blank');}
 
 /* =====================================================
@@ -1461,6 +1856,547 @@ async function initStore(){
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initStore);}
 else{initStore();}
+
+/* =====================================================
+   BOTTOM NAV
+   ===================================================== */
+function bnSwitch(tab){
+  document.querySelectorAll('.bn-item').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('bn-'+tab);
+  if(el)el.classList.add('active');
+  if(tab==='store'){closeVdl();closeGchat();}
+}
+
+/* =====================================================
+   VIDEO DOWNLOADER
+   ===================================================== */
+let vdlPlatform='tiktok';
+const VDL_HIST_KEY='vdl-history';
+const VDL_API_BASES={
+  tiktok:'https://api.tiklydown.eu.org/api/download?url=',
+  instagram:'https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index',
+  youtube:'https://yt-api.p.rapidapi.com/dl?id='
+};
+
+function openVdl(){document.getElementById('vdl-overlay').classList.add('open');loadVdlHistory();}
+function closeVdl(){document.getElementById('vdl-overlay').classList.remove('open');bnSwitch('store');}
+
+function vdlSetPlatform(p){
+  vdlPlatform=p;
+  document.querySelectorAll('.vdl-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('vdl-tab-'+p).classList.add('active');
+  document.getElementById('vdl-url-input').value='';
+  document.getElementById('vdl-result').classList.remove('show');
+  document.getElementById('vdl-err').classList.remove('show');
+  const placeholders={tiktok:'Paste link TikTok...',instagram:'Paste link Instagram...',youtube:'Paste link YouTube...'};
+  document.getElementById('vdl-url-input').placeholder=placeholders[p]||'Paste link video...';
+}
+
+async function vdlProcess(){
+  const url=document.getElementById('vdl-url-input').value.trim();
+  if(!url){showToast('⚠️ Paste link video dulu!');return;}
+  
+  const result=document.getElementById('vdl-result');
+  const loading=document.getElementById('vdl-loading');
+  const errEl=document.getElementById('vdl-err');
+  result.classList.remove('show');
+  errEl.classList.remove('show');
+  loading.classList.add('show');
+
+  try{
+    let data;
+    if(vdlPlatform==='tiktok'){
+      data=await fetchTiktok(url);
+    }else if(vdlPlatform==='instagram'){
+      data=await fetchInstagram(url);
+    }else{
+      data=await fetchYoutube(url);
+    }
+    loading.classList.remove('show');
+    if(!data||data.error){
+      errEl.textContent='❌ '+(data?.error||'Gagal mengambil video. Pastikan link valid.');
+      errEl.classList.add('show');
+      return;
+    }
+    renderVdlResult(data);
+    saveVdlHistory(data);
+  }catch(e){
+    loading.classList.remove('show');
+    errEl.textContent='❌ Gagal: '+e.message;
+    errEl.classList.add('show');
+  }
+}
+
+async function fetchTiktok(url){
+  try{
+    const res=await fetch('https://api.tiklydown.eu.org/api/download?url='+encodeURIComponent(url));
+    const d=await res.json();
+    if(!d||d.code!==0)return{error:'Link TikTok tidak valid atau video private.'};
+    const v=d.data;
+    return{
+      platform:'tiktok',
+      title:v.title||'TikTok Video',
+      author:'@'+(v.author?.nickname||v.author?.unique_id||'user'),
+      thumb:v.cover||'',
+      links:[
+        {label:'🎬 Video (No Watermark)',url:v.play||'',quality:'HD'},
+        {label:'🎬 Video (Watermark)',url:v.wmplay||'',quality:''},
+        {label:'🎵 Audio MP3',url:v.music||'',quality:''},
+      ].filter(l=>l.url)
+    };
+  }catch{
+    return{error:'Gagal terhubung ke server. Coba lagi.'};
+  }
+}
+
+async function fetchInstagram(url){
+  try{
+    const cfg=await dbGet('store-dl-config');const apiKey=cfg?.rapidApiKey||'';
+    if(!apiKey)return{error:'API key belum diset. Minta admin tambahkan RapidAPI key di dashboard.'};
+    const res=await fetch('https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index?url='+encodeURIComponent(url),{
+      headers:{'X-RapidAPI-Key':apiKey,'X-RapidAPI-Host':'instagram-downloader-download-instagram-videos-stories.p.rapidapi.com'}
+    });
+    const d=await res.json();
+    if(!d||!d.media)return{error:'Link Instagram tidak valid. Pastikan postingan publik.'};
+    const media=Array.isArray(d.media)?d.media[0]:d.media;
+    return{
+      platform:'instagram',
+      title:d.title||d.caption||'Instagram Post',
+      author:'@'+(d.owner?.username||'instagram'),
+      thumb:d.thumbnail||media||'',
+      links:[{label:'📸 Download Media',url:typeof media==='string'?media:media?.url||'',quality:'HD'}].filter(l=>l.url)
+    };
+  }catch{
+    return{error:'Gagal ambil Instagram. Pastikan postingan publik & link valid.'};
+  }
+}
+
+async function fetchYoutube(url){
+  try{
+    const videoId=extractYtId(url);
+    if(!videoId)return{error:'Link YouTube tidak valid.'};
+    const cfg=await dbGet('store-dl-config');const apiKey=cfg?.rapidApiKey||'';
+    if(!apiKey)return{error:'API key belum diset. Minta admin tambahkan RapidAPI key di dashboard.'};
+    const res=await fetch('https://yt-api.p.rapidapi.com/dl?id='+videoId,{
+      headers:{'X-RapidAPI-Key':apiKey,'X-RapidAPI-Host':'yt-api.p.rapidapi.com'}
+    });
+    const d=await res.json();
+    if(!d||d.status!=='OK')return{error:'Gagal mengambil video YouTube.'};
+    const links=[];
+    if(d.formats){d.formats.filter(f=>f.url).slice(0,3).forEach(f=>links.push({label:'🎬 '+( f.qualityLabel||f.quality||'Video'),url:f.url,quality:f.qualityLabel||''}));}
+    if(d.adaptiveFormats){const audio=d.adaptiveFormats.find(f=>f.mimeType?.includes('audio/mp4')&&f.url);if(audio)links.push({label:'🎵 Audio MP4',url:audio.url,quality:''});}
+    return{platform:'youtube',title:d.title||'YouTube Video',author:d.channelName||'',thumb:d.thumbnail?.[0]?.url||'',links};
+  }catch{
+    return{error:'Gagal ambil YouTube. Cek API key atau coba lagi.'};
+  }
+}
+
+function extractYtId(url){
+  const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/);
+  return m?m[1]:null;
+}
+
+function renderVdlResult(data){
+  const result=document.getElementById('vdl-result');
+  const preview=document.getElementById('vdl-preview');
+  const icon=document.getElementById('vdl-preview-icon');
+  const title=document.getElementById('vdl-info-title');
+  const meta=document.getElementById('vdl-info-meta');
+  const btns=document.getElementById('vdl-dl-btns');
+  
+  if(data.thumb){
+    preview.innerHTML=`<img src="${data.thumb}" alt="thumbnail" onerror="this.parentElement.innerHTML='<div class=vdl-preview-icon>🎬</div>'">`;
+  }else{
+    icon.textContent={tiktok:'🎵',instagram:'📸',youtube:'▶️'}[data.platform]||'🎬';
+  }
+  title.textContent=data.title||'Video';
+  meta.textContent=data.author||data.platform;
+  
+  btns.innerHTML=data.links.map((l,i)=>`
+    <button class="vdl-dl-btn" onclick="vdlDownload('${l.url.replace(/'/g,"\'")}','${(l.label||'video').replace(/'/g,"\'")}')">
+      <span>${l.label}</span>
+      <span class="dl-quality">${l.quality}</span>
+    </button>`).join('');
+  
+  result.classList.add('show');
+}
+
+function vdlDownload(url,label){
+  if(!url){showToast('⚠️ URL tidak tersedia');return;}
+  const a=document.createElement('a');
+  a.href=url;
+  a.target='_blank';
+  a.rel='noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('⬇️ Membuka link download...');
+}
+
+function saveVdlHistory(data){
+  try{
+    const hist=JSON.parse(localStorage.getItem(VDL_HIST_KEY)||'[]');
+    hist.unshift({...data,savedAt:new Date().toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
+    if(hist.length>10)hist.pop();
+    localStorage.setItem(VDL_HIST_KEY,JSON.stringify(hist));
+    loadVdlHistory();
+  }catch{}
+}
+
+function loadVdlHistory(){
+  try{
+    const hist=JSON.parse(localStorage.getItem(VDL_HIST_KEY)||'[]');
+    const section=document.getElementById('vdl-history');
+    const list=document.getElementById('vdl-hist-list');
+    if(!hist.length){section.style.display='none';return;}
+    section.style.display='block';
+    const icons={tiktok:'🎵',instagram:'📸',youtube:'▶️'};
+    list.innerHTML=hist.map((h,i)=>`
+      <div class="vdl-hist-item">
+        <div class="vdl-hist-icon">${icons[h.platform]||'🎬'}</div>
+        <div class="vdl-hist-info">
+          <div class="vdl-hist-title">${h.title||'Video'}</div>
+          <div class="vdl-hist-meta">${h.platform||''} · ${h.savedAt||''}</div>
+        </div>
+        ${h.links?.[0]?`<button class="vdl-hist-dl" onclick="vdlDownload('${(h.links[0].url||'').replace(/'/g,"\'")}','')">↓</button>`:''}
+      </div>`).join('');
+  }catch{}
+}
+
+function vdlClearHistory(){
+  localStorage.removeItem(VDL_HIST_KEY);
+  document.getElementById('vdl-history').style.display='none';
+  showToast('🗑 Riwayat download dihapus!');
+}
+
+/* =====================================================
+   GLOBAL CHAT (Firebase Realtime)
+   ===================================================== */
+const GCHAT_KEY='store-gchat';
+const GCHAT_NICK_KEY='gchat-nickname';
+let gchatNick='';
+let gchatLastKey='';
+let gchatPolling=null;
+let gchatOpen=false;
+let gchatLastCount=0;
+
+function openGchat(){
+  gchatOpen=true;
+  document.getElementById('gchat-overlay').classList.add('open');
+  document.getElementById('gchat-badge').style.display='none';
+  const nick=localStorage.getItem(GCHAT_NICK_KEY);
+  if(!nick){
+    document.getElementById('gchat-nick-modal').classList.add('open');
+    setTimeout(()=>document.getElementById('gchat-nick-input').focus(),100);
+  }else{
+    gchatNick=nick;
+    loadGchatMessages();
+    startGchatPolling();
+  }
+}
+
+function closeGchat(){
+  gchatOpen=false;
+  document.getElementById('gchat-overlay').classList.remove('open');
+  if(gchatPolling){clearInterval(gchatPolling);gchatPolling=null;}
+  bnSwitch('store');
+}
+
+function saveGchatNick(){
+  const nick=document.getElementById('gchat-nick-input').value.trim();
+  if(!nick||nick.length<2){showToast('⚠️ Nama minimal 2 karakter!');return;}
+  gchatNick=nick;
+  localStorage.setItem(GCHAT_NICK_KEY,nick);
+  document.getElementById('gchat-nick-modal').classList.remove('open');
+  // Send join message
+  gchatSendSystem(gchatNick+' bergabung ke chat 👋');
+  loadGchatMessages();
+  startGchatPolling();
+}
+
+function startGchatPolling(){
+  if(gchatPolling)clearInterval(gchatPolling);
+  gchatPolling=setInterval(loadGchatMessages,3000);
+}
+
+async function loadGchatMessages(){
+  try{
+    const data=await dbGet(GCHAT_KEY);
+    if(!data)return;
+    const msgs=Array.isArray(data)?data:Object.values(data);
+    if(msgs.length===gchatLastCount&&gchatLastCount>0)return;
+    
+    // Notify if new messages and chat is closed
+    if(!gchatOpen&&msgs.length>gchatLastCount&&gchatLastCount>0){
+      document.getElementById('gchat-badge').style.display='flex';
+    }
+    
+    gchatLastCount=msgs.length;
+    renderGchatMessages(msgs);
+  }catch{}
+}
+
+function renderGchatMessages(msgs){
+  const container=document.getElementById('gchat-messages');
+  if(!msgs||!msgs.length){
+    container.innerHTML='<div class="gchat-empty"><div class="ei">💬</div><div>Jadilah yang pertama chat!</div></div>';
+    return;
+  }
+  const now=new Date();
+  container.innerHTML=msgs.slice(-80).map(m=>{
+    if(m.type==='system')return`<div class="gchat-system">${m.text}</div>`;
+    const isMe=m.nick===gchatNick;
+    const t=m.time?new Date(m.time).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'-';
+    return`<div class="gchat-msg ${isMe?'me':'other'}">
+      <div class="gchat-msg-name">${m.nick||'User'}</div>
+      <div class="gchat-bubble">${escapeHtml(m.text||'')}</div>
+      <div class="gchat-msg-time">${t}</div>
+    </div>`;
+  }).join('');
+  container.scrollTop=container.scrollHeight;
+  
+  const onlineEl=document.getElementById('gchat-online-badge');
+  if(onlineEl){const unique=new Set(msgs.slice(-50).filter(m=>m.nick).map(m=>m.nick)).size;onlineEl.textContent=unique+' Online';}
+}
+
+async function gchatSend(){
+  if(!gchatNick){document.getElementById('gchat-nick-modal').classList.add('open');return;}
+  const inp=document.getElementById('gchat-input');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';inp.style.height='auto';
+  const msg={nick:gchatNick,text,time:new Date().toISOString(),type:'msg'};
+  await appendGchatMsg(msg);
+  loadGchatMessages();
+}
+
+async function gchatSendSystem(text){
+  const msg={type:'system',text,time:new Date().toISOString()};
+  await appendGchatMsg(msg);
+}
+
+async function appendGchatMsg(msg){
+  try{
+    const data=await dbGet(GCHAT_KEY);
+    const msgs=Array.isArray(data)?data:(data?Object.values(data):[]);
+    // Keep max 200 messages
+    if(msgs.length>=200)msgs.splice(0,msgs.length-199);
+    msgs.push(msg);
+    await dbSet(GCHAT_KEY,msgs);
+  }catch{}
+}
+
+function gchatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();gchatSend();}}
+function autoResizeGchat(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+function escapeHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+
+/* =====================================================
+   SCRIPT AUTO DOWNLOAD MODAL
+   ===================================================== */
+const SCRIPT_DL_URL='https://www.mediafire.com/file/vwxnqvnfwbemx7h/alip_ai_MD_v11.0.0.zip/file';
+let currentOrderId=''; // ID order SC yang baru dibuat
+
+function openDlScriptModal(){
+  document.getElementById('dl-step-wait').style.display='block';
+  document.getElementById('dl-step-ready').style.display='none';
+  document.getElementById('dl-status-note').textContent='💡 Tekan "Cek Status" setelah admin konfirmasi via WA';
+  document.getElementById('dl-script-overlay').classList.add('open');
+}
+
+function closeDlScriptModal(){
+  document.getElementById('dl-script-overlay').classList.remove('open');
+  pendingIsScript=false;
+}
+
+async function cekStatusLunas(){
+  if(!currentOrderId){showToast('⚠️ ID order tidak ditemukan');return;}
+  const btn=document.getElementById('btn-cek-lunas');
+  const note=document.getElementById('dl-status-note');
+  btn.innerHTML='<span style="font-size:18px">⏳</span> Mengecek...';
+  btn.disabled=true;
+
+  try{
+    const data=await dbGet('store-orders');
+    const orders=Array.isArray(data)?data:(data?Object.values(data):[]);
+    const order=orders.find(o=>o.id===currentOrderId);
+
+    if(order&&order.lunas){
+      // Lunas → tampilkan tombol download
+      document.getElementById('dl-step-wait').style.display='none';
+      document.getElementById('dl-step-ready').style.display='block';
+      showToast('✅ Pembayaran dikonfirmasi!');
+    } else {
+      note.textContent='⏳ Pembayaran belum dikonfirmasi admin. Pastikan sudah kirim bukti ke WA admin ya!';
+      note.style.color='var(--gold)';
+      showToast('⏳ Belum dikonfirmasi admin');
+      btn.innerHTML='<span style="font-size:18px">🔄</span> Cek Status Pembayaran';
+      btn.disabled=false;
+    }
+  } catch(e){
+    note.textContent='❌ Gagal cek status, coba lagi.';
+    btn.innerHTML='<span style="font-size:18px">🔄</span> Cek Status Pembayaran';
+    btn.disabled=false;
+  }
+}
+
+function doDownloadScript(){
+  window.open(SCRIPT_DL_URL,'_blank');
+  showToast('⬇️ Membuka MediaFire...');
+  setTimeout(()=>closeDlScriptModal(),1800);
+}
+
 </script>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <div class="bn-item active" id="bn-store" onclick="bnSwitch('store')">
+    <div class="bn-icon">🏠</div>
+    <div class="bn-label">Store</div>
+  </div>
+  <div class="bn-item" id="bn-downloader" onclick="bnSwitch('downloader');openVdl()">
+    <div class="bn-icon">⬇️</div>
+    <div class="bn-label">Downloader</div>
+  </div>
+  <div class="bn-item" id="bn-gchat" onclick="bnSwitch('gchat');openGchat()">
+    <div class="bn-icon">💬</div>
+    <div class="bn-label">Chat Global</div>
+    <div class="bn-badge" id="gchat-badge" style="display:none">!</div>
+  </div>
+  <div class="bn-item" id="bn-cs" onclick="contactAdmin()">
+    <div class="bn-icon">🎧</div>
+    <div class="bn-label">CS</div>
+  </div>
+</div>
+
+<!-- VIDEO DOWNLOADER MODAL -->
+<div class="vdl-overlay" id="vdl-overlay" onclick="if(event.target===this)closeVdl()">
+  <div class="vdl-sheet">
+    <div class="vdl-handle"></div>
+    <div class="vdl-header">
+      <div class="vdl-title">⬇️ Video Downloader</div>
+      <button style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closeVdl()">×</button>
+    </div>
+    <div class="vdl-body">
+      <div class="vdl-platform-tabs">
+        <div class="vdl-tab active" id="vdl-tab-tiktok" onclick="vdlSetPlatform('tiktok')">
+          <div class="vdl-tab-icon">🎵</div>TikTok
+        </div>
+        <div class="vdl-tab" id="vdl-tab-instagram" onclick="vdlSetPlatform('instagram')">
+          <div class="vdl-tab-icon">📸</div>Instagram
+        </div>
+        <div class="vdl-tab" id="vdl-tab-youtube" onclick="vdlSetPlatform('youtube')">
+          <div class="vdl-tab-icon">▶️</div>YouTube
+        </div>
+      </div>
+      <div class="vdl-input-row">
+        <input class="vdl-input" id="vdl-url-input" placeholder="Tempel link video di sini..." type="url">
+        <button class="vdl-btn" onclick="vdlProcess()">Ambil</button>
+      </div>
+      <div class="vdl-loading" id="vdl-loading">
+        <div class="spinner"></div>
+        <div style="font-size:12px;color:var(--muted)">Mengambil info video...</div>
+      </div>
+      <div class="vdl-err" id="vdl-err"></div>
+      <div class="vdl-result" id="vdl-result">
+        <div class="vdl-preview" id="vdl-preview">
+          <div class="vdl-preview-icon" id="vdl-preview-icon">🎬</div>
+        </div>
+        <div class="vdl-info">
+          <div class="vdl-info-title" id="vdl-info-title"></div>
+          <div class="vdl-info-meta" id="vdl-info-meta"></div>
+        </div>
+        <div class="vdl-dl-btns" id="vdl-dl-btns"></div>
+      </div>
+      <div class="vdl-history" id="vdl-history" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="vdl-history-title" style="margin-bottom:0">Riwayat Download</div>
+          <button style="font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;font-family:'Sora',sans-serif" onclick="vdlClearHistory()">🗑 Hapus</button>
+        </div>
+        <div id="vdl-hist-list"></div>
+      </div>
+      <div style="margin-top:14px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:11px;color:var(--muted);line-height:1.6">
+        💡 <strong style="color:var(--text)">Cara pakai:</strong> Buka TikTok/Instagram/YouTube → Copy link video → Paste di sini → Klik Ambil → Download
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL CHAT MODAL -->
+<div class="gchat-overlay" id="gchat-overlay" onclick="if(event.target===this)closeGchat()">
+  <div class="gchat-sheet">
+    <div class="gchat-handle"></div>
+    <div class="gchat-header">
+      <div class="gchat-title">
+        💬 Chat Global
+        <span class="gchat-online-badge" id="gchat-online-badge">Online</span>
+      </div>
+      <button style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closeGchat()">×</button>
+    </div>
+    <div class="gchat-messages" id="gchat-messages">
+      <div class="gchat-empty"><div class="ei">💬</div><div>Jadilah yang pertama chat!</div></div>
+    </div>
+    <div class="gchat-input-row" id="gchat-input-row">
+      <textarea class="gchat-input" id="gchat-input" rows="1" placeholder="Ketik pesan..." onkeydown="gchatKeydown(event)" oninput="autoResizeGchat(this)"></textarea>
+      <button class="gchat-send" onclick="gchatSend()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- NICK SETUP MODAL -->
+<div class="gchat-nick-modal" id="gchat-nick-modal">
+  <div class="gchat-nick-box">
+    <h3>👋 Pilih Nama Chat</h3>
+    <p>Nama ini yang akan terlihat oleh semua orang di Chat Global</p>
+    <input class="fi" id="gchat-nick-input" placeholder="Nama kamu..." maxlength="20" style="width:100%;margin-bottom:10px" onkeydown="if(event.key==='Enter')saveGchatNick()">
+    <button class="btn-order" onclick="saveGchatNick()" style="margin-top:4px">✅ Mulai Chat</button>
+  </div>
+</div>
+
+<!-- SCRIPT DOWNLOAD MODAL -->
+<div class="dl-script-overlay" id="dl-script-overlay">
+  <div class="dl-script-box">
+
+    <!-- STATE: Menunggu konfirmasi admin -->
+    <div id="dl-step-wait">
+      <div class="dl-script-icon">⏳</div>
+      <div class="dl-script-title">Order Terkirim!</div>
+      <div class="dl-script-sub">
+        Order kamu sudah masuk ke admin 🎉<br>
+        Kirim bukti transfer ke WA admin, lalu tunggu admin konfirmasi pembayaran kamu.
+      </div>
+      <div class="dl-script-info">
+        <div class="dl-script-info-row"><span>1️⃣</span><span>Kirim <strong>bukti transfer</strong> ke WA admin</span></div>
+        <div class="dl-script-info-row"><span>2️⃣</span><span>Admin verifikasi &amp; tandai <strong>Lunas</strong></span></div>
+        <div class="dl-script-info-row"><span>3️⃣</span><span>Tombol download akan <strong>langsung aktif</strong> di sini</span></div>
+      </div>
+      <button class="btn-dl-mediafire" style="background:linear-gradient(135deg,#16a34a,#22c55e);box-shadow:0 4px 20px rgba(34,197,94,.3);margin-bottom:10px" onclick="lanjutWhatsApp()">
+        <span style="font-size:18px">📲</span> Kirim Bukti ke Admin WA
+      </button>
+      <button class="btn-dl-mediafire" id="btn-cek-lunas" onclick="cekStatusLunas()" style="background:var(--bg3);border:1.5px solid var(--purple);box-shadow:none;color:var(--purple-light);margin-bottom:0">
+        <span style="font-size:18px">🔄</span> Cek Status Pembayaran
+      </button>
+      <div class="dl-script-note" id="dl-status-note" style="margin-top:10px">💡 Tekan "Cek Status" setelah admin konfirmasi via WA</div>
+      <button class="btn-dl-close" onclick="closeDlScriptModal()" style="margin-top:10px">Tutup — Cek Nanti</button>
+    </div>
+
+    <!-- STATE: Sudah lunas → tampilkan tombol download -->
+    <div id="dl-step-ready" style="display:none">
+      <div class="dl-script-icon">🎉</div>
+      <div class="dl-script-title">Pembayaran Dikonfirmasi!</div>
+      <div class="dl-script-sub">Admin sudah mengkonfirmasi pembayaran kamu. Silakan download scriptnya sekarang!</div>
+      <div class="dl-script-info">
+        <div class="dl-script-info-row"><span>📁</span><span>File: <strong>alip_ai_MD_v11.0.0.zip</strong></span></div>
+        <div class="dl-script-info-row"><span>🤖</span><span>SC Evernight Ai v11.0.0 · Full Source</span></div>
+        <div class="dl-script-info-row"><span>☁️</span><span>Host: <strong>MediaFire</strong> — aman &amp; cepat</span></div>
+      </div>
+      <button class="btn-dl-mediafire" onclick="doDownloadScript()">
+        <span style="font-size:20px">⬇️</span> Download dari MediaFire
+      </button>
+      <button class="btn-dl-close" onclick="closeDlScriptModal()" style="margin-top:8px">Tutup</button>
+    </div>
+
+  </div>
+</div>
 </body>
 </html>
