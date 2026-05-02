@@ -270,40 +270,59 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .drawer-footer{margin-top:15px;display:flex;flex-direction:column;gap:7px;}
 .btn-wa{padding:10px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);color:var(--purple-light);font-size:12px;font-weight:500;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;}
 
-/* LIVE CHAT */
-#chat-fab{position:fixed;bottom:74px;right:15px;z-index:550;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 4px 20px rgba(124,58,237,.6);transition:transform .2s;animation:fabPulse 3s ease-in-out infinite;color:#fff;}
-#chat-fab:hover{transform:scale(1.08);}
-.chat-badge{position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:#ef4444;border-radius:50%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
-@keyframes fabPulse{0%,100%{box-shadow:0 4px 18px rgba(124,58,237,.5)}50%{box-shadow:0 4px 28px rgba(124,58,237,.8),0 0 0 5px rgba(124,58,237,.07)}}
-#chat-window{position:fixed;bottom:132px;right:12px;z-index:551;width:calc(100vw - 24px);max-width:330px;background:var(--bg2);border:1px solid var(--border);border-radius:15px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 14px 44px rgba(0,0,0,.7);animation:chatIn .22s ease;}
+/* CHAT AI BADGE */
+.chat-ai-badge{display:inline-flex;align-items:center;padding:1px 5px;border-radius:4px;background:linear-gradient(135deg,rgba(124,58,237,.6),rgba(217,70,239,.6));border:1px solid rgba(168,85,247,.4);font-size:8px;font-weight:700;color:#fff;letter-spacing:.5px;margin-left:4px;vertical-align:middle;}
+
+/* CHAT BADGE (notif merah di fab) */
+.chat-badge{position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:#ef4444;border-radius:50%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);animation:badgePop .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes fabPulse{0%,100%{box-shadow:0 4px 20px rgba(124,58,237,.5)}50%{box-shadow:0 4px 32px rgba(124,58,237,.85),0 0 0 6px rgba(124,58,237,.08)}}
+@keyframes chatIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+.chat-status-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:dotPulse 2s infinite;flex-shrink:0;}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.chat-close-btn{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.chat-close-btn:hover{background:rgba(255,255,255,.25);}
+.chat-head-info{display:flex;align-items:center;gap:9px;}
+
+/* CHAT MSG */
+.chat-msg{max-width:85%;padding:9px 12px;border-radius:14px;font-size:12px;line-height:1.55;word-break:break-word;font-weight:400;animation:msgIn .2s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.chat-msg-time{font-size:9px;opacity:.45;margin-top:4px;text-align:right;}
+.chat-msg.admin .chat-msg-time{text-align:left;}
+
+/* CHAT TYPING INDICATOR */
+.chat-typing{display:flex;gap:4px;align-items:center;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(124,58,237,.15);border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;width:52px;}
+.chat-typing span{width:5px;height:5px;border-radius:50%;background:var(--purple-light);animation:typingDot 1.2s ease-in-out infinite;}
+.chat-typing span:nth-child(2){animation-delay:.2s;}
+.chat-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-5px);opacity:1}}
+
+/* CHAT WINDOW premium upgrade */
+#chat-window{position:fixed;bottom:132px;right:12px;z-index:551;width:calc(100vw - 24px);max-width:340px;background:linear-gradient(180deg,#0d0d1e 0%,var(--bg2) 100%);border:1px solid rgba(124,58,237,.25);border-radius:18px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(124,58,237,.1);animation:chatIn .25s cubic-bezier(.34,1.56,.64,1);}
 #chat-window.open{display:flex;}
-@keyframes chatIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
-.chat-head{background:linear-gradient(135deg,var(--purple),var(--accent));padding:11px 13px;display:flex;align-items:center;justify-content:space-between;}
-.chat-head-info{display:flex;align-items:center;gap:8px;}
-.chat-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;border:1.5px solid rgba(255,255,255,.25);}
-.chat-head-name{font-size:12px;font-weight:600;color:#fff;}
-.chat-head-status{font-size:9px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:4px;margin-top:1px;}
-.chat-status-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:dotPulse 2s infinite;}
-@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.4}}
-.chat-close-btn{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);border:none;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.chat-messages{flex:1;max-height:240px;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-.chat-msg{max-width:80%;padding:8px 11px;border-radius:11px;font-size:12px;line-height:1.5;word-break:break-word;font-weight:400;}
-.chat-msg.admin{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px;align-self:flex-start;}
-.chat-msg.user{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-bottom-right-radius:3px;align-self:flex-end;}
-.chat-msg-time{font-size:9px;opacity:.4;margin-top:3px;text-align:right;}
-.chat-typing{display:flex;gap:3px;align-items:center;padding:8px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:11px;border-bottom-left-radius:3px;align-self:flex-start;width:48px;}
-.chat-typing span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typingDot 1.2s ease-in-out infinite;}
-.chat-typing span:nth-child(2){animation-delay:.2s}.chat-typing span:nth-child(3){animation-delay:.4s}
-@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
-.chat-wa-cta{padding:7px 11px;background:rgba(34,197,94,.05);border-top:1px solid rgba(34,197,94,.12);}
-.chat-wa-btn{width:100%;padding:7px;border-radius:7px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28);color:#4ade80;font-size:11px;font-weight:500;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s;}
-.chat-wa-btn:hover{background:rgba(34,197,94,.18);}
-.chat-input-row{padding:9px 11px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:flex-end;background:var(--bg2);}
-.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:7px 11px;color:var(--text);font-family:'Sora',sans-serif;font-size:12px;outline:none;resize:none;line-height:1.4;max-height:65px;transition:border-color .2s;}
-.chat-input:focus{border-color:var(--purple);}
-.chat-input::placeholder{color:#3a3d50;}
-.chat-send{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:transform .15s;box-shadow:0 2px 8px rgba(124,58,237,.3);}
-.chat-send:hover{transform:scale(1.08);}
+.chat-head{background:linear-gradient(135deg,#4a1d96,#7c3aed,#a855f7);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+.chat-head::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 20px);pointer-events:none;}
+.chat-head-name{font-size:13px;font-weight:700;color:#fff;display:flex;align-items:center;}
+.chat-head-status{font-size:9px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px;margin-top:2px;}
+.chat-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid rgba(255,255,255,.3);backdrop-filter:blur(4px);}
+.chat-messages{flex:1;max-height:260px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.2) transparent;}
+.chat-msg.admin{background:rgba(255,255,255,.05);border:1px solid rgba(124,58,237,.15);color:var(--text);border-bottom-left-radius:4px;align-self:flex-start;max-width:85%;backdrop-filter:blur(4px);}
+.chat-msg.user{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-bottom-right-radius:4px;align-self:flex-end;max-width:85%;box-shadow:0 2px 12px rgba(124,58,237,.3);}
+.chat-input-row{padding:10px 12px;border-top:1px solid rgba(124,58,237,.1);display:flex;gap:8px;align-items:flex-end;background:rgba(7,7,15,.6);backdrop-filter:blur(8px);}
+.chat-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(124,58,237,.2);border-radius:16px;padding:8px 12px;color:var(--text);font-family:'Sora',sans-serif;font-size:12px;outline:none;resize:none;line-height:1.4;max-height:65px;transition:border-color .2s;}
+.chat-input:focus{border-color:rgba(168,85,247,.5);background:rgba(124,58,237,.06);}
+.chat-send{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .2s;box-shadow:0 3px 10px rgba(124,58,237,.35);}
+.chat-send:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(124,58,237,.5);}
+.chat-send:active{transform:scale(.94);}
+.chat-wa-cta{padding:8px 12px;background:rgba(34,197,94,.04);border-top:1px solid rgba(34,197,94,.1);}
+.chat-wa-btn{width:100%;padding:7px;border-radius:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.22);color:#4ade80;font-size:11px;font-weight:500;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s;}
+.chat-wa-btn:hover{background:rgba(34,197,94,.16);}
+
+/* CHAT FAB premium */
+#chat-fab{position:fixed;bottom:74px;right:15px;z-index:550;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 24px rgba(124,58,237,.65);transition:transform .2s;animation:fabPulse 3s ease-in-out infinite;color:#fff;}
+#chat-fab:hover{transform:scale(1.1);}
+#chat-fab:active{transform:scale(.95);}
+
 
 /* IN-APP MODALS */
 .inapp-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);display:none;align-items:flex-end;}
@@ -894,15 +913,18 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 <div id="chat-window">
   <div class="chat-head">
     <div class="chat-head-info">
-      <div class="chat-avatar">U</div>
-      <div><div class="chat-head-name">UnoTech Store</div><div class="chat-head-status"><span class="chat-status-dot"></span>Admin Online</div></div>
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <div class="chat-head-name">Una <span class="chat-ai-badge">AI</span></div>
+        <div class="chat-head-status"><span class="chat-status-dot"></span>CS Online · Powered by Claude</div>
+      </div>
     </div>
     <button class="chat-close-btn" onclick="toggleChat()">×</button>
   </div>
   <div class="chat-messages" id="chat-messages"></div>
   <div class="chat-wa-cta"><button class="chat-wa-btn" onclick="lanjutWhatsApp()">📲 Lanjut Chat via WhatsApp</button></div>
   <div class="chat-input-row">
-    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ketik pesan..." onkeydown="chatKeydown(event)" oninput="autoResizeChat(this)"></textarea>
+    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Tanya Una sesuatu..." onkeydown="chatKeydown(event)" oninput="autoResizeChat(this)"></textarea>
     <button class="chat-send" onclick="sendChatMsg()">➤</button>
   </div>
 </div>
@@ -1946,146 +1968,203 @@ function renderTrackResult(result){
 }
 
 /* =====================================================
-   LIVE CHAT
+   AI CS CHAT — Powered by Claude
    ===================================================== */
-const AUTO_REPLIES=[
-  {match:['halo','hai','hi','hello','hey','hei','p','ping'],replies:[
-    'Halo kak! 👋 Selamat datang di UnoTech Store, ada yang bisa dibantu?',
-    'Hai kak! Ada yang bisa admin bantu hari ini? 😊',
-    'Halo! Lagi cari produk apa nih? Bisa bantu pilihkan 🙏',
-  ]},
-  {match:['harga','berapa','cost','price','murah'],replies:[
-    'Harga produk kita:\n• 🤖 Sewa Bot: mulai Rp500/hari\n• 🖥️ Panel Bot WA: mulai Rp2.000/minggu\n• 📦 SC Evernight Ai: Rp75.000\n\nSemua stok unlimited kak, bisa langsung order 😊',
-    'Nih daftar harganya kak 👇\n• Sewa Bot → Rp500/hari s.d Rp40.000/tahun\n• Panel → Rp2.000/minggu s.d Rp50.000 permanen\n• Source Code → Rp75.000 (1x beli, update gratis)\n\nMau yang mana kak?',
-  ]},
-  {match:['bot','sewa bot','whatsapp bot','wa bot'],replies:[
-    'Sewa Bot Evernight AI kak 🤖 mulai Rp500/hari aja! 1800+ fitur aktif, langsung masuk grup setelah bayar. Klik produk "Sewa Bot" untuk order ya!',
-    'Bot WA kita punya 1800+ command kak — game, sticker, info, moderasi grup, dll. Mulai dari Rp500 aja 🔥 Mau sewa berapa lama?',
-  ]},
-  {match:['panel','pterodactyl','ptero','vps','hosting'],replies:[
-    'Panel Pterodactyl kita legal dan pakai VPS beneran kak 🖥️ Mulai Rp2.000/minggu, uptime 99.9%. Ada pilihan RAM 2GB sampai Unlimited. Mau coba yang mana?',
-    'Panel botnya stabil kak, VPS legal bukan gratisan 👍 Harga mulai Rp2.000/minggu. Ada yang mau ditanyain soal speknya?',
-  ]},
-  {match:['bayar','payment','transfer','dana','gopay','ovo','qris','briva','bni','bca'],replies:[
-    'Bisa bayar via DANA, GoPay, OVO, atau QRIS kak 💳 Setelah transfer, kirim bukti bayar ke admin WA ya supaya cepat diproses!',
-    'Metode bayarnya: DANA / GoPay / OVO / QRIS semua bank. Setelah bayar langsung WA admin sambil kirim bukti transfer kak 🙏',
-  ]},
-  {match:['order','beli','pesan','cara','gimana','bagaimana'],replies:[
-    'Gampang kak! Tinggal:\n1. Klik produk yang diinginkan\n2. Pilih varian/durasi\n3. Klik "Beli Sekarang"\n4. Isi data\n5. Pilih metode bayar\n6. Kirim bukti ke WA admin 😊',
-    'Cara ordernya: pilih produk → klik Beli Sekarang → isi form → bayar → kirim bukti ke WA. Prosesnya cepat kak, ga sampai 5 menit ✅',
-  ]},
-  {match:['sc','source','code','script','evernight','source code'],replies:[
-    'SC Evernight Ai v10.5 Premium kak 📦 Rp75.000 sekali beli, dapat:\n• 1800+ fitur lengkap\n• Full source tanpa enkripsi\n• Update gratis selamanya\n• Bantuan setup dari admin\n\nMinat kak?',
-    'Source code Evernight AI versi terbaru kak, 1800+ fitur. Bayar sekali, update gratis terus 🔥 Rp75.000 aja. Mau lanjut order?',
-  ]},
-  {match:['garansi','refund','jaminan','aman'],replies:[
-    'Aman kak, kita sudah buka sejak lama dan banyak pembeli setia 💪 Kalau ada masalah teknis kita bantu sampai beres via WA. Produk dijamin aktif setelah bayar!',
-    'Kita garansi aktif kak 👍 Kalau bot/panel bermasalah langsung WA admin, pasti dibantu. Sudah ratusan buyer dan alhamdulillah lancar semua!',
-  ]},
-  {match:['lama','proses','kapan','cepat','aktivasi'],replies:[
-    'Prosesnya cepat kak, biasanya dibawah 30 menit setelah bukti bayar diterima admin 🚀 Kalau butuh cepat langsung WA admin aja ya!',
-    'Aktivasi manual oleh admin kak, tapi rata-rata under 30 menit kok 😊 Pastikan kirim bukti bayar langsung ya supaya tidak ketinggalan!',
-  ]},
-  {match:['cs','admin','hubungi','kontak','wa','whatsapp'],replies:[
-    'Bisa langsung WA admin kak! Klik tombol "Lanjut Chat via WhatsApp" di bawah ya, admin siap bantu 📲',
-    'Admin WA siap melayani kak! Tekan tombol WhatsApp di bawah untuk chat langsung, lebih cepat direspons 😊',
-  ]},
-  {match:['update','versi','terbaru'],replies:[
-    'SC Evernight kita selalu update ke versi terbaru kak, dan pembelian lama tetap dapat update gratis 🔄 Sekarang sudah v10.5!',
-  ]},
-  {match:['terima kasih','makasih','thanks','thx','tq'],replies:[
-    'Sama-sama kak! 😊 Kalau ada pertanyaan lain jangan sungkan ya. Semoga puas dengan produknya 🙏',
-    'Siap kak, sama-sama! Jangan lupa kasih bintang 5 kalau puas ya ⭐⭐⭐⭐⭐',
-    'Makasih juga kak udah mampir ke UnoTech Store 🙏 Semoga bermanfaat!',
-  ]},
-];
 
-function getAutoReply(lower){
-  const r=AUTO_REPLIES.find(r=>r.match.some(k=>lower.includes(k)));
-  if(!r)return null;
-  const arr=r.replies;
-  return arr[Math.floor(Math.random()*arr.length)];
-}
+// Prompt persona CS — bisa disesuaikan
+const CS_SYSTEM_PROMPT = `Kamu adalah CS (Customer Service) dari UnoTech Store bernama "Una" 🤖
 
-let chatOpen=false;let chatInit=false;
-// FIX: guard untuk mencegah multiple typing indicators
-let chatTypingTimeout=null;
+IDENTITAS:
+- Nama: Una
+- Toko: UnoTech Store
+- Karakter: Ramah, cepat respons, gaul tapi tetap profesional, suka pakai emoji
+- Bahasa: Indonesia kasual (kak, nih, dong, sih, aja, dll)
+
+PRODUK YANG DIJUAL:
+1. 🤖 Sewa Bot WhatsApp (Evernight AI Multidevice)
+   - 1 hari: Rp500
+   - 3 hari: Rp2.000
+   - 5 hari: Rp3.500
+   - 7 hari: Rp4.000
+   - 14 hari: Rp6.000
+   - 1 bulan: Rp7.000
+   - 3 bulan: Rp26.000
+   - 1 tahun: Rp40.000
+   - Fitur: 1800+ command, game, sticker, info, moderasi grup, dll
+   - Aktivasi otomatis masuk grup setelah bayar
+
+2. 🖥️ Panel Bot WA (Pterodactyl Premium)
+   - 1 minggu: Rp2.000
+   - 2 minggu: Rp4.000
+   - 1 bulan: Rp7.000
+   - 2 bulan: Rp12.000
+   - Permanen: Rp50.000
+   - VPS legal, uptime 99.9%, RAM 2GB - Unlimited
+
+3. 📦 SC Evernight AI (Source Code)
+   - Harga: Rp75.000 (beli sekali)
+   - Full source code tanpa enkripsi
+   - Update gratis selamanya
+   - 1800+ fitur lengkap
+   - Bantuan setup oleh CS
+
+CARA ORDER:
+1. Klik produk di web
+2. Pilih varian/durasi
+3. Klik "Beli Sekarang"
+4. Isi data
+5. Pilih metode bayar
+6. Upload bukti bayar
+7. Kirim ke admin WA
+
+METODE BAYAR: DANA, GoPay, OVO, QRIS (semua bank)
+
+GARANSI & SUPPORT:
+- Aktivasi < 30 menit setelah bayar dikonfirmasi
+- Support 24/7 via WhatsApp
+- Garansi aktif, kalau ada masalah dibantu sampai beres
+- Rating 4.9/5 dari 1000+ pembeli
+
+ATURAN MENJAWAB:
+- Jawab singkat, padat, natural — maksimal 3-4 kalimat per pesan
+- Selalu pakai "kak" saat menyapa
+- Gunakan emoji yang relevan tapi jangan berlebihan (max 2-3 per pesan)
+- Kalau ditanya sesuatu yang tidak kamu tahu atau perlu konfirmasi admin langsung, arahkan ke WA admin
+- Jangan pernah membuat janji harga atau promo yang tidak tertulis di atas
+- Kalau user ingin order, semangati dan arahkan ke tombol produk di web atau WA admin`;
+
+// Riwayat chat untuk konteks AI (max 10 pesan terakhir)
+let chatHistory = [];
+let chatOpen = false;
+let chatInit = false;
+let chatTypingTimeout = null;
+let aiChatEnabled = true; // fallback ke keyword jika API error
 
 function toggleChat(){
   chatOpen=!chatOpen;
   document.getElementById('chat-window').classList.toggle('open',chatOpen);
-  if(chatOpen){document.getElementById('chat-notif').style.display='none';if(!chatInit)initChat();}
+  if(chatOpen){
+    document.getElementById('chat-notif').style.display='none';
+    if(!chatInit)initChat();
+  }
 }
+
 function initChat(){
   chatInit=true;
+  chatHistory=[];
   const msgs=document.getElementById('chat-messages');
   msgs.innerHTML='';
-  const greets=[
-    'Halo kak! Selamat datang di UnoTech Store 👋',
-    'Hai kak! Ada yang bisa admin bantu? 😊',
-    'Halo! Selamat datang, ada yang bisa dibantu kak? 🙏',
-  ];
-  const followUps=[
-    'Lagi cari produk apa nih? Bisa bantu rekomendasiin 😊',
-    'Silakan tanya-tanya dulu kak, admin siap bantu!',
-    'Ada pertanyaan soal produk atau cara order? Tanya aja kak!',
-  ];
-  addChatMsg('admin',greets[Math.floor(Math.random()*greets.length)]);
+  // Sapa pembuka dari Una
   addTypingIndicator();
   setTimeout(()=>{
     removeTypingIndicator();
-    addChatMsg('admin',followUps[Math.floor(Math.random()*followUps.length)]);
-  },1400+(Math.random()*600));
+    const greet='Halo kak! 👋 Aku Una, CS dari UnoTech Store. Ada yang bisa aku bantu hari ini? Mau tanya produk, harga, atau cara order?';
+    addChatMsg('admin',greet,'Una');
+    // Tambah ke history sebagai konteks
+    chatHistory.push({role:'assistant',content:greet});
+  },900);
 }
 
-function addChatMsg(from,text){
+function addChatMsg(from, text, senderName=''){
   const msgs=document.getElementById('chat-messages');
-  const div=document.createElement('div');div.className=`chat-msg ${from}`;
-  div.innerHTML=escapeHtml(text).replace(/\n/g,'<br>')+`<div class="chat-msg-time">${new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</div>`;
-  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  const div=document.createElement('div');
+  div.className=`chat-msg ${from}`;
+  // Format teks: baris baru jadi <br>, bold **text**
+  const formatted=escapeHtml(text)
+    .replace(/\n/g,'<br>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  div.innerHTML=formatted+`<div class="chat-msg-time">${new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
 }
 
-// FIX: rename fungsi untuk menghindari konflik dan tambah guard
 function addTypingIndicator(){
-  removeTypingIndicator(); // pastikan tidak ada duplikat
+  removeTypingIndicator();
   const msgs=document.getElementById('chat-messages');
-  const t=document.createElement('div');t.className='chat-typing';t.id='chat-typing';
-  t.innerHTML='<span></span><span></span><span></span>';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
+  const t=document.createElement('div');
+  t.className='chat-typing';t.id='chat-typing';
+  t.innerHTML='<span></span><span></span><span></span>';
+  msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
 }
+
 function removeTypingIndicator(){
   const t=document.getElementById('chat-typing');if(t)t.remove();
   if(chatTypingTimeout){clearTimeout(chatTypingTimeout);chatTypingTimeout=null;}
 }
 
-function sendChatMsg(){
-  const inp=document.getElementById('chat-input');const txt=inp.value.trim();if(!txt)return;
-  addChatMsg('user',txt);inp.value='';inp.style.height='auto';
-  const lower=txt.toLowerCase();
-  const reply=getAutoReply(lower);
-  // FIX: hapus typing sebelumnya jika masih ada, lalu tambah baru
-  removeTypingIndicator();
+async function sendChatMsg(){
+  const inp=document.getElementById('chat-input');
+  const txt=inp.value.trim();
+  if(!txt)return;
+
+  addChatMsg('user',txt);
+  inp.value='';inp.style.height='auto';
+
+  // Tambah ke history
+  chatHistory.push({role:'user',content:txt});
+
+  // Batasi history 10 pesan terakhir
+  if(chatHistory.length>10)chatHistory=chatHistory.slice(-10);
+
   addTypingIndicator();
-  const delay=Math.min(1000+(Math.random()*1400)+(txt.length*18),3500);
-  chatTypingTimeout=setTimeout(()=>{
+
+  try{
+    const reply = await askClaudeCS(txt);
     removeTypingIndicator();
-    addChatMsg('admin',reply||getDefaultReply(lower));
-  },delay);
+    addChatMsg('admin',reply,'Una');
+    chatHistory.push({role:'assistant',content:reply});
+    if(chatHistory.length>10)chatHistory=chatHistory.slice(-10);
+  }catch(err){
+    removeTypingIndicator();
+    // Fallback jika API error
+    const fallback=getFallbackReply(txt.toLowerCase());
+    addChatMsg('admin',fallback,'Una');
+    console.warn('AI CS error, using fallback:',err);
+  }
+}
+
+async function askClaudeCS(userMessage){
+  const response = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:300,
+      system: CS_SYSTEM_PROMPT,
+      messages: chatHistory
+    })
+  });
+
+  if(!response.ok){
+    const err=await response.json().catch(()=>({}));
+    throw new Error(err?.error?.message||'API error '+response.status);
+  }
+
+  const data=await response.json();
+  const text=data?.content?.[0]?.text;
+  if(!text)throw new Error('Empty response from AI');
+  return text;
+}
+
+// Fallback replies jika Claude API tidak tersedia
+function getFallbackReply(lower){
+  if(lower.includes('harga')||lower.includes('berapa'))
+    return 'Harga produk kita mulai dari Rp500 kak 😊\n• Sewa Bot: Rp500/hari\n• Panel: Rp2.000/minggu\n• SC Evernight: Rp75.000\n\nMau yang mana?';
+  if(lower.includes('bot')||lower.includes('sewa'))
+    return 'Sewa Bot kita ada 1800+ fitur kak 🤖 Mulai Rp500/hari aja, langsung aktif setelah bayar!';
+  if(lower.includes('panel'))
+    return 'Panel Pterodactyl premium VPS legal kak 🖥️ Mulai Rp2.000/minggu, uptime 99.9%!';
+  if(lower.includes('bayar')||lower.includes('transfer'))
+    return 'Bisa bayar via DANA, GoPay, OVO, atau QRIS kak 💳 Setelah bayar upload bukti di web ya!';
+  if(lower.includes('halo')||lower.includes('hai')||lower.includes('hi'))
+    return 'Halo kak! 👋 Ada yang bisa Una bantu?';
+  return 'Maaf kak, Una lagi ada gangguan koneksi 😅 Coba tanya lagi atau langsung WA admin ya biar lebih cepat!';
 }
 
 function chatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}}
 function autoResizeChat(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,65)+'px';}
-function getDefaultReply(lower){
-  if(lower.includes('?')||lower.includes('bisa')||lower.includes('mau')||lower.includes('minta'))
-    return 'Noted kak! 😊 Untuk penanganan lebih lanjut silakan langsung WA admin ya, lebih cepat direspons 📲';
-  const fallbacks=[
-    'Hm, admin perlu cek dulu nih kak 😅 Bisa langsung WA admin untuk jawaban lebih lengkap ya!',
-    'Baik kak, dicatat! Untuk info lebih detail silakan WA admin langsung 📲',
-    'Oke kak, kalau butuh bantuan lebih lanjut langsung chat WA admin ya, lebih cepat 😊',
-    'Siap kak! Kalau ada pertanyaan spesifik bisa langsung ke WA admin aja biar lebih jelas 🙏',
-  ];
-  return fallbacks[Math.floor(Math.random()*fallbacks.length)];
-}
 function lanjutWhatsApp(){window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent('Halo Admin UnoTech Store, saya mau tanya tentang produk 🙏')}`,'_blank');}
+
 
 /* =====================================================
    TOAST
