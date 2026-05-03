@@ -715,12 +715,12 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 <div class="marquee-bar">
   <div class="marquee-inner">
     <span>Bot WA — Rp5.000</span><span class="marquee-dot">•</span>
-    <span>SC Evernight Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>SC Alya Ai — Rp75.000</span><span class="marquee-dot">•</span>
     <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
     <span>⭐ Stok Unlimited</span><span class="marquee-dot">•</span>
     <span>Bayar via DANA / GoPay / OVO / QRIS</span><span class="marquee-dot">•</span>
     <span>Bot WA — Rp5.000</span><span class="marquee-dot">•</span>
-    <span>SC Evernight Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>SC Alya Ai — Rp75.000</span><span class="marquee-dot">•</span>
     <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
     <span>⭐ Stok Unlimited</span><span class="marquee-dot">•</span>
     <span>Bayar via DANA / GoPay / OVO / QRIS</span><span class="marquee-dot">•</span>
@@ -1037,13 +1037,13 @@ const BG_CLASSES=['','bg2','bg3'];
 let allProductReviews={};
 
 const DEFAULT_PRODUCTS=[
-  {id:'sewa-bot',cat:'bot-wa',title:'Sewa Bot',imgClass:'bot',imgTitle:'SEWA BOT EVERNIGHT MULTIDEVICE',imgUrl:'',price:'Rp500',available:'Tersedia hingga Rp40.000',desc:'Sewa bot untuk jaga grup anda yang memiliki 1800+ fitur aktif.',
+  {id:'sewa-bot',cat:'bot-wa',title:'Sewa Bot',imgClass:'bot',imgTitle:'SEWA BOT Alya MULTIDEVICE',imgUrl:'',price:'Rp500',available:'Tersedia hingga Rp40.000',desc:'Sewa bot untuk jaga grup anda yang memiliki 1800+ fitur aktif.',
    varians:[{name:'1 hari',price:'Rp500'},{name:'3 hari',price:'Rp2.000'},{name:'5 hari',price:'Rp3.500'},{name:'7 hari',price:'Rp4.000'},{name:'14 hari',price:'Rp6.000'},{name:'1 bulan',price:'Rp7.000'},{name:'3 bulan',price:'Rp26.000'},{name:'1 tahun',price:'Rp40.000'}],
    features:[{icon:'💬',name:'Bot WhatsApp',desc:'Bot aktif langsung di grup kamu'},{icon:'🔄',name:'Aktivasi Otomatis',desc:'Bot masuk grup setelah bayar'},{icon:'⚡',name:'Fitur Lengkap',desc:'1800+ command aktif'},{icon:'🛡️',name:'Support 24/7',desc:'CS siap bantu kapan saja'}]},
   {id:'panel',cat:'panel',title:'Panel Bot WA',imgClass:'panel',imgTitle:'PANEL PTERO PREMIUM',imgUrl:'',price:'Rp2.000',available:'Tersedia hingga Rp50.000',desc:'Panel pterodactyl premium menggunakan VPS legal, aktif hingga 1 bulan penuh.',
    varians:[{name:'1 minggu',price:'Rp2.000'},{name:'2 minggu',price:'Rp4.000'},{name:'1 bulan',price:'Rp7.000'},{name:'2 bulan',price:'Rp12.000'},{name:'Permanen',price:'Rp50.000'}],
    features:[{icon:'🖥️',name:'VPS Legal',desc:'VPS berlisensi resmi'},{icon:'⚡',name:'Performa Tinggi',desc:'Uptime 99.9% dijamin'},{icon:'🔒',name:'Aman & Stabil',desc:'Tidak pernah down sembarangan'},{icon:'🛡️',name:'Support 24/7',desc:'CS siap bantu kapan saja'}]},
-  {id:'script',cat:'source-code',title:'SC Evernight Ai',imgClass:'sc',imgTitle:'EVERNIGHT MULTIDEVICE V10.5 — PREMIUM',imgUrl:'',price:'Rp75.000',available:'Tersedia: Unlimited',desc:'Source code bot WhatsApp Evernight AI versi premium dengan 1800+ fitur lengkap siap pakai.',
+  {id:'script',cat:'source-code',title:'SC Alya Ai',imgClass:'sc',imgTitle:'Alya MULTIDEVICE V10.5 — PREMIUM',imgUrl:'',price:'Rp75.000',available:'Tersedia: Unlimited',desc:'Source code bot WhatsApp Alya AI versi premium dengan 1800+ fitur lengkap siap pakai.',
    varians:[{name:'Download',price:'Rp75.000'}],
    features:[{icon:'📦',name:'Full Source Code',desc:'Kode lengkap tanpa enkripsi'},{icon:'🔄',name:'Update Gratis',desc:'Dapat update versi terbaru'},{icon:'⚙️',name:'1800+ Fitur',desc:'Menu all, game, fun, search, sticker'},{icon:'🛡️',name:'Support Setup',desc:'Bantuan instalasi oleh CS'}]}
 ];
@@ -1547,7 +1547,7 @@ function goToPayment(){
     const botname2=document.getElementById('sc-botname2').value.trim();
     const nomerbot=document.getElementById('sc-nomerbot').value.trim();
     if(!owner||!namaOwn||!botname||!nomerbot){showToast('⚠️ Data wajib: Owner, Nama Owner, Botname, Nomer Bot!');return;}
-    msg=`📦 *ORDER SC EVERNIGHT AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk : SC Evernight Ai v10.5 Premium\n💰 Harga  : ${v.price}\n\n📋 *KONFIGURASI SCRIPT:*\nglobal.owner = '${owner}'\nglobal.namaOwner = "${namaOwn}"\nglobal.packname = '${packname}'\nglobal.author = '${author}'\nglobal.botname = '${botname}'\nglobal.botname2 = "${botname2}"\n\nNomer bot : ${nomerbot}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+    msg=`📦 *ORDER SC Alya AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk : SC Alya Ai v10.5 Premium\n💰 Harga  : ${v.price}\n\n📋 *KONFIGURASI SCRIPT:*\nglobal.owner = '${owner}'\nglobal.namaOwner = "${namaOwn}"\nglobal.packname = '${packname}'\nglobal.author = '${author}'\nglobal.botname = '${botname}'\nglobal.botname2 = "${botname2}"\n\nNomer bot : ${nomerbot}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
   }else{
     const wa=document.getElementById('sb-wa')?.value?.trim()||'';
     if(!wa){showToast('⚠️ Lengkapi nomor WA!');return;}
@@ -1817,7 +1817,7 @@ async function savePendingScriptOrder(){
     const nomerbot=document.getElementById('sc-nomerbot')?.value?.trim()||'-';
     const namaOwner=document.getElementById('sc-namaowner')?.value?.trim()||'-';
     const order={
-      id,produk:'SC Evernight Ai v11.0.0',cat:'source-code',
+      id,produk:'SC Alya Ai v11.0.0',cat:'source-code',
       harga:v.price,wa:nomerbot,namaOwner,
       tanggal:now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
       waktu:now.toISOString(),status:'menunggu',lunas:false,
@@ -1982,7 +1982,7 @@ IDENTITAS:
 - Bahasa: Indonesia kasual (kak, nih, dong, sih, aja, dll)
 
 PRODUK YANG DIJUAL:
-1. 🤖 Sewa Bot WhatsApp (Evernight AI Multidevice)
+1. 🤖 Sewa Bot WhatsApp (Alya AI Multidevice)
    - 1 hari: Rp500 | 3 hari: Rp2.000 | 5 hari: Rp3.500 | 7 hari: Rp4.000
    - 14 hari: Rp6.000 | 1 bulan: Rp7.000 | 3 bulan: Rp26.000 | 1 tahun: Rp40.000
    - Fitur: 1800+ command, game, sticker, info, moderasi grup
@@ -1993,7 +1993,7 @@ PRODUK YANG DIJUAL:
    - 2 bulan: Rp12.000 | Permanen: Rp50.000
    - VPS legal, uptime 99.9%, RAM 2GB - Unlimited
 
-3. 📦 SC Evernight AI (Source Code)
+3. 📦 SC Alya AI (Source Code)
    - Harga: Rp75.000 (beli sekali, update gratis selamanya)
    - Full source code tanpa enkripsi, 1800+ fitur
 
@@ -2151,7 +2151,7 @@ async function askLocalCS(userMessage){
     if(/panel|pterodactyl|ptero/i.test(lower))
       return extractSection('panel')||`Harga Panel Pterodactyl kak:\n• 1 minggu: Rp2.000\n• 1 bulan: Rp7.000\n• Permanen: Rp50.000\n\nVPS legal, uptime 99.9%! 🖥️`;
     if(/sc|source.*code|script/i.test(lower))
-      return extractSection('sc')||`SC Evernight AI: Rp75.000 kak 📦\nBeli sekali, update gratis selamanya! Tanpa enkripsi, 1800+ fitur langsung pakai.`;
+      return extractSection('sc')||`SC Alya AI: Rp75.000 kak 📦\nBeli sekali, update gratis selamanya! Tanpa enkripsi, 1800+ fitur langsung pakai.`;
     return `Harga produk kita kak:\n• 🤖 Sewa Bot: mulai Rp500/hari\n• 🖥️ Panel: mulai Rp2.000/minggu\n• 📦 Source Code: Rp75.000\n\nMau info produk yang mana? 😊`;
   }
 
@@ -2165,7 +2165,7 @@ async function askLocalCS(userMessage){
 
   // ── Source code ──
   if(/sc|source.*code|script|source/i.test(lower))
-    return `SC Evernight AI — Rp75.000 kak 📦\nFull source code tanpa enkripsi, 1800+ fitur, update gratis selamanya.\nPas banget buat yang mau develop bot sendiri!`;
+    return `SC Alya AI — Rp75.000 kak 📦\nFull source code tanpa enkripsi, 1800+ fitur, update gratis selamanya.\nPas banget buat yang mau develop bot sendiri!`;
 
   // ── Cara order ──
   if(/cara.*order|gimana.*order|cara.*beli|order.*gimana|langkah|step/i.test(lower))
@@ -2211,7 +2211,7 @@ function extractSection(keyword){
 // Fallback replies jika AI CS dimatikan dari admin
 function getFallbackReply(lower){
   if(lower.includes('harga')||lower.includes('berapa'))
-    return `Harga produk kita mulai dari Rp500 kak 😊\n• Sewa Bot: Rp500/hari\n• Panel: Rp2.000/minggu\n• SC Evernight: Rp75.000\n\nMau yang mana?`;
+    return `Harga produk kita mulai dari Rp500 kak 😊\n• Sewa Bot: Rp500/hari\n• Panel: Rp2.000/minggu\n• SC Alya: Rp75.000\n\nMau yang mana?`;
   if(lower.includes('bot')||lower.includes('sewa'))
     return `Sewa Bot kita ada 1800+ fitur kak 🤖 Mulai Rp500/hari aja, langsung aktif setelah bayar!`;
   if(lower.includes('panel'))
@@ -2549,11 +2549,11 @@ function initScrollReveal(){
 let FAKE_BUYERS=[
   {name:'Reza',city:'Jakarta',product:'Sewa Bot 1 bulan',avatar:'R'},
   {name:'Fajar',city:'Surabaya',product:'Panel Bot WA 2 minggu',avatar:'F'},
-  {name:'Dinda',city:'Bandung',product:'SC Evernight Ai',avatar:'D'},
+  {name:'Dinda',city:'Bandung',product:'SC Alya Ai',avatar:'D'},
   {name:'Aldi',city:'Medan',product:'Sewa Bot 7 hari',avatar:'A'},
   {name:'Sinta',city:'Yogyakarta',product:'Panel Bot WA 1 bulan',avatar:'S'},
   {name:'Bagas',city:'Semarang',product:'Sewa Bot 14 hari',avatar:'B'},
-  {name:'Nadia',city:'Makassar',product:'SC Evernight Ai',avatar:'N'},
+  {name:'Nadia',city:'Makassar',product:'SC Alya Ai',avatar:'N'},
   {name:'Rizki',city:'Palembang',product:'Sewa Bot 3 bulan',avatar:'R'},
   {name:'Ayu',city:'Denpasar',product:'Panel Bot WA Permanen',avatar:'A'},
   {name:'Hendra',city:'Malang',product:'Sewa Bot 1 tahun',avatar:'H'},
@@ -3431,7 +3431,7 @@ function doDownloadScript(){
       <div class="dl-script-sub">Admin sudah mengkonfirmasi pembayaran kamu. Silakan download scriptnya sekarang!</div>
       <div class="dl-script-info">
         <div class="dl-script-info-row"><span>📁</span><span>File: <strong id="dl-filename-label">alip_ai_MD_v11.0.0.zip</strong></span></div>
-        <div class="dl-script-info-row"><span>🤖</span><span>SC Evernight Ai <span id="dl-version-label">v11.0.0</span> · Full Source</span></div>
+        <div class="dl-script-info-row"><span>🤖</span><span>SC Alya Ai <span id="dl-version-label">v11.0.0</span> · Full Source</span></div>
         <div class="dl-script-info-row"><span>☁️</span><span>Host: <strong>MediaFire</strong> — aman &amp; cepat</span></div>
       </div>
       <button class="btn-dl-mediafire" onclick="doDownloadScript()">
@@ -3487,7 +3487,9 @@ function doDownloadScript(){
   function _url(path) {
     const base = window.FIREBASE_URL || '';
     const tok = window.FIREBASE_TOKEN || '';
-    return `${base}/${path}.json${tok ? '?auth=' + tok : ''}`;
+    // Normalkan path: hilangkan "store/" di awal agar tidak double
+    const cleanPath = path.replace(/^\/store\//, '').replace(/^store\//, '');
+    return `${base}/store/${cleanPath}.json${tok ? '?auth=' + tok : ''}`;
   }
 
   async function _get(path) {
@@ -3505,8 +3507,15 @@ function doDownloadScript(){
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(val),
       });
-      return r.ok;
-    } catch { return false; }
+      if (!r.ok) {
+        let errMsg = `HTTP ${r.status}`;
+        try { const d = await r.clone().json(); errMsg = d?.error || errMsg; } catch(_){}
+        throw new Error(errMsg);
+      }
+      return true;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async function _push(path, val) {
@@ -3615,10 +3624,14 @@ function doDownloadScript(){
     const uid = username.toLowerCase().replace(/\s/g, '_');
 
     // Cek apakah uid sudah ada
-    const existing = await _get(`store/users/${uid}`);
-    if (existing) return { ok: false, err: 'Username sudah dipakai!' };
+    let existing = null;
+    try { existing = await _get(`users/${uid}`); } catch(_) {}
+    if (existing) return { ok: false, err: 'Username sudah dipakai, coba yang lain!' };
 
-    const pwHash = await _simpleHash(password);
+    let pwHash;
+    try { pwHash = await _simpleHash(password); }
+    catch(e) { return { ok: false, err: 'Error hash password: ' + e.message }; }
+
     const user = {
       uid,
       username,
@@ -3631,8 +3644,16 @@ function doDownloadScript(){
       createdAt: new Date().toISOString(),
     };
 
-    const ok = await _set(`store/users/${uid}`, user);
-    if (!ok) return { ok: false, err: 'Gagal daftar, coba lagi!' };
+    try {
+      await _set(`users/${uid}`, user);
+    } catch(e) {
+      // Tangkap error Firebase spesifik
+      const msg = e.message || '';
+      if (msg.includes('401') || msg.toLowerCase().includes('unauthorized') || msg.toLowerCase().includes('permission')) {
+        return { ok: false, err: 'Firebase tidak mengizinkan tulis data. Cek Rules di Firebase Console → Database Rules, ubah ke "true" untuk read & write.' };
+      }
+      return { ok: false, err: 'Gagal simpan akun: ' + (msg || 'coba lagi!') };
+    }
 
     _currentUser = user;
     _saveSession({ uid, username, role: user.role, avatar: user.profile.avatar });
@@ -3645,12 +3666,12 @@ function doDownloadScript(){
     const uid = username.toLowerCase().replace(/\s/g, '_');
     const pwHash = await _simpleHash(password);
 
-    const user = await _get(`store/users/${uid}`);
+    const user = await _get(`users/${uid}`);
     if (!user) return { ok: false, err: 'Username tidak ditemukan!' };
     if (user.passwordHash !== pwHash) return { ok: false, err: 'Password salah!' };
 
     // Cek ban
-    const banData = await _get(`store/bans/${uid}`);
+    const banData = await _get(`bans/${uid}`);
     if (banData) {
       if (banData.type === 'permanent') {
         return { ok: false, err: `Akun kamu diban permanen.\nAlasan: ${banData.reason}` };
@@ -3732,7 +3753,7 @@ function doDownloadScript(){
   }
 
   async function _checkBanOnLoad(uid) {
-    const banData = await _get(`store/bans/${uid}`);
+    const banData = await _get(`bans/${uid}`);
     if (!banData) return false;
     if (banData.type === 'permanent') return true;
     if (banData.type === 'temp' && new Date(banData.expireAt) > new Date()) return true;
@@ -3854,10 +3875,10 @@ function doDownloadScript(){
       time: new Date().toISOString(),
       uid,
     };
-    const data = await _get('store/store-gchat');
+    const data = await _get('store-gchat');
     const msgs = _norm(data);
     msgs.push(msg);
-    await _set('store/store-gchat', msgs);
+    await _set('store-gchat', msgs);
   }
 
   window.gchatSendImage = gchatSendImage;
@@ -3945,12 +3966,12 @@ function doDownloadScript(){
     // 1. Simpan ke array lama /store/orders (compatibility)
     let saved = false;
     try {
-      const data = await _get('store/orders');
+      const data = await _get('store-orders');
       const orders = _norm(data);
       // filter _key meta sebelum simpan
       const clean = orders.map(({ _key, ...rest }) => rest);
       clean.push(order);
-      saved = await _set('store/orders', clean);
+      saved = await _set('store-orders', clean);
     } catch (e) {
       console.error('[saveOrder] error:', e);
     }
@@ -4181,16 +4202,57 @@ function doDownloadScript(){
         color: #fff !important;
       }
       ._auth-err {
-        display: none !important;
-        background: rgba(255,61,90,0.1) !important;
-        border: 1px solid rgba(255,61,90,0.35) !important;
-        border-radius: 8px !important;
-        padding: 10px 12px !important;
-        font-size: 12px !important;
-        color: #ff3d5a !important;
-        margin-bottom: 12px !important;
-        line-height: 1.5 !important;
+        display: none;
+        background: rgba(255,61,90,0.1);
+        border: 1px solid rgba(255,61,90,0.35);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #ff3d5a;
+        margin-bottom: 12px;
+        line-height: 1.5;
+        white-space: pre-line;
       }
+      ._auth-err.show {
+        display: block !important;
+      }
+      
+      /* ── PROFILE MODAL ─────────────────────────────────── */
+      #_prof-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;}
+      #_prof-overlay.open{display:flex;}
+      #_prof-modal{background:linear-gradient(160deg,#14102a 0%,#0d0d1a 100%);border:1px solid rgba(168,85,247,.25);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 32px;max-height:90vh;overflow-y:auto;}
+      ._prof-handle{width:36px;height:4px;border-radius:99px;background:rgba(255,255,255,.15);margin:12px auto 0;}
+      ._prof-head{text-align:center;padding:20px 20px 0;}
+      ._prof-avatar-wrap{position:relative;width:88px;height:88px;margin:0 auto 12px;}
+      ._prof-avatar{width:88px;height:88px;border-radius:24px;background:linear-gradient(135deg,#7c3aed,#d946ef);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;box-shadow:0 0 0 3px rgba(168,85,247,.4),0 8px 32px rgba(124,58,237,.5);overflow:hidden;border:none;padding:0;}
+      ._prof-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:24px;}
+
+      ._prof-avatar-edit{position:absolute;bottom:-6px;right:-6px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#d946ef);border:2px solid #0d0d1a;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;}
+      ._prof-username{font-size:11px;color:rgba(168,85,247,.8);font-weight:600;letter-spacing:.5px;margin-bottom:2px;}
+      ._prof-role-badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#a855f7;margin-bottom:4px;}
+      ._prof-joined{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;}
+      ._prof-divider{height:1px;background:rgba(255,255,255,.06);margin:16px 0;}
+      ._prof-section{padding:0 20px;}
+      ._prof-label{font-size:10px;color:rgba(168,85,247,.7);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;}
+      ._prof-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+      ._prof-field-icon{font-size:16px;flex-shrink:0;}
+      ._prof-field input{flex:1;background:none;border:none;outline:none;color:#fff;font-size:13px;font-family:inherit;}
+      ._prof-field input::placeholder{color:rgba(255,255,255,.25);}
+      ._prof-field:focus-within{border-color:rgba(168,85,247,.5);background:rgba(168,85,247,.07);}
+      ._prof-save-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#d946ef);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:opacity .2s;}
+      ._prof-save-btn:disabled{opacity:.5;}
+      ._prof-logout-btn{width:100%;padding:12px;border-radius:14px;background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.25);color:#ff3d5a;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:all .2s;}
+      ._prof-logout-btn:hover{background:rgba(255,61,90,.15);}
+      ._prof-msg{text-align:center;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:8px;display:none;}
+      ._prof-msg.ok{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#4ade80;}
+      ._prof-msg.err{display:block;background:rgba(255,61,90,.1);border:1px solid rgba(255,61,90,.3);color:#f87171;}
+      ._prof-upload-spinner{display:none;font-size:11px;color:rgba(168,85,247,.7);text-align:center;margin-bottom:6px;}
+      ._prof-upload-spinner.show{display:block;}
+      ._prof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0;}
+      ._prof-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px;text-align:center;}
+      ._prof-stat-val{font-size:18px;font-weight:700;color:#a855f7;}
+      ._prof-stat-label{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;}
+
       ._auth-hint {
         font-size: 10px !important;
         color: rgba(255,255,255,0.28) !important;
@@ -4397,8 +4459,8 @@ function doDownloadScript(){
     document.getElementById('_auth-success').style.display = 'none';
     const loginErr = document.getElementById('_auth-login-err');
     const regErr = document.getElementById('_auth-reg-err');
-    if (loginErr) { loginErr.style.display = 'none'; }
-    if (regErr) { regErr.style.display = 'none'; }
+    if (loginErr) { loginErr.classList.remove('show'); }
+    if (regErr) { regErr.classList.remove('show'); }
     // Update header
     const titleEl = document.getElementById('_auth-modal-title');
     const subEl = document.getElementById('_auth-modal-sub');
@@ -4420,14 +4482,15 @@ function doDownloadScript(){
     const errEl = document.getElementById('_auth-login-err');
 
     const showErr = (msg) => {
-      if (errEl) { errEl.style.display = 'block'; errEl.textContent = msg; }
+      if (errEl) { errEl.textContent = msg; errEl.classList.add('show'); }
     };
 
-    if (errEl) errEl.style.display = 'none';
+    if (errEl) { errEl.classList.remove('show'); errEl.textContent = ''; }
 
     if (!username) return showErr('Username wajib diisi!');
     if (!password) return showErr('Password wajib diisi!');
     if (!window.FIREBASE_URL) return showErr('Konfigurasi Firebase tidak ditemukan!');
+    if (window._firebaseRulesError) return showErr('⚠️ ' + window._firebaseRulesError);
 
     const btn = document.getElementById('_auth-login-btn');
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Memproses...'; }
@@ -4436,11 +4499,10 @@ function doDownloadScript(){
     try {
       result = await authLogin(username, password);
     } catch (e) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Masuk Sekarang →'; }
       return showErr('Terjadi error: ' + (e.message || 'Coba lagi!'));
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Masuk Sekarang →'; }
     }
-
-    if (btn) { btn.disabled = false; btn.textContent = 'Masuk Sekarang →'; }
 
     if (!result || !result.ok) {
       return showErr(result?.err || 'Login gagal, coba lagi!');
@@ -4474,10 +4536,10 @@ function doDownloadScript(){
     const errEl = document.getElementById('_auth-reg-err');
 
     const showErr = (msg) => {
-      if (errEl) { errEl.style.display = 'block'; errEl.textContent = msg; }
+      if (errEl) { errEl.textContent = msg; errEl.classList.add('show'); }
     };
 
-    if (errEl) errEl.style.display = 'none';
+    if (errEl) { errEl.classList.remove('show'); errEl.textContent = ''; }
 
     // Validasi sisi klien sebelum kirim ke Firebase
     if (!username) return showErr('Username wajib diisi!');
@@ -4488,19 +4550,21 @@ function doDownloadScript(){
 
     // Cek Firebase URL tersedia
     if (!window.FIREBASE_URL) return showErr('Konfigurasi Firebase tidak ditemukan!');
+    // Cek Firebase Rules error yang terdeteksi saat init
+    if (window._firebaseRulesError) return showErr('⚠️ ' + window._firebaseRulesError);
 
     const btn = document.getElementById('_auth-reg-btn');
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Memproses...'; }
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Membuat akun...'; }
 
     let result;
     try {
       result = await authRegister(username, password, name || username);
     } catch (e) {
+      return showErr('Error: ' + (e.message || 'Coba lagi!'));
+    } finally {
+      // Pastikan button SELALU kembali aktif tidak peduli apapun
       if (btn) { btn.disabled = false; btn.textContent = 'Buat Akun Gratis 🚀'; }
-      return showErr('Terjadi error: ' + (e.message || 'Coba lagi!'));
     }
-
-    if (btn) { btn.disabled = false; btn.textContent = 'Buat Akun Gratis 🚀'; }
 
     if (!result || !result.ok) {
       return showErr(result?.err || 'Gagal mendaftar, coba lagi!');
@@ -4601,7 +4665,7 @@ function doDownloadScript(){
     btn.onclick = () => {
       const user = getCurrentUser();
       if (user) {
-        if (confirm(`Logout dari akun ${user.username}?`)) authLogout();
+        _openProfile();
       } else {
         window.openAuthModal();
       }
@@ -4609,14 +4673,12 @@ function doDownloadScript(){
 
     topbar.appendChild(btn);
 
-    // Update button text saat auth berubah
+    // Update button saat auth berubah
     onAuthChange((user) => {
       if (user) {
-        btn.textContent = `👤 ${user.username}`;
-        btn.style.background = 'rgba(34,197,94,.15)';
-        btn.style.borderColor = 'rgba(34,197,94,.4)';
-        btn.style.color = '#22c55e';
+        _profUpdateNavBtn(user);
       } else {
+        btn.innerHTML = '';
         btn.textContent = '👤 Masuk';
         btn.style.background = 'rgba(168,85,247,.15)';
         btn.style.borderColor = 'rgba(168,85,247,.4)';
@@ -4634,7 +4696,7 @@ function doDownloadScript(){
     if (!session?.uid) return;
 
     // Verifikasi session masih valid (user masih ada di Firebase)
-    const user = await _get(`store/users/${session.uid}`);
+    const user = await _get(`users/${session.uid}`);
     if (!user) { _clearSession(); return; }
 
     // Cek ban
@@ -4658,6 +4720,7 @@ function doDownloadScript(){
     // Inject UI
     _injectAuthModal();
     _injectAuthButton();
+    _injectProfileModal();
     _injectGchatImageBtn();
 
     // Patch functions
@@ -4673,12 +4736,328 @@ function doDownloadScript(){
     // Restore session
     await _restoreSession();
 
+    // ── AUTO TEST FIREBASE READ+WRITE saat init ──────────────────
+    (async () => {
+      const base = window.FIREBASE_URL || '';
+      if (!base) {
+        console.error('[Firebase] ❌ FIREBASE_URL kosong!');
+        return;
+      }
+      // Test READ
+      try {
+        const r = await fetch(`${base}/store/.json`);
+        if (r.status === 401 || r.status === 403) {
+          console.error('[Firebase] ❌ READ DITOLAK (HTTP ' + r.status + ') — Rules belum diset!');
+          window._firebaseRulesError = 'Firebase Rules menolak akses. Buka Firebase Console → Realtime Database → Rules, ubah ke: {\"rules\":{\"read\":true,\"write\":true}}';
+        } else {
+          console.log('[Firebase] ✅ READ ok (HTTP ' + r.status + ')');
+        }
+      } catch(e) {
+        console.error('[Firebase] ❌ READ error:', e.message);
+        window._firebaseRulesError = 'Tidak bisa koneksi ke Firebase: ' + e.message;
+      }
+      // Test WRITE
+      try {
+        const r2 = await fetch(`${base}/store/_ping.json`, {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({t: Date.now()})
+        });
+        if (r2.status === 401 || r2.status === 403) {
+          console.error('[Firebase] ❌ WRITE DITOLAK (HTTP ' + r2.status + ') — Rules write = false!');
+          window._firebaseRulesError = 'Firebase Rules menolak WRITE. Buka Firebase Console → Realtime Database → Rules, ubah \"write\" ke true.';
+        } else {
+          console.log('[Firebase] ✅ WRITE ok (HTTP ' + r2.status + ')');
+          window._firebaseRulesError = null;
+        }
+      } catch(e) {
+        console.error('[Firebase] ❌ WRITE error:', e.message);
+      }
+    })();
+
     console.log('[FirebaseStoreAddon] ✅ Loaded & initialized');
   });
 
   /* ============================================================
      10. PUBLIC API
      ============================================================ */
+
+  /* ============================================================
+     PROFILE SYSTEM — edit nama, foto profil, logout
+     ============================================================ */
+
+  function _injectProfileModal() {
+    if (document.getElementById('_prof-overlay')) return;
+    const el = document.createElement('div');
+    el.id = '_prof-overlay';
+    el.innerHTML = `
+      <div id="_prof-modal">
+        <div class="_prof-handle"></div>
+        <div class="_prof-head">
+          <div class="_prof-avatar-wrap">
+            <div class="_prof-avatar" id="_prof-av-display">U</div>
+            <div class="_prof-avatar-edit" onclick="_profPickPhoto()" title="Ganti foto">📷</div>
+            <input type="file" id="_prof-file-input" accept="image/*" style="display:none" onchange="_profHandleFile(this)">
+          </div>
+          <div class="_prof-username" id="_prof-uname">@username</div>
+          <div class="_prof-role-badge" id="_prof-role">User</div>
+          <div class="_prof-joined" id="_prof-joined"></div>
+        </div>
+
+        <div class="_prof-divider"></div>
+
+        <div class="_prof-section">
+          <div class="_prof-label">📊 Statistik</div>
+          <div class="_prof-stats">
+            <div class="_prof-stat"><div class="_prof-stat-val" id="_prof-stat-orders">-</div><div class="_prof-stat-label">Total Order</div></div>
+            <div class="_prof-stat"><div class="_prof-stat-val" id="_prof-stat-joined">-</div><div class="_prof-stat-label">Bergabung</div></div>
+          </div>
+        </div>
+
+        <div class="_prof-divider"></div>
+
+        <div class="_prof-section">
+          <div class="_prof-label">✏️ Edit Profil</div>
+          <div class="_prof-upload-spinner" id="_prof-spinner">⏳ Mengupload foto...</div>
+          <div class="_prof-msg" id="_prof-msg"></div>
+          <div class="_prof-field">
+            <span class="_prof-field-icon">🪪</span>
+            <input id="_prof-inp-name" type="text" placeholder="Nama tampilan kamu" maxlength="30">
+          </div>
+          <div class="_prof-field" style="opacity:.5;pointer-events:none;cursor:default">
+            <span class="_prof-field-icon">🔒</span>
+            <span style="flex:1;font-size:13px;color:rgba(255,255,255,.4)" id="_prof-inp-username">username</span>
+            <span style="font-size:10px;color:rgba(255,255,255,.25)">tidak bisa diubah</span>
+          </div>
+          <button class="_prof-save-btn" id="_prof-save-btn" onclick="_profSave()">💾 Simpan Perubahan</button>
+          <button class="_prof-logout-btn" onclick="_profLogout()">🚪 Logout dari Akun</button>
+        </div>
+      </div>`;
+
+    // Tutup saat klik overlay (luar modal)
+    el.addEventListener('click', (e) => {
+      if (e.target === el) _closeProfile();
+    });
+    document.body.appendChild(el);
+  }
+
+  function _openProfile() {
+    const user = getCurrentUser();
+    if (!user) { window.openAuthModal(); return; }
+    _profFillData(user);
+    document.getElementById('_prof-overlay').classList.add('open');
+    // Load stats
+    _profLoadStats(user.uid);
+  }
+
+  function _closeProfile() {
+    const el = document.getElementById('_prof-overlay');
+    if (el) el.classList.remove('open');
+  }
+  window._closeProfile = _closeProfile;
+
+  function _profSetAvatar(av, avatarUrl, letter) {
+    if (!av) return;
+    if (avatarUrl) {
+      const img = document.createElement('img');
+      img.src = avatarUrl;
+      img.alt = 'foto profil';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:24px';
+      img.onerror = () => { av.innerHTML = ''; av.textContent = letter; };
+      av.innerHTML = '';
+      av.appendChild(img);
+    } else {
+      av.innerHTML = '';
+      av.textContent = letter;
+    }
+  }
+
+  function _profFillData(user) {
+    const name = user.profile?.name || user.username || '';
+    const avatarUrl = user.profile?.avatarUrl || null;
+    const letter = (name || user.username || 'U')[0].toUpperCase();
+
+    // Avatar display - pakai helper agar tidak ada bug textContent vs innerHTML
+    const av = document.getElementById('_prof-av-display');
+    _profSetAvatar(av, avatarUrl, letter);
+
+    // Fields
+    const uname = document.getElementById('_prof-uname');
+    if (uname) uname.textContent = '@' + (user.username || '');
+    const roleEl = document.getElementById('_prof-role');
+    if (roleEl) {
+      roleEl.textContent = user.role === 'admin' ? '👑 Admin' : '⭐ Member';
+      roleEl.style.color = user.role === 'admin' ? '#f59e0b' : '#a855f7';
+      roleEl.style.borderColor = user.role === 'admin' ? 'rgba(245,158,11,.3)' : 'rgba(168,85,247,.3)';
+    }
+    const joinedEl = document.getElementById('_prof-joined');
+    if (joinedEl && user.createdAt) {
+      joinedEl.textContent = 'Bergabung ' + new Date(user.createdAt).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+    }
+    const nameInp = document.getElementById('_prof-inp-name');
+    if (nameInp) nameInp.value = name;
+    const unameInp = document.getElementById('_prof-inp-username');
+    if (unameInp) unameInp.textContent = user.username || '';
+
+    // Reset msg
+    _profMsg('', '');
+  }
+
+  async function _profLoadStats(uid) {
+    // Hitung orders milik user ini
+    try {
+      const data = await _get('store-orders');
+      const orders = Array.isArray(data) ? data : (data && typeof data === 'object' ? Object.values(data) : []);
+      const myOrders = orders.filter(o => o && (o.uid === uid || o.username === getCurrentUser()?.username));
+      const el = document.getElementById('_prof-stat-orders');
+      if (el) el.textContent = myOrders.length;
+    } catch(_) {}
+
+    // Joined (berapa hari yang lalu)
+    const user = getCurrentUser();
+    if (user?.createdAt) {
+      const days = Math.floor((Date.now() - new Date(user.createdAt)) / 86400000);
+      const el = document.getElementById('_prof-stat-joined');
+      if (el) el.textContent = days === 0 ? 'Hari ini' : days + ' hari';
+    }
+  }
+
+  function _profMsg(msg, type) {
+    const el = document.getElementById('_prof-msg');
+    if (!el) return;
+    el.className = '_prof-msg' + (type ? ' ' + type : '');
+    el.textContent = msg;
+  }
+
+  function _profPickPhoto() {
+    document.getElementById('_prof-file-input')?.click();
+  }
+  window._profPickPhoto = _profPickPhoto;
+
+  async function _profHandleFile(input) {
+    const file = input?.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { _profMsg('Foto maksimal 5MB!', 'err'); return; }
+
+    const spinner = document.getElementById('_prof-spinner');
+    const saveBtn = document.getElementById('_prof-save-btn');
+    if (spinner) spinner.classList.add('show');
+    if (saveBtn) saveBtn.disabled = true;
+    _profMsg('', '');
+
+    try {
+      // Upload ke ImgBB pakai key yang sama dengan bukti bayar
+      const IMGBB_KEY = window.IMGBB_API_KEY || '6faadb795960be644410c4211ebb0558';
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+        method: 'POST', body: formData
+      });
+      const d = await res.json();
+      if (!d.success) throw new Error(d.error?.message || 'Upload gagal');
+
+      const imgUrl = d.data.url;
+
+      // Tampilkan preview langsung
+      const av = document.getElementById('_prof-av-display');
+      _profSetAvatar(av, imgUrl, (getCurrentUser()?.profile?.name || getCurrentUser()?.username || 'U')[0].toUpperCase());
+
+      // Simpan ke Firebase
+      const user = getCurrentUser();
+      if (user) {
+        user.profile = user.profile || {};
+        user.profile.avatarUrl = imgUrl;
+        user.profile.avatar = (user.profile.name || user.username || 'U')[0].toUpperCase();
+        await _set(`users/${user.uid}`, user);
+        _currentUser = user;
+        // Update navbar button
+        _profUpdateNavBtn(user);
+        _profMsg('✅ Foto profil berhasil diperbarui!', 'ok');
+      }
+    } catch(e) {
+      _profMsg('❌ Gagal upload: ' + e.message, 'err');
+    } finally {
+      if (spinner) spinner.classList.remove('show');
+      if (saveBtn) saveBtn.disabled = false;
+      input.value = '';
+    }
+  }
+  window._profHandleFile = _profHandleFile;
+
+  async function _profSave() {
+    const nameVal = (document.getElementById('_prof-inp-name')?.value || '').trim();
+    if (!nameVal) { _profMsg('Nama tidak boleh kosong!', 'err'); return; }
+    if (nameVal.length > 30) { _profMsg('Nama maksimal 30 karakter!', 'err'); return; }
+
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const saveBtn = document.getElementById('_prof-save-btn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳ Menyimpan...'; }
+    _profMsg('', '');
+
+    try {
+      user.profile = user.profile || {};
+      user.profile.name = nameVal;
+      user.profile.avatar = nameVal[0].toUpperCase();
+
+      await _set(`users/${user.uid}`, user);
+      _currentUser = user;
+
+      // Update gchat nick
+      if (typeof window.gchatNick !== 'undefined') {
+        window.gchatNick = user.username;
+        localStorage.setItem('gchat-nickname', user.username);
+      }
+
+      // Update navbar
+      _profUpdateNavBtn(user);
+
+      // Update header display
+      const uname = document.getElementById('_prof-uname');
+      if (uname) uname.textContent = '@' + user.username;
+
+      _profMsg('✅ Profil berhasil disimpan!', 'ok');
+      if (typeof window.showToast === 'function') window.showToast('✅ Profil diperbarui!');
+    } catch(e) {
+      _profMsg('❌ Gagal: ' + e.message, 'err');
+    } finally {
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Simpan Perubahan'; }
+    }
+  }
+  window._profSave = _profSave;
+
+  function _profLogout() {
+    if (confirm('Yakin mau logout?')) {
+      _closeProfile();
+      authLogout();
+    }
+  }
+  window._profLogout = _profLogout;
+
+  function _profUpdateNavBtn(user) {
+    const btn = document.getElementById('_store-auth-btn');
+    if (!btn) return;
+    const name = user.profile?.name || user.username || '';
+    const avatarUrl = user.profile?.avatarUrl;
+    btn.innerHTML = '';
+    if (avatarUrl) {
+      const img = document.createElement('img');
+      img.src = avatarUrl;
+      img.style.cssText = 'width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;border:1.5px solid rgba(34,197,94,.5)';
+      img.onerror = () => { img.remove(); };
+      btn.appendChild(img);
+      btn.appendChild(document.createTextNode(name || user.username));
+    } else {
+      btn.textContent = '👤 ' + (name || user.username);
+    }
+    btn.style.background = 'rgba(34,197,94,.15)';
+    btn.style.borderColor = 'rgba(34,197,94,.4)';
+    btn.style.color = '#22c55e';
+  }
+
+
+  window.openProfile = _openProfile;
   window.FirebaseStore = {
     authLogin,
     authRegister,
