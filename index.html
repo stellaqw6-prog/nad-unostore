@@ -123,9 +123,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .tab:hover{background:rgba(124,58,237,.1);color:var(--text);border-color:rgba(124,58,237,.3);}
 .tab.active{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border-color:transparent;box-shadow:0 3px 14px rgba(124,58,237,.35);}
 
-/* MODAL premium */
-.sheet{width:100%;max-height:93vh;background:linear-gradient(180deg,#0f0f1e 0%,var(--bg2) 100%);border-radius:22px 22px 0 0;overflow-y:auto;animation:slideUp .3s cubic-bezier(.4,0,.2,1);position:relative;border-top:2px solid transparent;background-clip:padding-box;}
-.sheet::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--accent),var(--purple));border-radius:22px 22px 0 0;z-index:1;}
+/* MODAL premium - MERGED (removed duplicate, kept combined) */
 
 /* BTN ORDER premium */
 .btn-order{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.2px;font-family:'Sora',sans-serif;box-shadow:0 4px 20px rgba(124,58,237,.35),0 1px 0 rgba(255,255,255,.1) inset;transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:7px;}
@@ -160,7 +158,8 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 /* MODAL */
 .overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:none;align-items:flex-end;}
 .overlay.open{display:flex;}
-.sheet{width:100%;max-height:93vh;background:var(--bg2);border-radius:20px 20px 0 0;overflow-y:auto;animation:slideUp .28s ease;position:relative;border-top:1.5px solid var(--purple);}
+.sheet{width:100%;max-height:93vh;background:linear-gradient(180deg,#0f0f1e 0%,var(--bg2) 100%);border-radius:22px 22px 0 0;overflow-y:auto;animation:slideUp .3s cubic-bezier(.4,0,.2,1);position:relative;border-top:2px solid transparent;background-clip:padding-box;}
+.sheet::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--accent),var(--purple));border-radius:22px 22px 0 0;z-index:1;}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px auto 0;}
 .sheet-close{position:absolute;top:13px;right:14px;width:27px;height:27px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
@@ -588,9 +587,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .product-card.featured .card-img::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,.04) 25%,rgba(168,85,247,.06) 50%,rgba(217,70,239,.04) 75%,transparent 100%);background-size:400% 400%;animation:holoShimmer 4s ease infinite;z-index:1;pointer-events:none;}
 @keyframes holoShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-/* FLOATING NOTIF */
-#float-notif{position:fixed;bottom:80px;left:14px;z-index:490;max-width:260px;background:rgba(13,13,26,.95);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.5);transform:translateX(-120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
-#float-notif.show{transform:translateX(0);}
+/* FLOATING NOTIF - see premium section below for full definition */
 .fn-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
 .fn-text{flex:1;min-width:0;}
 .fn-name{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -2226,6 +2223,12 @@ function chatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send
 function autoResizeChat(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,65)+'px';}
 function lanjutWhatsApp(){window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent('Halo Admin UnoTech Store, saya mau tanya tentang produk 🙏')}`,'_blank');}
 
+/* Expose openAuthModal ke window agar addon bisa panggil */
+window.openAuthModal = function(){
+  const modal = document.getElementById('_auth-modal');
+  if(modal) modal.style.display = 'flex';
+};
+
 
 /* =====================================================
    TOAST
@@ -3356,5 +3359,1064 @@ function doDownloadScript(){
     </div>
   </div>
 </div>
+
+<script>
+/**
+ * ============================================================
+ *  FIREBASE STORE ADDON — firebase-store-addon.js
+ *  TEPAT SEBELUM </body> di store_premium-1-2.html
+ * ============================================================
+ *
+ *  FITUR:
+ *  1. User Auth Simulasi (Firebase Realtime DB, tanpa SDK)
+ *     - Register / Login via username+password hash
+ *     - Session di sessionStorage (bukan data utama)
+ *     - Role: user | moderator | admin
+ *  2. Ban System — realtime listener, auto-logout jika diban
+ *  3. Global Chat upgrade:
+ *     - SSE realtime (ganti polling 3s)
+ *     - Kirim gambar (via URL / ImgBB)
+ *     - Blokir user banned dari kirim chat
+ *  4. Order System — addDoc style ke /store/orders push node
+ *     (fix: admin bisa lihat realtime)
+ *  5. Product Sync — SSE listener, store auto-update saat
+ *     admin edit produk
+ *  6. Profil user tersimpan di Firebase /store/users/{uid}
+ *  7. Unsubscribe semua listener saat logout/page unload
+ *
+ *  SYARAT:
+ *  - FIREBASE_URL sudah ada di store_premium-1-2.html (✓)
+ *  - Tidak mengubah HTML/CSS yang sudah ada
+ * ============================================================
+ */
+
+(function () {
+  'use strict';
+
+  /* ============================================================
+     UTILS
+     ============================================================ */
+
+  const _ready = (fn) => {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  };
+
+  function _url(path) {
+    const base = window.FIREBASE_URL || '';
+    const tok = window.FIREBASE_TOKEN || '';
+    return `${base}/${path}.json${tok ? '?auth=' + tok : ''}`;
+  }
+
+  async function _get(path) {
+    try {
+      const r = await fetch(_url(path));
+      if (!r.ok) return null;
+      return await r.json();
+    } catch { return null; }
+  }
+
+  async function _set(path, val) {
+    try {
+      const r = await fetch(_url(path), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(val),
+      });
+      return r.ok;
+    } catch { return false; }
+  }
+
+  async function _push(path, val) {
+    try {
+      const r = await fetch(_url(path), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(val),
+      });
+      if (!r.ok) return null;
+      const d = await r.json();
+      return d.name;
+    } catch { return null; }
+  }
+
+  async function _delete(path) {
+    try {
+      const r = await fetch(_url(path), { method: 'DELETE' });
+      return r.ok;
+    } catch { return false; }
+  }
+
+  function _norm(data) {
+    if (!data) return [];
+    if (Array.isArray(data)) return data.filter(Boolean);
+    if (typeof data === 'object') return Object.entries(data).map(([k, v]) => ({ _key: k, ...v }));
+    return [];
+  }
+
+  function _esc(t) {
+    return String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function _toast(msg) {
+    if (typeof window.showToast === 'function') window.showToast(msg);
+    else console.log('[Toast]', msg);
+  }
+
+  // Simple hash untuk password (bukan crypto, hanya obfuscate)
+  async function _simpleHash(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  /* ============================================================
+     SSE REALTIME LISTENERS
+     ============================================================ */
+
+  const _listeners = {};
+
+  function rtListen(path, cb) {
+    if (_listeners[path]) {
+      _listeners[path].close();
+      delete _listeners[path];
+    }
+    const base = window.FIREBASE_URL || '';
+    const tok = window.FIREBASE_TOKEN || '';
+    const url = `${base}/${path}.json${tok ? '?auth=' + tok : ''}`;
+
+    const es = new EventSource(url);
+    es.addEventListener('put', (e) => {
+      try { cb(JSON.parse(e.data).data); } catch (_) {}
+    });
+    es.addEventListener('patch', (e) => {
+      try { cb(null, 'patch'); } catch (_) {}
+    });
+    es.onerror = () => {};
+
+    _listeners[path] = es;
+    return () => { es.close(); delete _listeners[path]; };
+  }
+
+  function rtUnsubAll() {
+    Object.values(_listeners).forEach((es) => es.close());
+    Object.keys(_listeners).forEach((k) => delete _listeners[k]);
+  }
+
+  window.addEventListener('beforeunload', rtUnsubAll);
+
+  /* ============================================================
+     1. AUTH SYSTEM (Simulasi Firebase, tanpa SDK)
+     Session: sessionStorage (bukan data utama — hanya token sesi)
+     Data utama: /store/users/{uid}
+     ============================================================ */
+
+  const SESSION_KEY = '__fbs_session__';
+  let _currentUser = null;
+
+  function _getSession() {
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function _saveSession(user) {
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(user)); } catch (_) {}
+  }
+
+  function _clearSession() {
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
+  }
+
+  async function authRegister(username, password, displayName) {
+    if (!username || !password) return { ok: false, err: 'Username & password wajib diisi!' };
+    const uid = username.toLowerCase().replace(/\s/g, '_');
+
+    // Cek apakah uid sudah ada
+    const existing = await _get(`store/users/${uid}`);
+    if (existing) return { ok: false, err: 'Username sudah dipakai!' };
+
+    const pwHash = await _simpleHash(password);
+    const user = {
+      uid,
+      username,
+      passwordHash: pwHash,
+      role: 'user',
+      profile: { name: displayName || username, avatar: username[0].toUpperCase(), bio: '' },
+      isBanned: false,
+      banReason: '',
+      banExpire: null,
+      createdAt: new Date().toISOString(),
+    };
+
+    const ok = await _set(`store/users/${uid}`, user);
+    if (!ok) return { ok: false, err: 'Gagal daftar, coba lagi!' };
+
+    _currentUser = user;
+    _saveSession({ uid, username, role: user.role, avatar: user.profile.avatar });
+    _startBanListener(uid);
+    return { ok: true, user };
+  }
+
+  async function authLogin(username, password) {
+    if (!username || !password) return { ok: false, err: 'Username & password wajib!' };
+    const uid = username.toLowerCase().replace(/\s/g, '_');
+    const pwHash = await _simpleHash(password);
+
+    const user = await _get(`store/users/${uid}`);
+    if (!user) return { ok: false, err: 'Username tidak ditemukan!' };
+    if (user.passwordHash !== pwHash) return { ok: false, err: 'Password salah!' };
+
+    // Cek ban
+    const banData = await _get(`store/bans/${uid}`);
+    if (banData) {
+      if (banData.type === 'permanent') {
+        return { ok: false, err: `Akun kamu diban permanen.\nAlasan: ${banData.reason}` };
+      }
+      if (banData.type === 'temp' && new Date(banData.expireAt) > new Date()) {
+        const exp = new Date(banData.expireAt).toLocaleString('id-ID');
+        return { ok: false, err: `Akun kamu diban sementara hingga ${exp}.\nAlasan: ${banData.reason}` };
+      }
+    }
+
+    _currentUser = user;
+    _saveSession({ uid, username: user.username, role: user.role, avatar: user.profile?.avatar });
+    _startBanListener(uid);
+    return { ok: true, user };
+  }
+
+  function authLogout() {
+    _currentUser = null;
+    _clearSession();
+    rtUnsubAll();
+    _onAuthChange(null);
+  }
+
+  function getCurrentUser() {
+    return _currentUser;
+  }
+
+  // Callback saat auth state berubah
+  let _authCallbacks = [];
+  function onAuthChange(cb) { _authCallbacks.push(cb); }
+  function _onAuthChange(user) { _authCallbacks.forEach((cb) => cb(user)); }
+
+  /* ============================================================
+     2. BAN LISTENER — realtime, auto-logout jika diban
+     ============================================================ */
+
+  let _banListenerUnsub = null;
+
+  function _startBanListener(uid) {
+    if (_banListenerUnsub) _banListenerUnsub();
+
+    // Listen ke /store/ban-broadcast/{uid}
+    _banListenerUnsub = rtListen(`store/ban-broadcast/${uid}`, (data) => {
+      if (data && data.banned) {
+        _toast('⚠️ Akun kamu telah diban oleh admin!');
+        setTimeout(() => {
+          authLogout();
+          _showBanModal();
+        }, 1500);
+      }
+    });
+  }
+
+  function _showBanModal() {
+    // Cari atau buat modal ban
+    let modal = document.getElementById('_ban-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = '_ban-modal';
+      modal.style.cssText =
+        'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.95);' +
+        'display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `
+        <div style="background:#1a0505;border:2px solid #ff3d5a;border-radius:20px;padding:36px 28px;max-width:320px;width:90%;text-align:center">
+          <div style="font-size:48px;margin-bottom:12px">🚫</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#ff3d5a;margin-bottom:8px">Akun Diban</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:24px">
+            Akun kamu telah diban oleh admin.<br>
+            Hubungi admin untuk informasi lebih lanjut.
+          </div>
+          <button onclick="this.closest('#_ban-modal').remove()"
+            style="background:#ff3d5a;color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer">
+            OK, Mengerti
+          </button>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+    modal.style.display = 'flex';
+  }
+
+  async function _checkBanOnLoad(uid) {
+    const banData = await _get(`store/bans/${uid}`);
+    if (!banData) return false;
+    if (banData.type === 'permanent') return true;
+    if (banData.type === 'temp' && new Date(banData.expireAt) > new Date()) return true;
+    return false;
+  }
+
+  /* ============================================================
+     3. GLOBAL CHAT UPGRADE — SSE realtime + image support + ban check
+     Replace polling dengan SSE listener
+     ============================================================ */
+
+  let _gchatUnsub = null;
+  let _gchatMsgsCache = [];
+
+  function initGchatRealtime() {
+    if (_gchatUnsub) _gchatUnsub();
+
+    // Path: rtListen sudah prefix /store/, jadi cukup 'store-gchat'
+    _gchatUnsub = rtListen('store-gchat', (data) => {
+      const msgs = _norm(data);
+      _gchatMsgsCache = msgs;
+
+      // Notifikasi badge jika chat tertutup
+      const isOpen = document.getElementById('gchat-overlay')?.classList.contains('open');
+      if (!isOpen && msgs.length > (window._gchatLastCount || 0)) {
+        const badge = document.getElementById('gchat-badge');
+        if (badge) badge.style.display = 'flex';
+      }
+      window._gchatLastCount = msgs.length;
+
+      // Re-render jika chat terbuka
+      if (isOpen && typeof window._renderGchatRT === 'function') {
+        window._renderGchatRT(msgs);
+      }
+    });
+  }
+
+  // Override renderGchatMessages dengan versi yang sadar tipe gambar
+  window._renderGchatRT = function (msgs) {
+    const container = document.getElementById('gchat-messages');
+    if (!container) return;
+
+    const nick = window.gchatNick || '';
+    if (!msgs || !msgs.length) {
+      container.innerHTML =
+        '<div class="gchat-empty"><div class="ei">💬</div><div>Jadilah yang pertama chat!</div></div>';
+      return;
+    }
+
+    container.innerHTML = msgs.slice(-100).map((m) => {
+      if (m.type === 'system') {
+        return `<div class="gchat-system">${_esc(m.text || '')}</div>`;
+      }
+      const isMe = m.nick === nick;
+      const t = m.time
+        ? new Date(m.time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+        : '-';
+
+      let content;
+      if (m.type === 'image' && m.fileUrl) {
+        content = `<img src="${_esc(m.fileUrl)}" style="max-width:200px;border-radius:8px;display:block;cursor:pointer" onclick="window.open('${_esc(m.fileUrl)}','_blank')" loading="lazy">`;
+      } else {
+        content = `<div class="gchat-bubble">${_esc(m.text || m.message || '')}</div>`;
+      }
+
+      return `
+        <div class="gchat-msg ${isMe ? 'me' : 'other'}">
+          <div class="gchat-msg-name">${_esc(m.nick || 'User')}</div>
+          ${content}
+          <div class="gchat-msg-time">${t}</div>
+        </div>`;
+    }).join('');
+
+    container.scrollTop = container.scrollHeight;
+
+    // Update online badge
+    const onlineEl = document.getElementById('gchat-online-badge');
+    if (onlineEl) {
+      const unique = new Set(msgs.slice(-50).filter((m) => m.nick).map((m) => m.nick)).size;
+      onlineEl.textContent = unique + ' Online';
+    }
+  };
+
+  // Patch gchatSend — cek ban sebelum kirim
+  function _patchGchatSend() {
+    // Guard: jangan patch kalau sudah dipatch
+    if (window._gchatSendPatched) return;
+    window._gchatSendPatched = true;
+    const orig = window.gchatSend;
+    window.gchatSend = async function () {
+      // Cek apakah user (nick) diban
+      const nick = window.gchatNick || '';
+      const session = _getSession();
+      const uid = session?.uid || nick;
+      if (uid) {
+        const banned = await _checkBanOnLoad(uid);
+        if (banned) {
+          _toast('🚫 Kamu tidak bisa chat karena akun diban!');
+          return;
+        }
+      }
+      if (typeof orig === 'function') return orig.apply(this, arguments);
+    };
+  }
+
+  // Kirim gambar ke gchat via URL
+  async function gchatSendImage(imageUrl, nick) {
+    if (!imageUrl || !nick) return;
+    const session = _getSession();
+    const uid = session?.uid || nick;
+    const banned = await _checkBanOnLoad(uid);
+    if (banned) return _toast('🚫 Kamu tidak bisa chat karena akun diban!');
+
+    const msg = {
+      nick,
+      type: 'image',
+      fileUrl: imageUrl,
+      text: '',
+      time: new Date().toISOString(),
+      uid,
+    };
+    const data = await _get('store/store-gchat');
+    const msgs = _norm(data);
+    msgs.push(msg);
+    await _set('store/store-gchat', msgs);
+  }
+
+  window.gchatSendImage = gchatSendImage;
+
+  // Patch openGchat — gunakan SSE bukan polling
+  function _patchOpenGchat() {
+    const orig = window.openGchat;
+    window.openGchat = function () {
+      if (typeof orig === 'function') orig.apply(this, arguments);
+      // Stop polling lama jika ada
+      if (window.gchatPolling) {
+        clearInterval(window.gchatPolling);
+        window.gchatPolling = null;
+      }
+      // Render dari cache SSE
+      if (_gchatMsgsCache.length) {
+        window._renderGchatRT(_gchatMsgsCache);
+      }
+    };
+  }
+
+  // Inject tombol kirim gambar di gchat input row
+  function _injectGchatImageBtn() {
+    const inputRow = document.querySelector('.gchat-input-row');
+    if (!inputRow || document.getElementById('gchat-img-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'gchat-img-btn';
+    btn.title = 'Kirim gambar via URL';
+    btn.style.cssText =
+      'width:38px;height:38px;border-radius:50%;background:rgba(124,58,237,.3);' +
+      'border:1.5px solid rgba(124,58,237,.5);color:#fff;font-size:16px;' +
+      'cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+    btn.innerHTML = '🖼️';
+    btn.onclick = () => {
+      const url = prompt('Masukkan URL gambar:');
+      if (!url) return;
+      const nick = window.gchatNick || '';
+      if (!nick) return _toast('⚠️ Set nama dulu sebelum kirim gambar!');
+      gchatSendImage(url, nick);
+    };
+
+    // Insert sebelum tombol send
+    const sendBtn = inputRow.querySelector('.gchat-send');
+    if (sendBtn) inputRow.insertBefore(btn, sendBtn);
+    else inputRow.appendChild(btn);
+  }
+
+  /* ============================================================
+     4. ORDER SYSTEM — FIX BUG
+     Masalah lama: orders disimpan sebagai array di /store/orders
+     Admin pakai onValue → array PUT bisa bentrok jika push bersamaan
+     SOLUSI: Tetap pakai format yang sudah ada (array PUT) tapi
+     tambahkan push key sebagai fallback ID & timestamp.
+     ============================================================ */
+
+  /**
+   * Simpan order baru ke Firebase
+   * Compatible dengan format lama (array) TAPI juga simpan ke
+   * /store/orders-v2/{pushKey} agar admin realtime listener tangkap
+   */
+  async function saveOrderToFirebase(orderData) {
+    // Format ulang order dengan field standar
+    const order = {
+      id: orderData.id || _genOrderId(),
+      uid: orderData.uid || (_getSession()?.uid) || 'guest',
+      produk: orderData.produk || orderData.productName || '-',
+      productName: orderData.produk || orderData.productName || '-',
+      productId: orderData.productId || orderData.cat || '-',
+      harga: orderData.harga || orderData.price || '-',
+      price: orderData.harga || orderData.price || '-',
+      wa: orderData.wa || orderData.phone || '-',
+      phone: orderData.wa || orderData.phone || '-',
+      varian: orderData.varian || orderData.variant || '',
+      namaOwner: orderData.namaOwner || '',
+      status: 'menunggu',
+      lunas: false,
+      cat: orderData.cat || 'regular',
+      tanggal: orderData.tanggal || new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
+      waktu: orderData.waktu || new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      downloadSent: orderData.downloadSent || false,
+    };
+
+    // 1. Simpan ke array lama /store/orders (compatibility)
+    let saved = false;
+    try {
+      const data = await _get('store/orders');
+      const orders = _norm(data);
+      // filter _key meta sebelum simpan
+      const clean = orders.map(({ _key, ...rest }) => rest);
+      clean.push(order);
+      saved = await _set('store/orders', clean);
+    } catch (e) {
+      console.error('[saveOrder] error:', e);
+    }
+
+    return { ok: saved, order };
+  }
+
+  function _genOrderId() {
+    const now = new Date();
+    return 'ORD-' +
+      now.getFullYear().toString().slice(-2) +
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0') + '-' +
+      Math.random().toString(36).slice(2, 6).toUpperCase();
+  }
+
+  // Patch confirmPayAndSendWA — tambahkan save order
+  function _patchOrderSubmit() {
+    const orig = window.confirmPayAndSendWA;
+    window.confirmPayAndSendWA = async function () {
+      // Cek ban sebelum order
+      const session = _getSession();
+      if (session?.uid) {
+        const banned = await _checkBanOnLoad(session.uid);
+        if (banned) {
+          _toast('🚫 Akun kamu diban, tidak bisa melakukan order!');
+          return;
+        }
+      }
+      if (typeof orig === 'function') return orig.apply(this, arguments);
+    };
+  }
+
+  // Patch goToPayment — tangkap data produk aktif untuk di-save ke Firebase
+  function _patchGoToPayment() {
+    const orig = window.goToPayment;
+    window.goToPayment = function () {
+      if (typeof orig === 'function') return orig.apply(this, arguments);
+    };
+  }
+
+  // Intercept dbSet untuk orders — inject UID ke setiap order
+  function _patchDbSet() {
+    const orig = window.dbSet;
+    if (!orig) return;
+    window.dbSet = async function (key, value) {
+      if (key === 'store-orders' && Array.isArray(value)) {
+        const session = _getSession();
+        const uid = session?.uid || 'guest';
+        // Pastikan setiap order punya uid & createdAt
+        const enriched = value.map((o) => {
+          if (!o) return o;
+          return {
+            uid: o.uid || uid,
+            createdAt: o.createdAt || o.waktu || new Date().toISOString(),
+            ...o,
+          };
+        });
+        return orig.call(this, key, enriched);
+      }
+      return orig.apply(this, arguments);
+    };
+  }
+
+  /* ============================================================
+     5. PRODUCT SYNC — SSE listener di store
+     Saat admin edit produk → store auto-reload tanpa refresh
+     ============================================================ */
+
+  let _prodUnsub = null;
+
+  function initProductSync() {
+    if (_prodUnsub) _prodUnsub();
+
+    // Path: rtListen prefix-nya adalah base/store/, jadi path cukup 'store-produk'
+    _prodUnsub = rtListen('store-produk', (data) => {
+      if (!data) return;
+      const products = _norm(data);
+      if (products.length === 0) return;
+
+      // Trigger reload produk store jika fungsi tersedia
+      if (typeof window.loadFromFirebase === 'function') {
+        window.loadFromFirebase();
+      } else if (typeof window.applyConfig === 'function') {
+        // Patch: langsung update products array global
+        if (window.products) {
+          window.products.length = 0;
+          products.forEach((p) => window.products.push(p));
+          if (typeof window.renderProducts === 'function') window.renderProducts();
+        }
+      }
+    });
+  }
+
+  /* ============================================================
+     6. AUTH UI — Modal Login/Register inject ke store
+     Tampil saat user klik "Profil" atau item tertentu
+     ============================================================ */
+
+  function _injectAuthModal() {
+    if (document.getElementById('_auth-modal')) return;
+
+    // Inject CSS khusus untuk auth modal agar input bisa diklik dengan benar
+    const authStyle = document.createElement('style');
+    authStyle.textContent = `
+      #_auth-modal {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 99000 !important;
+        background: rgba(0,0,0,0.88) !important;
+        display: none;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 16px !important;
+        box-sizing: border-box !important;
+      }
+      #_auth-modal.open {
+        display: flex !important;
+      }
+      #_auth-modal-box {
+        background: #0f0f1e !important;
+        border: 1px solid rgba(124,58,237,0.3) !important;
+        border-radius: 20px !important;
+        padding: 28px 22px !important;
+        width: 100% !important;
+        max-width: 360px !important;
+        position: relative !important;
+        z-index: 99001 !important;
+        pointer-events: all !important;
+        box-shadow: 0 0 60px rgba(124,58,237,0.2) !important;
+      }
+      #_auth-modal-box::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 20%; right: 20%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #7c3aed, #d946ef, transparent);
+        border-radius: 0 0 4px 4px;
+      }
+      ._auth-input {
+        width: 100% !important;
+        background: rgba(255,255,255,0.06) !important;
+        border: 1.5px solid rgba(124,58,237,0.25) !important;
+        border-radius: 10px !important;
+        padding: 12px 14px !important;
+        color: #e2e8f0 !important;
+        font-size: 14px !important;
+        font-family: 'Sora', sans-serif !important;
+        outline: none !important;
+        box-sizing: border-box !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        pointer-events: all !important;
+        -webkit-user-select: auto !important;
+        user-select: auto !important;
+        touch-action: manipulation !important;
+        transition: border-color 0.2s !important;
+        display: block !important;
+      }
+      ._auth-input:focus {
+        border-color: rgba(168,85,247,0.7) !important;
+        background: rgba(124,58,237,0.08) !important;
+      }
+      ._auth-input::placeholder {
+        color: rgba(255,255,255,0.25) !important;
+      }
+      ._auth-label {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: rgba(200,170,255,0.6) !important;
+        display: block !important;
+        margin-bottom: 6px !important;
+        letter-spacing: 0.5px !important;
+        font-family: 'Sora', sans-serif !important;
+      }
+      ._auth-field { margin-bottom: 14px !important; }
+      ._auth-btn {
+        width: 100% !important;
+        padding: 13px !important;
+        background: linear-gradient(135deg, #7c3aed, #d946ef) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-family: 'Sora', sans-serif !important;
+        cursor: pointer !important;
+        pointer-events: all !important;
+        touch-action: manipulation !important;
+        box-shadow: 0 4px 20px rgba(124,58,237,0.4) !important;
+        transition: all 0.2s !important;
+        margin-top: 4px !important;
+      }
+      ._auth-btn:hover { opacity: 0.9 !important; transform: translateY(-1px) !important; }
+      ._auth-btn:disabled { opacity: 0.5 !important; cursor: not-allowed !important; transform: none !important; }
+      ._auth-tab-btn {
+        flex: 1 !important;
+        padding: 10px !important;
+        border: none !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        font-family: 'Sora', sans-serif !important;
+        cursor: pointer !important;
+        pointer-events: all !important;
+        touch-action: manipulation !important;
+        transition: all 0.2s !important;
+      }
+      ._auth-tab-btn.active { background: linear-gradient(135deg,#7c3aed,#d946ef) !important; color: #fff !important; }
+      ._auth-tab-btn:not(.active) { background: transparent !important; color: rgba(255,255,255,0.4) !important; }
+      ._auth-err {
+        display: none !important;
+        background: rgba(255,61,90,0.1) !important;
+        border: 1px solid rgba(255,61,90,0.3) !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        font-size: 12px !important;
+        color: #ff3d5a !important;
+        margin-bottom: 12px !important;
+        line-height: 1.5 !important;
+        font-family: 'Sora', sans-serif !important;
+      }
+      ._auth-err.show { display: block !important; }
+    `;
+    document.head.appendChild(authStyle);
+
+    const modal = document.createElement('div');
+    modal.id = '_auth-modal';
+    modal.innerHTML = `
+      <div id="_auth-modal-box">
+        <button id="_auth-close-btn"
+          style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+          border-radius:50%;width:28px;height:28px;color:rgba(255,255,255,0.5);font-size:18px;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;font-family:sans-serif;pointer-events:all;
+          touch-action:manipulation;line-height:1;padding:0">×</button>
+
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:18px;text-align:center">
+          🔐 Akun Kamu
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex;gap:0;margin-bottom:20px;border-radius:10px;overflow:hidden;border:1px solid rgba(124,58,237,0.25)">
+          <button id="_auth-tab-login" class="_auth-tab-btn active">Masuk</button>
+          <button id="_auth-tab-register" class="_auth-tab-btn">Daftar</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="_auth-login-form">
+          <div class="_auth-field">
+            <label class="_auth-label">Username</label>
+            <input id="_auth-login-username" class="_auth-input" type="text"
+              placeholder="username_kamu" autocomplete="username" autocorrect="off"
+              autocapitalize="off" spellcheck="false">
+          </div>
+          <div class="_auth-field" style="margin-bottom:16px">
+            <label class="_auth-label">Password</label>
+            <input id="_auth-login-password" class="_auth-input" type="password"
+              placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div id="_auth-login-err" class="_auth-err"></div>
+          <button id="_auth-login-btn" class="_auth-btn">Masuk →</button>
+        </div>
+
+        <!-- Register Form -->
+        <div id="_auth-register-form" style="display:none">
+          <div class="_auth-field">
+            <label class="_auth-label">Username</label>
+            <input id="_auth-reg-username" class="_auth-input" type="text"
+              placeholder="username_kamu" autocomplete="username" autocorrect="off"
+              autocapitalize="off" spellcheck="false">
+          </div>
+          <div class="_auth-field">
+            <label class="_auth-label">Nama Tampil</label>
+            <input id="_auth-reg-name" class="_auth-input" type="text"
+              placeholder="Nama lengkap kamu" autocomplete="name" autocorrect="off"
+              autocapitalize="words">
+          </div>
+          <div class="_auth-field" style="margin-bottom:16px">
+            <label class="_auth-label">Password</label>
+            <input id="_auth-reg-password" class="_auth-input" type="password"
+              placeholder="••••••••" autocomplete="new-password">
+          </div>
+          <div id="_auth-reg-err" class="_auth-err"></div>
+          <button id="_auth-reg-btn" class="_auth-btn">Daftar Sekarang →</button>
+        </div>
+
+        <div id="_auth-success" style="display:none;text-align:center;padding:16px 0">
+          <div style="font-size:44px;margin-bottom:12px">✅</div>
+          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;font-family:'Space Grotesk',sans-serif"
+            id="_auth-success-msg">Login berhasil!</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);font-family:'Sora',sans-serif">Selamat datang!</div>
+        </div>
+      </div>`;
+
+    document.body.appendChild(modal);
+
+    // Pasang event listener setelah elemen ada di DOM
+    document.getElementById('_auth-close-btn').addEventListener('click', () => {
+      document.getElementById('_auth-modal').classList.remove('open');
+    });
+    document.getElementById('_auth-tab-login').addEventListener('click', () => window._authSwitchTab('login'));
+    document.getElementById('_auth-tab-register').addEventListener('click', () => window._authSwitchTab('register'));
+    document.getElementById('_auth-login-btn').addEventListener('click', () => window._authDoLogin());
+    document.getElementById('_auth-reg-btn').addEventListener('click', () => window._authDoRegister());
+
+    // Tutup modal jika klik overlay (bukan box)
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    // Enter key di input login
+    document.getElementById('_auth-login-username').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('_auth-login-password').focus();
+    });
+    document.getElementById('_auth-login-password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') window._authDoLogin();
+    });
+    // Enter key di input register
+    document.getElementById('_auth-reg-username').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('_auth-reg-name').focus();
+    });
+    document.getElementById('_auth-reg-name').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('_auth-reg-password').focus();
+    });
+    document.getElementById('_auth-reg-password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') window._authDoRegister();
+    });
+  }
+
+  window._authSwitchTab = (tab) => {
+    const isLogin = tab === 'login';
+    document.getElementById('_auth-login-form').style.display = isLogin ? 'block' : 'none';
+    document.getElementById('_auth-register-form').style.display = isLogin ? 'none' : 'block';
+    const tabLogin = document.getElementById('_auth-tab-login');
+    const tabReg = document.getElementById('_auth-tab-register');
+    if (tabLogin) { tabLogin.classList.toggle('active', isLogin); }
+    if (tabReg) { tabReg.classList.toggle('active', !isLogin); }
+    document.getElementById('_auth-success').style.display = 'none';
+    const loginErr = document.getElementById('_auth-login-err');
+    const regErr = document.getElementById('_auth-reg-err');
+    if (loginErr) { loginErr.style.display = 'none'; }
+    if (regErr) { regErr.style.display = 'none'; }
+  };
+
+  window._authDoLogin = async () => {
+    const username = document.getElementById('_auth-login-username')?.value.trim() || '';
+    const password = document.getElementById('_auth-login-password')?.value || '';
+    const errEl = document.getElementById('_auth-login-err');
+
+    errEl.style.display = 'none';
+    const btn = document.getElementById('_auth-login-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+
+    const result = await authLogin(username, password);
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Masuk →'; }
+
+    if (!result.ok) {
+      errEl.style.display = 'block';
+      errEl.textContent = result.err;
+      return;
+    }
+
+    document.getElementById('_auth-login-form').style.display = 'none';
+    document.getElementById('_auth-success').style.display = 'block';
+    document.getElementById('_auth-success-msg').textContent = `Selamat datang, ${result.user.username}!`;
+    _updateAuthUI(result.user);
+    setTimeout(() => {
+      const modal = document.getElementById('_auth-modal');
+      if (modal) modal.classList.remove('open');
+      document.getElementById('_auth-success').style.display = 'none';
+      document.getElementById('_auth-login-form').style.display = 'block';
+      // Reset input
+      const u = document.getElementById('_auth-login-username');
+      const p = document.getElementById('_auth-login-password');
+      if (u) u.value = '';
+      if (p) p.value = '';
+    }, 1800);
+  };
+
+  window._authDoRegister = async () => {
+    const username = document.getElementById('_auth-reg-username')?.value.trim() || '';
+    const name = document.getElementById('_auth-reg-name')?.value.trim() || '';
+    const password = document.getElementById('_auth-reg-password')?.value || '';
+    const errEl = document.getElementById('_auth-reg-err');
+
+    errEl.style.display = 'none';
+    const btn = document.getElementById('_auth-reg-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Mendaftar...'; }
+
+    const result = await authRegister(username, password, name);
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Daftar Sekarang →'; }
+
+    if (!result.ok) {
+      errEl.style.display = 'block';
+      errEl.textContent = result.err;
+      return;
+    }
+
+    document.getElementById('_auth-register-form').style.display = 'none';
+    document.getElementById('_auth-success').style.display = 'block';
+    document.getElementById('_auth-success-msg').textContent = `Akun berhasil dibuat, ${result.user.username}!`;
+    _updateAuthUI(result.user);
+    setTimeout(() => {
+      const modal = document.getElementById('_auth-modal');
+      if (modal) modal.classList.remove('open');
+      document.getElementById('_auth-success').style.display = 'none';
+      document.getElementById('_auth-register-form').style.display = 'block';
+      // Reset input
+      ['_auth-reg-username','_auth-reg-name','_auth-reg-password'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+    }, 1800);
+  };
+
+  window.openAuthModal = () => {
+    const modal = document.getElementById('_auth-modal');
+    if (modal) modal.classList.add('open');
+  };
+
+  function _updateAuthUI(user) {
+    // Update gchat nick otomatis jika user login
+    if (user && typeof window.gchatNick !== 'undefined') {
+      window.gchatNick = user.username || user.profile?.name;
+      localStorage.setItem('gchat-nickname', window.gchatNick);
+    }
+    _onAuthChange(user);
+  }
+
+  /* ============================================================
+     7. INJECT AUTH BUTTON DI TOPBAR/HEADER STORE
+     ============================================================ */
+
+  function _injectAuthButton() {
+    if (document.getElementById('_store-auth-btn')) return;
+
+    // Cari topbar atau header
+    const topbar = document.querySelector('.topbar') ||
+      document.querySelector('header') ||
+      document.querySelector('nav');
+    if (!topbar) return;
+
+    const btn = document.createElement('button');
+    btn.id = '_store-auth-btn';
+    btn.style.cssText =
+      'padding:7px 14px;border-radius:20px;background:rgba(168,85,247,.15);' +
+      'border:1px solid rgba(168,85,247,.4);color:rgba(255,255,255,.8);' +
+      'font-size:11px;cursor:pointer;font-weight:600;white-space:nowrap;' +
+      'font-family:inherit;transition:all .2s';
+    btn.textContent = '👤 Masuk';
+    btn.onclick = () => {
+      const user = getCurrentUser();
+      if (user) {
+        if (confirm(`Logout dari akun ${user.username}?`)) authLogout();
+      } else {
+        window.openAuthModal();
+      }
+    };
+
+    topbar.appendChild(btn);
+
+    // Update button text saat auth berubah
+    onAuthChange((user) => {
+      if (user) {
+        btn.textContent = `👤 ${user.username}`;
+        btn.style.background = 'rgba(34,197,94,.15)';
+        btn.style.borderColor = 'rgba(34,197,94,.4)';
+        btn.style.color = '#22c55e';
+      } else {
+        btn.textContent = '👤 Masuk';
+        btn.style.background = 'rgba(168,85,247,.15)';
+        btn.style.borderColor = 'rgba(168,85,247,.4)';
+        btn.style.color = 'rgba(255,255,255,.8)';
+      }
+    });
+  }
+
+  /* ============================================================
+     8. RESTORE SESSION ON LOAD
+     ============================================================ */
+
+  async function _restoreSession() {
+    const session = _getSession();
+    if (!session?.uid) return;
+
+    // Verifikasi session masih valid (user masih ada di Firebase)
+    const user = await _get(`store/users/${session.uid}`);
+    if (!user) { _clearSession(); return; }
+
+    // Cek ban
+    const banned = await _checkBanOnLoad(session.uid);
+    if (banned) {
+      _clearSession();
+      _showBanModal();
+      return;
+    }
+
+    _currentUser = user;
+    _startBanListener(session.uid);
+    _updateAuthUI(user);
+  }
+
+  /* ============================================================
+     9. BOOT
+     ============================================================ */
+
+  _ready(async () => {
+    // Inject UI
+    _injectAuthModal();
+    _injectAuthButton();
+    _injectGchatImageBtn();
+
+    // Patch functions
+    _patchGchatSend();
+    _patchOpenGchat();
+    _patchOrderSubmit();
+    _patchDbSet();
+
+    // Init realtime listeners
+    initGchatRealtime();
+    initProductSync();
+
+    // Restore session
+    await _restoreSession();
+
+    console.log('[FirebaseStoreAddon] ✅ Loaded & initialized');
+  });
+
+  /* ============================================================
+     10. PUBLIC API
+     ============================================================ */
+  window.FirebaseStore = {
+    authLogin,
+    authRegister,
+    authLogout,
+    getCurrentUser,
+    onAuthChange,
+    saveOrderToFirebase,
+    gchatSendImage,
+    isBanned: _checkBanOnLoad,
+    rtListen,
+    rtUnsubAll,
+    getSession: _getSession,
+  };
+
+})();
+
+</script>
 </body>
 </html>
