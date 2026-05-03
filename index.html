@@ -2792,45 +2792,57 @@ async function vdlProcess(){
 
 async function fetchTiktok(url){
   try{
-    const res=await fetch('https://api.tiklydown.eu.org/api/download?url='+encodeURIComponent(url));
+    // tikwm.com — support CORS, gratis, no key, stabil
+    const res=await fetch('https://www.tikwm.com/api/?url='+encodeURIComponent(url)+'&hd=1');
     const d=await res.json();
-    if(!d||d.code!==0)return{error:'Link TikTok tidak valid atau video private.'};
+    if(!d||d.code!==0||!d.data)return{error:'Link TikTok tidak valid atau video private.'};
     const v=d.data;
     return{
       platform:'tiktok',
       title:v.title||'TikTok Video',
-      author:'@'+(v.author?.nickname||v.author?.unique_id||'user'),
-      thumb:v.cover||'',
+      author:'@'+(v.author?.unique_id||v.author?.nickname||'user'),
+      thumb:v.cover||v.origin_cover||'',
       links:[
-        {label:'🎬 Video (No Watermark)',url:v.play||'',quality:'HD'},
-        {label:'🎬 Video (Watermark)',url:v.wmplay||'',quality:''},
-        {label:'🎵 Audio MP3',url:v.music||'',quality:''},
-      ].filter(l=>l.url)
+        v.play ?{label:'🎬 Video HD (No Watermark)',url:v.play,quality:'HD'}:null,
+        v.wmplay?{label:'🎬 Video (Watermark)',url:v.wmplay,quality:'SD'}:null,
+        v.music ?{label:'🎵 Audio MP3',url:v.music,quality:'MP3'}:null,
+      ].filter(Boolean)
     };
-  }catch{
-    return{error:'Gagal terhubung ke server. Coba lagi.'};
+  }catch(e){
+    return{error:'Gagal: '+e.message};
   }
 }
 
 async function fetchInstagram(url){
   try{
-    const cfg=await dbGet('store-dl-config');const apiKey=cfg?.rapidApiKey||'';
-    if(!apiKey)return{error:'API key belum diset. Minta admin tambahkan RapidAPI key di dashboard.'};
-    const res=await fetch('https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index?url='+encodeURIComponent(url),{
-      headers:{'X-RapidAPI-Key':apiKey,'X-RapidAPI-Host':'instagram-downloader-download-instagram-videos-stories.p.rapidapi.com'}
-    });
+    // instagramdownloader.pro — support CORS, gratis
+    const res=await fetch('https://instagramdownloader.pro/api.php?url='+encodeURIComponent(url));
     const d=await res.json();
-    if(!d||!d.media)return{error:'Link Instagram tidak valid. Pastikan postingan publik.'};
-    const media=Array.isArray(d.media)?d.media[0]:d.media;
-    return{
-      platform:'instagram',
-      title:d.title||d.caption||'Instagram Post',
-      author:'@'+(d.owner?.username||'instagram'),
-      thumb:d.thumbnail||media||'',
-      links:[{label:'📸 Download Media',url:typeof media==='string'?media:media?.url||'',quality:'HD'}].filter(l=>l.url)
-    };
-  }catch{
-    return{error:'Gagal ambil Instagram. Pastikan postingan publik & link valid.'};
+    if(d&&(d.url||d.video_url||d.image)){
+      const mediaUrl=d.url||d.video_url||d.image;
+      return{
+        platform:'instagram',
+        title:d.title||d.caption||'Instagram Post',
+        author:'@'+(d.username||'instagram'),
+        thumb:d.thumbnail||d.thumb||'',
+        links:[{label:'📸 Download Media',url:mediaUrl,quality:'HD'}]
+      };
+    }
+    // Fallback: instagram-api.app — gratis, CORS ok
+    const res2=await fetch('https://instagram-api.app/api/?url='+encodeURIComponent(url));
+    const d2=await res2.json();
+    if(d2&&d2.data){
+      const items=Array.isArray(d2.data)?d2.data:[d2.data];
+      const links=items.filter(i=>i.url).map((i,idx)=>({
+        label:i.type==='video'?`🎬 Video ${idx+1}`:`📸 Foto ${idx+1}`,
+        url:i.url,
+        quality:i.quality||'HD'
+      }));
+      if(links.length)return{platform:'instagram',title:d2.title||'Instagram Post',author:'@instagram',thumb:d2.thumbnail||'',links};
+    }
+    return{error:'Gagal ambil Instagram. Pastikan link publik & valid.'};
+  }catch(e){
+    return{error:'Gagal: '+e.message};
   }
 }
 
@@ -2838,19 +2850,55 @@ async function fetchYoutube(url){
   try{
     const videoId=extractYtId(url);
     if(!videoId)return{error:'Link YouTube tidak valid.'};
-    const cfg=await dbGet('store-dl-config');const apiKey=cfg?.rapidApiKey||'';
-    if(!apiKey)return{error:'API key belum diset. Minta admin tambahkan RapidAPI key di dashboard.'};
-    const res=await fetch('https://yt-api.p.rapidapi.com/dl?id='+videoId,{
-      headers:{'X-RapidAPI-Key':apiKey,'X-RapidAPI-Host':'yt-api.p.rapidapi.com'}
+
+    // yt5s.in API — gratis, support CORS, no key
+    const res=await fetch('https://yt5s.in/api/ajaxSearch',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'q=https://www.youtube.com/watch?v='+videoId+'&vt=homev'
     });
     const d=await res.json();
-    if(!d||d.status!=='OK')return{error:'Gagal mengambil video YouTube.'};
-    const links=[];
-    if(d.formats){d.formats.filter(f=>f.url).slice(0,3).forEach(f=>links.push({label:'🎬 '+(f.qualityLabel||f.quality||'Video'),url:f.url,quality:f.qualityLabel||''}));}
-    if(d.adaptiveFormats){const audio=d.adaptiveFormats.find(f=>f.mimeType?.includes('audio/mp4')&&f.url);if(audio)links.push({label:'🎵 Audio MP4',url:audio.url,quality:''});}
-    return{platform:'youtube',title:d.title||'YouTube Video',author:d.channelName||'',thumb:d.thumbnail?.[0]?.url||'',links};
-  }catch{
-    return{error:'Gagal ambil YouTube. Cek API key atau coba lagi.'};
+    if(d&&d.status==='ok'&&d.links){
+      const links=[];
+      // Video links (mp4)
+      if(d.links.mp4){
+        Object.entries(d.links.mp4).forEach(([q,info])=>{
+          if(info.url&&q!=='auto') links.push({label:`🎬 Video ${q}`,url:info.url,quality:q});
+        });
+      }
+      // Audio links (mp3)
+      if(d.links.mp3){
+        const best=Object.entries(d.links.mp3)[0];
+        if(best&&best[1].url) links.push({label:'🎵 Audio MP3',url:best[1].url,quality:'MP3'});
+      }
+      if(links.length){
+        return{
+          platform:'youtube',
+          title:d.title||'YouTube Video',
+          author:d.a||'',
+          thumb:`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          links:links.slice(0,5)
+        };
+      }
+    }
+
+    // Fallback: y2down.cc API gratis
+    const res2=await fetch('https://y2down.cc/api/ajaxSearch',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'q=https://www.youtube.com/watch?v='+videoId+'&vt=homev'
+    });
+    const d2=await res2.json();
+    if(d2&&d2.status==='ok'&&d2.links){
+      const links2=[];
+      if(d2.links.mp4){Object.entries(d2.links.mp4).forEach(([q,info])=>{if(info.url&&q!=='auto')links2.push({label:`🎬 Video ${q}`,url:info.url,quality:q});});}
+      if(d2.links.mp3){const b=Object.entries(d2.links.mp3)[0];if(b&&b[1].url)links2.push({label:'🎵 Audio MP3',url:b[1].url,quality:'MP3'});}
+      if(links2.length)return{platform:'youtube',title:d2.title||'YouTube Video',author:'',thumb:`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,links:links2.slice(0,5)};
+    }
+
+    return{error:'Gagal mengambil video YouTube. Coba lagi atau cek link.'};
+  }catch(e){
+    return{error:'Gagal: '+e.message};
   }
 }
 
