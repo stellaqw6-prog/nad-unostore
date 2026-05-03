@@ -472,6 +472,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .vdl-dl-btn{width:100%;padding:10px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg4);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:9px;font-family:'Sora',sans-serif;transition:all .2s;}
 .vdl-dl-btn:hover{border-color:var(--purple);background:var(--purple-glow);}
 .vdl-dl-btn .dl-quality{font-size:10px;color:var(--muted);margin-left:auto;}
+.vdl-dl-web{opacity:.75;border-style:dashed;}
 .vdl-loading{text-align:center;padding:20px;display:none;}
 .vdl-loading.show{display:block;}
 .vdl-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 13px;font-size:11px;color:var(--red);margin-top:8px;display:none;}
@@ -982,6 +983,9 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
    ===================================================== */
 const FIREBASE_URL = 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
 const FIREBASE_TOKEN = '';
+// Expose ke window agar addon script bisa akses
+window.FIREBASE_URL = FIREBASE_URL;
+window.FIREBASE_TOKEN = FIREBASE_TOKEN;
 
 async function dbGet(key){
   try{
@@ -2765,28 +2769,40 @@ async function vdlProcess(){
   const result=document.getElementById('vdl-result');
   const loading=document.getElementById('vdl-loading');
   const errEl=document.getElementById('vdl-err');
+  const loadTxt=document.getElementById('vdl-loading-txt');
   result.classList.remove('show');
   errEl.classList.remove('show');
   loading.classList.add('show');
+  if(loadTxt) loadTxt.textContent='Mencari server terbaik...';
+
+  // Update teks loading setelah 2 detik agar tidak terasa lama
+  const loadMsgTimer=setTimeout(()=>{
+    if(loadTxt) loadTxt.textContent='Sedang mengambil video, harap tunggu...';
+  },2000);
 
   try{
     let data;
     if(vdlPlatform==='tiktok'){
       data=await fetchTiktok(url);
     }else if(vdlPlatform==='instagram'){
+      if(loadTxt) loadTxt.textContent='Menghubungi Cobalt API...';
       data=await fetchInstagram(url);
     }else{
+      if(loadTxt) loadTxt.textContent='Menghubungi Cobalt API...';
       data=await fetchYoutube(url);
     }
+    clearTimeout(loadMsgTimer);
     loading.classList.remove('show');
     if(!data||data.error){
-      errEl.textContent='❌ '+(data?.error||'Gagal mengambil video. Pastikan link valid.');
+      const msg=data?.error||'Gagal mengambil video. Pastikan link valid.';
+      errEl.innerHTML='❌ '+msg+(vdlPlatform==='instagram'?'<br><small style="opacity:.7">💡 Pastikan akun IG tidak private & link dibuka dari browser, bukan app IG langsung.</small>':'');
       errEl.classList.add('show');
       return;
     }
     renderVdlResult(data);
     saveVdlHistory(data);
   }catch(e){
+    clearTimeout(loadMsgTimer);
     loading.classList.remove('show');
     errEl.textContent='❌ Gagal: '+e.message;
     errEl.classList.add('show');
@@ -2816,34 +2832,119 @@ async function fetchTiktok(url){
   }
 }
 
-async function fetchInstagram(url){
+/* ── COBALT ENGINE v2 ────────────────────────────────────────────
+   Multi-instance fallback. Cobalt adalah open-source media
+   downloader terbaik saat ini. Support IG Reels, YT, TikTok dll.
+   Instance list di-hardcode (lebih andal dari fetch dinamis).
+   ─────────────────────────────────────────────────────────────── */
+
+// Daftar instance Cobalt publik yang diketahui support CORS & no-auth
+// Urutan = prioritas. Semua dicoba hingga ada yang berhasil.
+const COBALT_INSTANCES = [
+  'https://cobalt.api.timelessnesses.me',
+  'https://cob.froth.zone',
+  'https://cobalt.aldi.wtf',
+  'https://cobalt.seelen.lol',
+  'https://cobalt.drgn.gay',
+  'https://cobalt.fossgaming.net',
+  'https://cobalt.akaaki.lol',
+  'https://dl.cgr.wtf',
+];
+
+// Bersihkan URL Instagram: hapus query string, pastikan format bersih
+function _cleanIgUrl(raw){
   try{
-    // instagramdownloader.pro — support CORS, gratis
-    const res=await fetch('https://instagramdownloader.pro/api.php?url='+encodeURIComponent(url));
-    const d=await res.json();
-    if(d&&(d.url||d.video_url||d.image)){
-      const mediaUrl=d.url||d.video_url||d.image;
+    // Ambil path saja (hilangkan ?igsh=xxx &utm_source= dll)
+    const u=new URL(raw);
+    // Pastikan domain instagram
+    if(!u.hostname.includes('instagram.com')) return raw;
+    // Hanya ambil pathname → tambah kembali ke domain
+    return 'https://www.instagram.com'+u.pathname.replace(/\/+$/,'').replace(/\/+/g,'/');
+  }catch(e){ return raw; }
+}
+
+async function _cobaltRequest(instance, mediaUrl){
+  const res = await fetch(instance, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      url: mediaUrl,
+      videoQuality: '1080',
+      filenameStyle: 'basic',
+      downloadMode: 'auto'
+    }),
+    signal: AbortSignal.timeout(12000)
+  });
+  if(!res.ok) return null;
+  const d = await res.json();
+  return d;
+}
+
+function _cobaltResponseToLinks(d, platform){
+  if(!d) return null;
+  const st = d.status;
+  // tunnel / redirect = satu file langsung
+  if(st==='tunnel'||st==='redirect'){
+    const label = platform==='instagram' ? '📸 Download Media (HD)'
+                : platform==='youtube'   ? '🎬 Download Video (HD)'
+                : '⬇️ Download';
+    return [{label, url:d.url, quality:'HD'}];
+  }
+  // picker = carousel / beberapa item
+  if(st==='picker' && Array.isArray(d.picker) && d.picker.length){
+    return d.picker.map((item,i)=>({
+      label: item.type==='video' ? `🎬 Video ${i+1}` : `📸 Foto ${i+1}`,
+      url: item.url,
+      quality: 'HD'
+    }));
+  }
+  return null; // error / rate limit / lainnya
+}
+
+async function _cobaltFetch(mediaUrl, platform){
+  for(const base of COBALT_INSTANCES){
+    try{
+      const d = await _cobaltRequest(base, mediaUrl);
+      const links = _cobaltResponseToLinks(d, platform);
+      if(links && links.length) return {_ok:true, links};
+    }catch(e){ /* timeout / CORS / network error → coba berikut */ }
+  }
+  return {_ok:false};
+}
+
+async function fetchInstagram(rawUrl){
+  try{
+    // Bersihkan URL dulu (hapus ?igsh=..., utm_, dll)
+    const cleanUrl = _cleanIgUrl(rawUrl);
+    const cobalt = await _cobaltFetch(cleanUrl, 'instagram');
+    if(cobalt._ok){
       return{
         platform:'instagram',
-        title:d.title||d.caption||'Instagram Post',
-        author:'@'+(d.username||'instagram'),
-        thumb:d.thumbnail||d.thumb||'',
-        links:[{label:'📸 Download Media',url:mediaUrl,quality:'HD'}]
+        title:'Instagram Post',
+        author:'@instagram',
+        thumb:'',
+        links: cobalt.links
       };
     }
-    // Fallback: instagram-api.app — gratis, CORS ok
-    const res2=await fetch('https://instagram-api.app/api/?url='+encodeURIComponent(url));
-    const d2=await res2.json();
-    if(d2&&d2.data){
-      const items=Array.isArray(d2.data)?d2.data:[d2.data];
-      const links=items.filter(i=>i.url).map((i,idx)=>({
-        label:i.type==='video'?`🎬 Video ${idx+1}`:`📸 Foto ${idx+1}`,
-        url:i.url,
-        quality:i.quality||'HD'
-      }));
-      if(links.length)return{platform:'instagram',title:d2.title||'Instagram Post',author:'@instagram',thumb:d2.thumbnail||'',links};
-    }
-    return{error:'Gagal ambil Instagram. Pastikan link publik & valid.'};
+    // Fallback: arahkan ke savefrom / ssig yang masih jalan via redirect
+    return{
+      platform:'instagram',
+      title:'Instagram Post',
+      author:'',
+      thumb:'',
+      links:[{
+        label:'🌐 Download via SaveFrom',
+        url:'https://savefrom.net/#url='+encodeURIComponent(cleanUrl),
+        quality:'Web'
+      },{
+        label:'🌐 Download via SnapSave',
+        url:'https://snapsave.app/result?lang=id&url='+encodeURIComponent(cleanUrl),
+        quality:'Web'
+      }]
+    };
   }catch(e){
     return{error:'Gagal: '+e.message};
   }
@@ -2852,54 +2953,35 @@ async function fetchInstagram(url){
 async function fetchYoutube(url){
   try{
     const videoId=extractYtId(url);
-    if(!videoId)return{error:'Link YouTube tidak valid.'};
+    const cleanUrl=videoId?`https://www.youtube.com/watch?v=${videoId}`:url;
+    if(!videoId&&!url.includes('youtu')) return{error:'Link YouTube tidak valid.'};
 
-    // yt5s.in API — gratis, support CORS, no key
-    const res=await fetch('https://yt5s.in/api/ajaxSearch',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'q=https://www.youtube.com/watch?v='+videoId+'&vt=homev'
-    });
-    const d=await res.json();
-    if(d&&d.status==='ok'&&d.links){
-      const links=[];
-      // Video links (mp4)
-      if(d.links.mp4){
-        Object.entries(d.links.mp4).forEach(([q,info])=>{
-          if(info.url&&q!=='auto') links.push({label:`🎬 Video ${q}`,url:info.url,quality:q});
-        });
-      }
-      // Audio links (mp3)
-      if(d.links.mp3){
-        const best=Object.entries(d.links.mp3)[0];
-        if(best&&best[1].url) links.push({label:'🎵 Audio MP3',url:best[1].url,quality:'MP3'});
-      }
-      if(links.length){
-        return{
-          platform:'youtube',
-          title:d.title||'YouTube Video',
-          author:d.a||'',
-          thumb:`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-          links:links.slice(0,5)
-        };
-      }
+    const cobalt=await _cobaltFetch(cleanUrl,'youtube');
+    if(cobalt._ok){
+      return{
+        platform:'youtube',
+        title:'YouTube Video',
+        author:'',
+        thumb:videoId?`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`:'',
+        links:cobalt.links
+      };
     }
-
-    // Fallback: y2down.cc API gratis
-    const res2=await fetch('https://y2down.cc/api/ajaxSearch',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'q=https://www.youtube.com/watch?v='+videoId+'&vt=homev'
-    });
-    const d2=await res2.json();
-    if(d2&&d2.status==='ok'&&d2.links){
-      const links2=[];
-      if(d2.links.mp4){Object.entries(d2.links.mp4).forEach(([q,info])=>{if(info.url&&q!=='auto')links2.push({label:`🎬 Video ${q}`,url:info.url,quality:q});});}
-      if(d2.links.mp3){const b=Object.entries(d2.links.mp3)[0];if(b&&b[1].url)links2.push({label:'🎵 Audio MP3',url:b[1].url,quality:'MP3'});}
-      if(links2.length)return{platform:'youtube',title:d2.title||'YouTube Video',author:'',thumb:`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,links:links2.slice(0,5)};
-    }
-
-    return{error:'Gagal mengambil video YouTube. Coba lagi atau cek link.'};
+    // Fallback: web downloader
+    return{
+      platform:'youtube',
+      title:'YouTube Video',
+      author:'',
+      thumb:videoId?`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`:'',
+      links:[{
+        label:'🌐 Download via Y2Mate',
+        url:'https://www.y2mate.com/youtube/'+videoId,
+        quality:'Web'
+      },{
+        label:'🌐 Download via SaveFrom',
+        url:'https://savefrom.net/#url='+encodeURIComponent(cleanUrl),
+        quality:'Web'
+      }]
+    };
   }catch(e){
     return{error:'Gagal: '+e.message};
   }
@@ -2926,12 +3008,12 @@ function renderVdlResult(data){
   title.textContent=data.title||'Video';
   meta.textContent=data.author||data.platform;
 
-  // FIX: gunakan dataset untuk menyimpan URL agar tidak ada masalah escaping di template literal
   btns.innerHTML='';
   (data.links||[]).forEach(l=>{
     if(!l.url)return;
     const btn=document.createElement('button');
-    btn.className='vdl-dl-btn';
+    // Tombol fallback "Web" → tampilkan sedikit berbeda (opacity lebih rendah)
+    btn.className='vdl-dl-btn'+(l.quality==='Web'?' vdl-dl-web':'');
     btn.dataset.url=l.url;
     btn.innerHTML=`<span>${l.label||'Download'}</span><span class="dl-quality">${l.quality||''}</span>`;
     btn.onclick=()=>vdlDownload(btn.dataset.url);
@@ -3260,7 +3342,7 @@ function doDownloadScript(){
       </div>
       <div class="vdl-loading" id="vdl-loading">
         <div class="spinner"></div>
-        <div style="font-size:12px;color:var(--muted)">Mengambil info video...</div>
+        <div style="font-size:12px;color:var(--muted)" id="vdl-loading-txt">Mencari server terbaik...</div>
       </div>
       <div class="vdl-err" id="vdl-err"></div>
       <div class="vdl-result" id="vdl-result">
@@ -3971,221 +4053,328 @@ function doDownloadScript(){
   function _injectAuthModal() {
     if (document.getElementById('_auth-modal')) return;
 
-    // Inject CSS khusus untuk auth modal agar input bisa diklik dengan benar
+    // Inject CSS auth modal — pendekatan baru yang lebih reliable
     const authStyle = document.createElement('style');
     authStyle.textContent = `
       #_auth-modal {
         position: fixed !important;
-        inset: 0 !important;
-        z-index: 99000 !important;
-        background: rgba(0,0,0,0.88) !important;
-        display: none;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 16px !important;
-        box-sizing: border-box !important;
+        top: 0 !important; left: 0 !important;
+        width: 100% !important; height: 100% !important;
+        z-index: 999999 !important;
+        background: rgba(0,0,0,0.9) !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.22s ease, visibility 0.22s ease !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
       #_auth-modal.open {
-        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
       }
+      /* Pastikan semua elemen lain tidak bisa diklik saat modal terbuka */
+      [inert] { pointer-events: none !important; user-select: none !important; }
       #_auth-modal-box {
         background: #0f0f1e !important;
-        border: 1px solid rgba(124,58,237,0.3) !important;
+        border: 1px solid rgba(124,58,237,0.35) !important;
         border-radius: 20px !important;
-        padding: 28px 22px !important;
-        width: 100% !important;
+        padding: 28px 20px 24px !important;
+        width: calc(100% - 32px) !important;
         max-width: 360px !important;
+        margin: 40px auto 40px auto !important;
         position: relative !important;
-        z-index: 99001 !important;
-        pointer-events: all !important;
-        box-shadow: 0 0 60px rgba(124,58,237,0.2) !important;
+        box-shadow: 0 0 60px rgba(124,58,237,0.25) !important;
       }
       #_auth-modal-box::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 20%; right: 20%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #7c3aed, #d946ef, transparent);
-        border-radius: 0 0 4px 4px;
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important; left: 20% !important; right: 20% !important;
+        height: 2px !important;
+        background: linear-gradient(90deg, transparent, #7c3aed, #d946ef, transparent) !important;
+        border-radius: 0 0 4px 4px !important;
       }
       ._auth-input {
+        display: block !important;
         width: 100% !important;
-        background: rgba(255,255,255,0.06) !important;
-        border: 1.5px solid rgba(124,58,237,0.25) !important;
+        background: rgba(255,255,255,0.07) !important;
+        border: 1.5px solid rgba(124,58,237,0.3) !important;
         border-radius: 10px !important;
-        padding: 12px 14px !important;
-        color: #e2e8f0 !important;
-        font-size: 14px !important;
-        font-family: 'Sora', sans-serif !important;
+        padding: 13px 14px !important;
+        color: #fff !important;
+        font-size: 15px !important;
+        font-family: inherit !important;
         outline: none !important;
         box-sizing: border-box !important;
         -webkit-appearance: none !important;
         appearance: none !important;
-        pointer-events: all !important;
-        -webkit-user-select: auto !important;
-        user-select: auto !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
         touch-action: manipulation !important;
-        transition: border-color 0.2s !important;
-        display: block !important;
+        cursor: text !important;
+        caret-color: #a855f7 !important;
       }
       ._auth-input:focus {
-        border-color: rgba(168,85,247,0.7) !important;
-        background: rgba(124,58,237,0.08) !important;
+        border-color: #a855f7 !important;
+        background: rgba(124,58,237,0.1) !important;
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.15) !important;
       }
-      ._auth-input::placeholder {
-        color: rgba(255,255,255,0.25) !important;
-      }
+      ._auth-input::placeholder { color: rgba(255,255,255,0.2) !important; }
       ._auth-label {
+        display: block !important;
         font-size: 11px !important;
         font-weight: 600 !important;
-        color: rgba(200,170,255,0.6) !important;
-        display: block !important;
-        margin-bottom: 6px !important;
-        letter-spacing: 0.5px !important;
-        font-family: 'Sora', sans-serif !important;
+        color: rgba(168,85,247,0.7) !important;
+        margin-bottom: 7px !important;
+        letter-spacing: 0.3px !important;
       }
       ._auth-field { margin-bottom: 14px !important; }
       ._auth-btn {
+        display: block !important;
         width: 100% !important;
-        padding: 13px !important;
+        padding: 14px !important;
         background: linear-gradient(135deg, #7c3aed, #d946ef) !important;
         color: #fff !important;
         border: none !important;
         border-radius: 10px !important;
         font-size: 14px !important;
         font-weight: 700 !important;
-        font-family: 'Sora', sans-serif !important;
+        font-family: inherit !important;
         cursor: pointer !important;
-        pointer-events: all !important;
         touch-action: manipulation !important;
         box-shadow: 0 4px 20px rgba(124,58,237,0.4) !important;
-        transition: all 0.2s !important;
-        margin-top: 4px !important;
+        transition: opacity 0.2s !important;
+        margin-top: 6px !important;
+        text-align: center !important;
       }
-      ._auth-btn:hover { opacity: 0.9 !important; transform: translateY(-1px) !important; }
-      ._auth-btn:disabled { opacity: 0.5 !important; cursor: not-allowed !important; transform: none !important; }
+      ._auth-btn:active { opacity: 0.8 !important; }
+      ._auth-btn:disabled { opacity: 0.45 !important; cursor: not-allowed !important; }
+      ._auth-tab-row {
+        display: flex !important;
+        margin-bottom: 22px !important;
+        border-radius: 11px !important;
+        overflow: hidden !important;
+        background: rgba(255,255,255,0.05) !important;
+        border: 1px solid rgba(124,58,237,0.2) !important;
+        padding: 3px !important;
+        gap: 3px !important;
+      }
       ._auth-tab-btn {
         flex: 1 !important;
         padding: 10px !important;
         border: none !important;
+        border-radius: 8px !important;
         font-size: 13px !important;
         font-weight: 600 !important;
-        font-family: 'Sora', sans-serif !important;
+        font-family: inherit !important;
         cursor: pointer !important;
-        pointer-events: all !important;
         touch-action: manipulation !important;
+        background: transparent !important;
+        color: rgba(255,255,255,0.4) !important;
         transition: all 0.2s !important;
       }
-      ._auth-tab-btn.active { background: linear-gradient(135deg,#7c3aed,#d946ef) !important; color: #fff !important; }
-      ._auth-tab-btn:not(.active) { background: transparent !important; color: rgba(255,255,255,0.4) !important; }
+      ._auth-tab-btn.active {
+        background: linear-gradient(135deg,#7c3aed,#d946ef) !important;
+        color: #fff !important;
+      }
       ._auth-err {
         display: none !important;
         background: rgba(255,61,90,0.1) !important;
-        border: 1px solid rgba(255,61,90,0.3) !important;
+        border: 1px solid rgba(255,61,90,0.35) !important;
         border-radius: 8px !important;
-        padding: 10px !important;
+        padding: 10px 12px !important;
         font-size: 12px !important;
         color: #ff3d5a !important;
         margin-bottom: 12px !important;
         line-height: 1.5 !important;
-        font-family: 'Sora', sans-serif !important;
       }
-      ._auth-err.show { display: block !important; }
+      ._auth-hint {
+        font-size: 10px !important;
+        color: rgba(255,255,255,0.28) !important;
+        margin-top: 5px !important;
+        line-height: 1.5 !important;
+      }
+      ._auth-switch-link {
+        color: rgba(168,85,247,0.85) !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+        text-decoration: underline !important;
+        touch-action: manipulation !important;
+      }
+      @keyframes _authSuccessPop {
+        from { transform: scale(0.5); opacity: 0; }
+        80%  { transform: scale(1.1); }
+        to   { transform: scale(1);   opacity: 1; }
+      }
+      @keyframes _authCloseBar {
+        from { width: 0%; }
+        to   { width: 100%; }
+      }
     `;
     document.head.appendChild(authStyle);
+
+    // Inject keyframe animation untuk success state
+    const extraStyle = document.createElement('style');
+    extraStyle.textContent = `
+      @keyframes _authSuccessPop { from{transform:scale(0.5);opacity:0} 80%{transform:scale(1.1)} to{transform:scale(1);opacity:1} }
+      @keyframes _authCloseBar { from{width:0%} to{width:100%} }
+      #_auth-close-btn:hover { background:rgba(255,255,255,0.12) !important; color:rgba(255,255,255,0.8) !important; }
+    `;
+    document.head.appendChild(extraStyle);
 
     const modal = document.createElement('div');
     modal.id = '_auth-modal';
     modal.innerHTML = `
       <div id="_auth-modal-box">
-        <button id="_auth-close-btn"
-          style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-          border-radius:50%;width:28px;height:28px;color:rgba(255,255,255,0.5);font-size:18px;cursor:pointer;
-          display:flex;align-items:center;justify-content:center;font-family:sans-serif;pointer-events:all;
-          touch-action:manipulation;line-height:1;padding:0">×</button>
 
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:18px;text-align:center">
-          🔐 Akun Kamu
+        <!-- Tombol Close -->
+        <button id="_auth-close-btn" style="
+          position:absolute;top:12px;right:12px;
+          width:30px;height:30px;border-radius:50%;
+          background:rgba(255,255,255,0.07);
+          border:1px solid rgba(255,255,255,0.12);
+          color:rgba(255,255,255,0.55);font-size:20px;line-height:1;
+          cursor:pointer;touch-action:manipulation;
+          display:flex;align-items:center;justify-content:center;
+          font-family:sans-serif;padding:0;">×</button>
+
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:20px;padding-top:2px">
+          <div id="_auth-avatar-circle" style="
+            width:54px;height:54px;border-radius:16px;
+            background:linear-gradient(135deg,#7c3aed,#d946ef);
+            display:flex;align-items:center;justify-content:center;
+            font-size:22px;margin:0 auto 10px;
+            box-shadow:0 8px 28px rgba(124,58,237,0.45)">🔐</div>
+          <div id="_auth-modal-title" style="font-size:17px;font-weight:700;color:#fff;margin-bottom:3px">Masuk ke Akun</div>
+          <div id="_auth-modal-sub" style="font-size:11px;color:rgba(168,85,247,0.7)">Akses fitur eksklusif member</div>
         </div>
 
-        <!-- Tabs -->
-        <div style="display:flex;gap:0;margin-bottom:20px;border-radius:10px;overflow:hidden;border:1px solid rgba(124,58,237,0.25)">
-          <button id="_auth-tab-login" class="_auth-tab-btn active">Masuk</button>
-          <button id="_auth-tab-register" class="_auth-tab-btn">Daftar</button>
+        <!-- Tab Switch -->
+        <div class="_auth-tab-row">
+          <button id="_auth-tab-login" class="_auth-tab-btn active">🔑 Masuk</button>
+          <button id="_auth-tab-register" class="_auth-tab-btn">✨ Daftar</button>
         </div>
 
-        <!-- Login Form -->
+        <!-- ===== LOGIN FORM ===== -->
         <div id="_auth-login-form">
           <div class="_auth-field">
-            <label class="_auth-label">Username</label>
+            <label class="_auth-label">👤 Username</label>
             <input id="_auth-login-username" class="_auth-input" type="text"
-              placeholder="username_kamu" autocomplete="username" autocorrect="off"
-              autocapitalize="off" spellcheck="false">
+              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"
+              placeholder="username kamu">
           </div>
-          <div class="_auth-field" style="margin-bottom:16px">
-            <label class="_auth-label">Password</label>
-            <input id="_auth-login-password" class="_auth-input" type="password"
-              placeholder="••••••••" autocomplete="current-password">
+          <div class="_auth-field">
+            <label class="_auth-label">🔒 Password</label>
+            <div style="position:relative">
+              <input id="_auth-login-password" class="_auth-input" type="password"
+                autocomplete="current-password" placeholder="••••••••" style="padding-right:42px">
+              <button type="button" onclick="(function(btn){var inp=document.getElementById('_auth-login-password');var show=inp.type==='password';inp.type=show?'text':'password';btn.textContent=show?'🙈':'👁️';})(this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;line-height:1;padding:2px;color:rgba(255,255,255,0.45);transition:color .2s" title="Lihat/Sembunyikan password">👁️</button>
+            </div>
           </div>
           <div id="_auth-login-err" class="_auth-err"></div>
-          <button id="_auth-login-btn" class="_auth-btn">Masuk →</button>
+          <button id="_auth-login-btn" class="_auth-btn">Masuk Sekarang →</button>
+          <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:14px">
+            Belum punya akun?
+            <span id="_auth-goto-register" class="_auth-switch-link">Daftar gratis →</span>
+          </p>
         </div>
 
-        <!-- Register Form -->
+        <!-- ===== REGISTER FORM ===== -->
         <div id="_auth-register-form" style="display:none">
           <div class="_auth-field">
-            <label class="_auth-label">Username</label>
+            <label class="_auth-label">👤 Username</label>
             <input id="_auth-reg-username" class="_auth-input" type="text"
-              placeholder="username_kamu" autocomplete="username" autocorrect="off"
-              autocapitalize="off" spellcheck="false">
+              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"
+              placeholder="pilih username unik">
+            <div class="_auth-hint">Huruf kecil, angka, underscore — min. 3 karakter</div>
           </div>
           <div class="_auth-field">
-            <label class="_auth-label">Nama Tampil</label>
+            <label class="_auth-label">✍️ Nama Tampil</label>
             <input id="_auth-reg-name" class="_auth-input" type="text"
-              placeholder="Nama lengkap kamu" autocomplete="name" autocorrect="off"
-              autocapitalize="words">
+              autocomplete="name" autocorrect="off" autocapitalize="words"
+              placeholder="nama yang terlihat di toko">
           </div>
-          <div class="_auth-field" style="margin-bottom:16px">
-            <label class="_auth-label">Password</label>
-            <input id="_auth-reg-password" class="_auth-input" type="password"
-              placeholder="••••••••" autocomplete="new-password">
+          <div class="_auth-field">
+            <label class="_auth-label">🔒 Password</label>
+            <div style="position:relative">
+              <input id="_auth-reg-password" class="_auth-input" type="password"
+                autocomplete="new-password" placeholder="min. 6 karakter" style="padding-right:42px">
+              <button type="button" onclick="(function(btn){var inp=document.getElementById('_auth-reg-password');var show=inp.type==='password';inp.type=show?'text':'password';btn.textContent=show?'🙈':'👁️';})(this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;line-height:1;padding:2px;color:rgba(255,255,255,0.45);transition:color .2s" title="Lihat/Sembunyikan password">👁️</button>
+            </div>
+          </div>
+          <!-- Password strength bar -->
+          <div style="height:4px;border-radius:4px;background:rgba(255,255,255,0.07);margin-bottom:14px;overflow:hidden">
+            <div id="_auth-pw-strength" style="height:100%;border-radius:4px;width:0%;background:#ef4444;transition:width 0.3s,background 0.3s"></div>
           </div>
           <div id="_auth-reg-err" class="_auth-err"></div>
-          <button id="_auth-reg-btn" class="_auth-btn">Daftar Sekarang →</button>
+          <button id="_auth-reg-btn" class="_auth-btn">Buat Akun Gratis 🚀</button>
+          <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:14px">
+            Sudah punya akun?
+            <span id="_auth-goto-login" class="_auth-switch-link">Masuk →</span>
+          </p>
         </div>
 
-        <div id="_auth-success" style="display:none;text-align:center;padding:16px 0">
-          <div style="font-size:44px;margin-bottom:12px">✅</div>
-          <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;font-family:'Space Grotesk',sans-serif"
-            id="_auth-success-msg">Login berhasil!</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);font-family:'Sora',sans-serif">Selamat datang!</div>
+        <!-- ===== SUCCESS STATE ===== -->
+        <div id="_auth-success" style="display:none;text-align:center;padding:16px 0 4px">
+          <div style="
+            width:60px;height:60px;border-radius:50%;margin:0 auto 14px;
+            background:rgba(34,197,94,0.15);border:2px solid rgba(34,197,94,0.4);
+            display:flex;align-items:center;justify-content:center;font-size:26px;
+            animation:_authSuccessPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275)">✅</div>
+          <div id="_auth-success-msg" style="font-size:16px;font-weight:700;color:#fff;margin-bottom:5px">Berhasil!</div>
+          <div id="_auth-success-sub" style="font-size:12px;color:rgba(255,255,255,0.45)">Selamat datang 🎉</div>
+          <div style="margin-top:16px;height:3px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden">
+            <div style="height:100%;background:linear-gradient(90deg,#7c3aed,#22c55e);animation:_authCloseBar 2s linear forwards"></div>
+          </div>
         </div>
-      </div>`;
+
+      </div>
+    `;
 
     document.body.appendChild(modal);
 
-    // Pasang event listener setelah elemen ada di DOM
+    // Event listeners
     document.getElementById('_auth-close-btn').addEventListener('click', () => {
-      document.getElementById('_auth-modal').classList.remove('open');
+      _closeAuthModal();
     });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) _closeAuthModal();
+    });
+
     document.getElementById('_auth-tab-login').addEventListener('click', () => window._authSwitchTab('login'));
     document.getElementById('_auth-tab-register').addEventListener('click', () => window._authSwitchTab('register'));
+    document.getElementById('_auth-goto-register').addEventListener('click', () => window._authSwitchTab('register'));
+    document.getElementById('_auth-goto-login').addEventListener('click', () => window._authSwitchTab('login'));
     document.getElementById('_auth-login-btn').addEventListener('click', () => window._authDoLogin());
     document.getElementById('_auth-reg-btn').addEventListener('click', () => window._authDoRegister());
 
-    // Tutup modal jika klik overlay (bukan box)
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('open');
+    // Password strength
+    document.getElementById('_auth-reg-password').addEventListener('input', function() {
+      const pw = this.value;
+      const bar = document.getElementById('_auth-pw-strength');
+      if (!bar) return;
+      let s = 0;
+      if (pw.length >= 6) s++;
+      if (pw.length >= 10) s++;
+      if (/[A-Z0-9]/.test(pw)) s++;
+      if (/[^A-Za-z0-9]/.test(pw)) s++;
+      const colors = ['#ef4444','#f97316','#eab308','#22c55e'];
+      const widths = ['25%','50%','75%','100%'];
+      bar.style.width = pw ? widths[Math.min(s, 3)] : '0%';
+      bar.style.background = pw ? colors[Math.min(s, 3)] : '#ef4444';
     });
 
-    // Enter key di input login
+    // Enter key navigation
     document.getElementById('_auth-login-username').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') document.getElementById('_auth-login-password').focus();
     });
     document.getElementById('_auth-login-password').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') window._authDoLogin();
     });
-    // Enter key di input register
     document.getElementById('_auth-reg-username').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') document.getElementById('_auth-reg-name').focus();
     });
@@ -4210,6 +4399,19 @@ function doDownloadScript(){
     const regErr = document.getElementById('_auth-reg-err');
     if (loginErr) { loginErr.style.display = 'none'; }
     if (regErr) { regErr.style.display = 'none'; }
+    // Update header
+    const titleEl = document.getElementById('_auth-modal-title');
+    const subEl = document.getElementById('_auth-modal-sub');
+    const avatarEl = document.getElementById('_auth-avatar-circle');
+    if (isLogin) {
+      if (titleEl) titleEl.textContent = 'Masuk ke Akun';
+      if (subEl) subEl.textContent = 'Akses fitur eksklusif member';
+      if (avatarEl) avatarEl.textContent = '🔐';
+    } else {
+      if (titleEl) titleEl.textContent = 'Buat Akun Baru';
+      if (subEl) subEl.textContent = 'Bergabung & nikmati benefit member';
+      if (avatarEl) avatarEl.textContent = '✨';
+    }
   };
 
   window._authDoLogin = async () => {
@@ -4217,35 +4419,52 @@ function doDownloadScript(){
     const password = document.getElementById('_auth-login-password')?.value || '';
     const errEl = document.getElementById('_auth-login-err');
 
-    errEl.style.display = 'none';
+    const showErr = (msg) => {
+      if (errEl) { errEl.style.display = 'block'; errEl.textContent = msg; }
+    };
+
+    if (errEl) errEl.style.display = 'none';
+
+    if (!username) return showErr('Username wajib diisi!');
+    if (!password) return showErr('Password wajib diisi!');
+    if (!window.FIREBASE_URL) return showErr('Konfigurasi Firebase tidak ditemukan!');
+
     const btn = document.getElementById('_auth-login-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Memproses...'; }
 
-    const result = await authLogin(username, password);
-
-    if (btn) { btn.disabled = false; btn.textContent = 'Masuk →'; }
-
-    if (!result.ok) {
-      errEl.style.display = 'block';
-      errEl.textContent = result.err;
-      return;
+    let result;
+    try {
+      result = await authLogin(username, password);
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Masuk Sekarang →'; }
+      return showErr('Terjadi error: ' + (e.message || 'Coba lagi!'));
     }
 
-    document.getElementById('_auth-login-form').style.display = 'none';
-    document.getElementById('_auth-success').style.display = 'block';
-    document.getElementById('_auth-success-msg').textContent = `Selamat datang, ${result.user.username}!`;
+    if (btn) { btn.disabled = false; btn.textContent = 'Masuk Sekarang →'; }
+
+    if (!result || !result.ok) {
+      return showErr(result?.err || 'Login gagal, coba lagi!');
+    }
+
+    // Sukses
+    const loginForm = document.getElementById('_auth-login-form');
+    if (loginForm) loginForm.style.display = 'none';
+    const successEl = document.getElementById('_auth-success');
+    if (successEl) successEl.style.display = 'block';
+    const msgEl = document.getElementById('_auth-success-msg');
+    if (msgEl) msgEl.textContent = `Selamat datang, ${result.user.username}!`;
+    const subEl2 = document.getElementById('_auth-success-sub');
+    if (subEl2) subEl2.textContent = 'Login berhasil! Selamat berbelanja 🛍️';
     _updateAuthUI(result.user);
     setTimeout(() => {
-      const modal = document.getElementById('_auth-modal');
-      if (modal) modal.classList.remove('open');
-      document.getElementById('_auth-success').style.display = 'none';
-      document.getElementById('_auth-login-form').style.display = 'block';
-      // Reset input
+      _closeAuthModal();
+      if (successEl) successEl.style.display = 'none';
+      if (loginForm) loginForm.style.display = 'block';
       const u = document.getElementById('_auth-login-username');
       const p = document.getElementById('_auth-login-password');
       if (u) u.value = '';
       if (p) p.value = '';
-    }, 1800);
+    }, 2000);
   };
 
   window._authDoRegister = async () => {
@@ -4254,41 +4473,100 @@ function doDownloadScript(){
     const password = document.getElementById('_auth-reg-password')?.value || '';
     const errEl = document.getElementById('_auth-reg-err');
 
-    errEl.style.display = 'none';
+    const showErr = (msg) => {
+      if (errEl) { errEl.style.display = 'block'; errEl.textContent = msg; }
+    };
+
+    if (errEl) errEl.style.display = 'none';
+
+    // Validasi sisi klien sebelum kirim ke Firebase
+    if (!username) return showErr('Username wajib diisi!');
+    if (username.length < 3) return showErr('Username minimal 3 karakter!');
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) return showErr('Username hanya boleh huruf, angka, dan underscore!');
+    if (!password) return showErr('Password wajib diisi!');
+    if (password.length < 6) return showErr('Password minimal 6 karakter!');
+
+    // Cek Firebase URL tersedia
+    if (!window.FIREBASE_URL) return showErr('Konfigurasi Firebase tidak ditemukan!');
+
     const btn = document.getElementById('_auth-reg-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Mendaftar...'; }
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Memproses...'; }
 
-    const result = await authRegister(username, password, name);
-
-    if (btn) { btn.disabled = false; btn.textContent = 'Daftar Sekarang →'; }
-
-    if (!result.ok) {
-      errEl.style.display = 'block';
-      errEl.textContent = result.err;
-      return;
+    let result;
+    try {
+      result = await authRegister(username, password, name || username);
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Buat Akun Gratis 🚀'; }
+      return showErr('Terjadi error: ' + (e.message || 'Coba lagi!'));
     }
 
+    if (btn) { btn.disabled = false; btn.textContent = 'Buat Akun Gratis 🚀'; }
+
+    if (!result || !result.ok) {
+      return showErr(result?.err || 'Gagal mendaftar, coba lagi!');
+    }
+
+    // Sukses
     document.getElementById('_auth-register-form').style.display = 'none';
-    document.getElementById('_auth-success').style.display = 'block';
-    document.getElementById('_auth-success-msg').textContent = `Akun berhasil dibuat, ${result.user.username}!`;
+    const successEl = document.getElementById('_auth-success');
+    if (successEl) successEl.style.display = 'block';
+    const msgEl = document.getElementById('_auth-success-msg');
+    if (msgEl) msgEl.textContent = `Akun berhasil dibuat, ${result.user.username}! 🎉`;
+    const subEl = document.getElementById('_auth-success-sub');
+    if (subEl) subEl.textContent = 'Selamat bergabung sebagai member!';
     _updateAuthUI(result.user);
     setTimeout(() => {
-      const modal = document.getElementById('_auth-modal');
-      if (modal) modal.classList.remove('open');
-      document.getElementById('_auth-success').style.display = 'none';
-      document.getElementById('_auth-register-form').style.display = 'block';
-      // Reset input
+      _closeAuthModal();
+      if (successEl) successEl.style.display = 'none';
+      const regForm = document.getElementById('_auth-register-form');
+      if (regForm) regForm.style.display = 'block';
       ['_auth-reg-username','_auth-reg-name','_auth-reg-password'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
-    }, 1800);
+      const bar = document.getElementById('_auth-pw-strength');
+      if (bar) bar.style.width = '0%';
+    }, 2000);
   };
 
-  window.openAuthModal = () => {
+  window.openAuthModal = (startTab) => {
     const modal = document.getElementById('_auth-modal');
-    if (modal) modal.classList.add('open');
+    if (!modal) return;
+    if (startTab) window._authSwitchTab(startTab);
+    modal.classList.add('open');
+    // Set inert pada semua elemen body lainnya — mencegah touch event bocor
+    document.querySelectorAll('body > *:not(#_auth-modal)').forEach(el => {
+      el.setAttribute('inert', '');
+      el.setAttribute('aria-hidden', 'true');
+    });
+    // Pastikan modal sendiri tidak inert
+    modal.removeAttribute('inert');
+    modal.removeAttribute('aria-hidden');
+    // Scroll ke atas modal
+    modal.scrollTop = 0;
+    // Focus ke input pertama
+    setTimeout(() => {
+      const loginForm = document.getElementById('_auth-login-form');
+      const regForm   = document.getElementById('_auth-register-form');
+      let firstInput;
+      if (loginForm && loginForm.style.display !== 'none') {
+        firstInput = document.getElementById('_auth-login-username');
+      } else if (regForm && regForm.style.display !== 'none') {
+        firstInput = document.getElementById('_auth-reg-username');
+      }
+      if (firstInput) firstInput.focus();
+    }, 150);
   };
+
+  function _closeAuthModal() {
+    const modal = document.getElementById('_auth-modal');
+    if (modal) modal.classList.remove('open');
+    // Hapus inert dari semua elemen
+    document.querySelectorAll('[inert]').forEach(el => {
+      el.removeAttribute('inert');
+      el.removeAttribute('aria-hidden');
+    });
+  }
 
   function _updateAuthUI(user) {
     // Update gchat nick otomatis jika user login
