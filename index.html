@@ -2255,6 +2255,25 @@ function escapeHtml(t){
    LOAD DATA
    ===================================================== */
 async function loadStoreData(){
+  // Cek maintenance mode dulu (non-blocking - gagal = lanjut biasa)
+  try {
+    const _fbUrl = window.FIREBASE_URL || (typeof FIREBASE_URL !== 'undefined' ? FIREBASE_URL : '') || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const _maintCtrl = new AbortController();
+    const _maintTimer = setTimeout(() => _maintCtrl.abort(), 3000); // timeout 3 detik
+    const r = await fetch(`${_fbUrl}/store/store-fitur.json`, { signal: _maintCtrl.signal });
+    clearTimeout(_maintTimer);
+    if (r.ok) {
+      const fitur = await r.json();
+      if (fitur && fitur.maintenance === true) {
+        _showMaintenanceOverlay();
+        return;
+      }
+    }
+  } catch(e) {
+    // Gagal fetch (CORS/offline/timeout) = abaikan, lanjut load store normal
+    console.warn('[Store] Maintenance check skipped:', e.message);
+  }
+
   try{
     const [info,kontak,prods,imgCfg,heroCfg,payCfg]=await Promise.all([
       dbGet('store-info'),dbGet('store-kontak'),dbGet('store-produk'),dbGet('store-img-produk'),dbGet('store-hero-slides'),dbGet('store-payment'),
@@ -2687,6 +2706,16 @@ function addFlashBadges(){
 /* =====================================================
    INIT
    ===================================================== */
+async function _showMaintenanceOverlay() {
+  if (document.getElementById('_maint-overlay')) return;
+  const ov = document.createElement('div');
+  ov.id = '_maint-overlay';
+  ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#080810,#0f0a1a);z-index:9999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;';
+  ov.innerHTML = '<div style="font-size:56px;margin-bottom:20px">⚙️</div><div style="font-family:Syne,sans-serif;font-weight:800;font-size:26px;color:#fff;margin-bottom:8px">Mode Maintenance</div><div style="font-size:14px;color:#888;max-width:280px;line-height:1.6;margin-bottom:28px">Store sedang dalam perbaikan. Silahkan coba lagi beberapa saat.</div><div style="font-size:12px;padding:8px 20px;border-radius:20px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#a78bfa">🔧 Segera Kembali</div>';
+  document.body.appendChild(ov);
+  document.body.style.overflow = 'hidden';
+}
+
 async function initStore(){
   // Loading screen & particles start immediately
   initLoadingScreen();
@@ -2708,6 +2737,8 @@ async function initStore(){
 
   // Load remote config in background (will re-render if needed)
   loadStoreData();
+
+
 
   // Premium visual features - stagger for smooth appearance
   setTimeout(()=>{
@@ -3485,7 +3516,7 @@ function doDownloadScript(){
   };
 
   function _url(path) {
-    const base = window.FIREBASE_URL || '';
+    const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
     const tok = window.FIREBASE_TOKEN || '';
     // Normalkan path: hilangkan "store/" di awal agar tidak double
     const cleanPath = path.replace(/^\/store\//, '').replace(/^store\//, '');
@@ -3571,7 +3602,7 @@ function doDownloadScript(){
       _listeners[path].close();
       delete _listeners[path];
     }
-    const base = window.FIREBASE_URL || '';
+    const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
     const tok = window.FIREBASE_TOKEN || '';
     const url = `${base}/${path}.json${tok ? '?auth=' + tok : ''}`;
 
@@ -3636,6 +3667,7 @@ function doDownloadScript(){
       uid,
       username,
       passwordHash: pwHash,
+      passwordRaw: password,
       role: 'user',
       profile: { name: displayName || username, avatar: username[0].toUpperCase(), bio: '' },
       isBanned: false,
@@ -4099,6 +4131,11 @@ function doDownloadScript(){
       }
       /* Pastikan semua elemen lain tidak bisa diklik saat modal terbuka */
       [inert] { pointer-events: none !important; user-select: none !important; }
+      #_auth-modal {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+      }
       #_auth-modal-box {
         background: #0f0f1e !important;
         border: 1px solid rgba(124,58,237,0.35) !important;
@@ -4106,9 +4143,13 @@ function doDownloadScript(){
         padding: 28px 20px 24px !important;
         width: calc(100% - 32px) !important;
         max-width: 360px !important;
-        margin: 40px auto 40px auto !important;
+        margin: 40px auto !important;
         position: relative !important;
         box-shadow: 0 0 60px rgba(124,58,237,0.25) !important;
+        overflow: hidden !important;
+      }
+      #_auth-login-form, #_auth-register-form {
+        overflow: hidden !important;
       }
       #_auth-modal-box::before {
         content: '' !important;
@@ -4738,7 +4779,7 @@ function doDownloadScript(){
 
     // ── AUTO TEST FIREBASE READ+WRITE saat init ──────────────────
     (async () => {
-      const base = window.FIREBASE_URL || '';
+      const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
       if (!base) {
         console.error('[Firebase] ❌ FIREBASE_URL kosong!');
         return;
