@@ -3793,8 +3793,8 @@ function doDownloadScript(){
   function initGchatRealtime() {
     if (_gchatUnsub) _gchatUnsub();
 
-    // Path: rtListen sudah prefix /store/, jadi cukup 'store-gchat'
-    _gchatUnsub = rtListen('store-gchat', (data) => {
+    // FIX: rtListen TIDAK auto-prefix '/store/', jadi ditulis eksplisit
+    _gchatUnsub = rtListen('store/store-gchat', (data) => {
       const msgs = _norm(data);
       _gchatMsgsCache = msgs;
 
@@ -4068,24 +4068,73 @@ function doDownloadScript(){
   function initProductSync() {
     if (_prodUnsub) _prodUnsub();
 
-    // Path: rtListen prefix-nya adalah base/store/, jadi path cukup 'store-produk'
-    _prodUnsub = rtListen('store-produk', (data) => {
-      if (!data) return;
-      const products = _norm(data);
-      if (products.length === 0) return;
+    // FIX: rtListen TIDAK auto-prefix '/store/', jadi harus ditulis eksplisit di sini
+    _prodUnsub = rtListen('store/store-produk', (data) => {
+      const list = _norm(data);
 
-      // Trigger reload produk store jika fungsi tersedia
-      if (typeof window.loadFromFirebase === 'function') {
-        window.loadFromFirebase();
-      } else if (typeof window.applyConfig === 'function') {
-        // Patch: langsung update products array global
-        if (window.products) {
-          window.products.length = 0;
-          products.forEach((p) => window.products.push(p));
-          if (typeof window.renderProducts === 'function') window.renderProducts();
+      // FIX: panggil fungsi asli store (loadStoreData/renderProductGrid/buildHeroSlides),
+      // bukan fungsi lama yang tidak pernah ada (loadFromFirebase/applyConfig/renderProducts)
+      if (window.products) {
+        window.products.length = 0;
+        list.forEach((p) => window.products.push(p));
+        if (typeof window.renderProductGrid === 'function') window.renderProductGrid();
+        if (typeof window.buildHeroSlides === 'function') window.buildHeroSlides();
+        if (typeof injectCardShine === 'function') {
+          setTimeout(() => {
+            injectCardShine();
+            if (typeof initCardTilt === 'function') initCardTilt();
+            if (typeof addViewCounts === 'function') addViewCounts();
+            if (typeof addFlashBadges === 'function') addFlashBadges();
+            if (typeof initScrollReveal === 'function') initScrollReveal();
+          }, 60);
         }
+        if (typeof showToast === 'function') showToast('🔄 Produk diperbarui otomatis');
       }
     });
+  }
+
+  /* ============================================================
+     5b. FULL ADMIN CONFIG SYNC — SSE listener untuk semua bagian
+     yang bisa diedit dari Admin Panel (bukan cuma produk).
+     Setiap perubahan di Admin langsung tayang di store tanpa refresh.
+     ============================================================ */
+
+  // NOTE: 'store-fitur' sengaja tidak dimasukkan di sini — ia punya listener
+  // khusus di bawah (reaksi instan untuk maintenance mode, tanpa debounce)
+  const ADMIN_LIVE_KEYS = [
+    'store-info', 'store-kontak', 'store-img-produk', 'store-hero-slides',
+    'store-payment', 'store-marquee', 'store-drawer', 'store-tampilan',
+    'store-ai-cs', 'store-sc-config',
+  ];
+  let _adminSyncUnsubs = [];
+  let _adminSyncDebounce = null;
+
+  function initAdminConfigSync() {
+    _adminSyncUnsubs.forEach((u) => u && u());
+    _adminSyncUnsubs = [];
+
+    ADMIN_LIVE_KEYS.forEach((key) => {
+      const unsub = rtListen(`store/${key}`, () => {
+        clearTimeout(_adminSyncDebounce);
+        _adminSyncDebounce = setTimeout(async () => {
+          if (typeof window.loadStoreData === 'function') await window.loadStoreData();
+          if (typeof window.applyBg === 'function') await window.applyBg();
+          if (typeof showToast === 'function') showToast('✅ Tampilan store diperbarui');
+        }, 350);
+      });
+      _adminSyncUnsubs.push(unsub);
+    });
+
+    // Maintenance mode: reaksi instan (tanpa nunggu debounce loadStoreData)
+    const unsubFitur = rtListen('store/store-fitur', (data) => {
+      if (data && data.maintenance === true && typeof _showMaintenanceOverlay === 'function') {
+        _showMaintenanceOverlay();
+      } else {
+        const ov = document.getElementById('_maint-overlay');
+        if (ov) { ov.remove(); document.body.style.overflow = ''; }
+      }
+    });
+    _adminSyncUnsubs.push(unsubFitur);
   }
 
   /* ============================================================
@@ -4763,6 +4812,7 @@ function doDownloadScript(){
     // Init realtime listeners
     initGchatRealtime();
     initProductSync();
+    initAdminConfigSync();
 
     // Restore session
     await _restoreSession();
