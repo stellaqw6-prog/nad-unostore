@@ -981,10 +981,10 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 /* =====================================================
    FIREBASE CONFIG
    ===================================================== */
-const FIREBASE_URL = 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+const FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 const FIREBASE_TOKEN = '';
 // Expose ke window agar addon script bisa akses
-window.FIREBASE_URL = 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+window.FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 window.FIREBASE_TOKEN = FIREBASE_TOKEN;
 
 async function dbGet(key){
@@ -2247,7 +2247,7 @@ function escapeHtml(t){
 async function loadStoreData(){
   // Cek maintenance mode dulu (non-blocking - gagal = lanjut biasa)
   try {
-    const _fbUrl = window.FIREBASE_URL || (typeof FIREBASE_URL !== 'undefined' ? FIREBASE_URL : '') || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const _fbUrl = window.FIREBASE_URL || (typeof FIREBASE_URL !== 'undefined' ? FIREBASE_URL : '') || 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
     const _maintCtrl = new AbortController();
     const _maintTimer = setTimeout(() => _maintCtrl.abort(), 3000); // timeout 3 detik
     const r = await fetch(`${_fbUrl}/store/store-fitur.json`, { signal: _maintCtrl.signal });
@@ -3506,7 +3506,7 @@ function doDownloadScript(){
   };
 
   function _url(path) {
-    const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const base = window.FIREBASE_URL || 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
     const tok = window.FIREBASE_TOKEN || '';
     // Normalkan path: hilangkan "store/" di awal agar tidak double
     const cleanPath = path.replace(/^\/store\//, '').replace(/^store\//, '');
@@ -3592,7 +3592,7 @@ function doDownloadScript(){
       _listeners[path].close();
       delete _listeners[path];
     }
-    const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const base = window.FIREBASE_URL || 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
     const tok = window.FIREBASE_TOKEN || '';
     const url = `${base}/${path}.json${tok ? '?auth=' + tok : ''}`;
 
@@ -4819,7 +4819,7 @@ function doDownloadScript(){
 
     // ── AUTO TEST FIREBASE READ+WRITE saat init ──────────────────
     (async () => {
-      const base = window.FIREBASE_URL || 'https://new-store-5b481-default-rtdb.asia-southeast1.firebasedatabase.app';
+      const base = window.FIREBASE_URL || 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
       if (!base) {
         console.error('[Firebase] ❌ FIREBASE_URL kosong!');
         return;
