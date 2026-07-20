@@ -984,7 +984,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 const FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 const FIREBASE_TOKEN = '';
 // Expose ke window agar addon script bisa akses
-window.FIREBASE_URL = '-';
+window.FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 window.FIREBASE_TOKEN = FIREBASE_TOKEN;
 
 async function dbGet(key){
@@ -1473,14 +1473,14 @@ function openModal(idx){
   document.getElementById('m-avail').textContent=p.available;
   document.getElementById('m-desc').textContent=p.desc;
   const vg=document.getElementById('m-varians');vg.innerHTML='';
-  p.varians.forEach((v,i)=>{
+  (p.varians||[]).forEach((v,i)=>{
     const b=document.createElement('button');b.className='vbtn'+(i===0?' active':'');
     b.innerHTML=`<div class="vbtn-name">${v.name}</div><div class="vbtn-price">${v.price}</div>`;
     b.onclick=()=>{document.querySelectorAll('.vbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeVar=i;document.getElementById('m-price').textContent=v.price;};
     vg.appendChild(b);
   });
   const fg=document.getElementById('m-features');fg.innerHTML='';
-  p.features.forEach(f=>{fg.innerHTML+=`<div class="fcard"><div class="fcard-icon">${f.icon}</div><div class="fcard-name">${f.name}</div><div class="fcard-desc">${f.desc}</div></div>`;});
+  (p.features||[]).forEach(f=>{fg.innerHTML+=`<div class="fcard"><div class="fcard-icon">${f.icon||'⭐'}</div><div class="fcard-name">${f.name||''}</div><div class="fcard-desc">${f.desc||''}</div></div>`;});
   renderProductReviewsSection(idx);
   document.getElementById('prod-overlay').classList.add('open');
 }
@@ -1492,7 +1492,7 @@ function closeProd(){document.getElementById('prod-overlay').classList.remove('o
    ===================================================== */
 function openOrderForm(){
   if(activeIdx===null)return;
-  const p=products[activeIdx];const v=p.varians[activeVar];
+  const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};
   document.getElementById('of-sub').textContent=p.title+' — '+v.name;
   document.getElementById('of-name').textContent=p.title;
   document.getElementById('of-var').textContent=v.name;
@@ -1516,7 +1516,7 @@ function closeOrder(){document.getElementById('order-overlay').classList.remove(
 
 function goToPayment(){
   if(activeIdx===null)return;
-  const p=products[activeIdx];const v=p.varians[activeVar];let msg='';
+  const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};let msg='';
   if(p.id==='sewa-bot'){
     const grup=document.getElementById('sb-grup').value.trim();
     const link=document.getElementById('sb-link').value.trim();
@@ -1798,7 +1798,7 @@ async function confirmPayAndSendWA(){
 
 async function savePendingScriptOrder(){
   try{
-    const p=products[activeIdx];const v=p.varians[activeVar];
+    const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};
     const now=new Date();
     const id='SC-'+now.getFullYear().toString().slice(-2)+
       String(now.getMonth()+1).padStart(2,'0')+
