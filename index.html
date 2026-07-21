@@ -815,14 +815,14 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
       </div>
       <div id="f-sewa">
         <div class="fsec">Data Sewa Bot</div>
-        <div class="fg"><label class="fl">Nama Grup</label><input class="fi" id="sb-grup" placeholder="Contoh: Grup Gaming Squad" type="text"></div>
-        <div class="fg"><label class="fl">Link Grup WhatsApp</label><input class="fi" id="sb-link" placeholder="https://chat.whatsapp.com/..." type="url"></div>
+        <div class="fg"><label class="fl">Link Grup WhatsApp Kamu</label><input class="fi" id="sb-link" placeholder="https://chat.whatsapp.com/..." type="url"></div>
+        <div class="fg"><label class="fl">Nama Kamu</label><input class="fi" id="sb-nama" placeholder="Nama lengkap kamu" type="text"></div>
         <div class="fg"><label class="fl">Nomor WA Kamu</label><input class="fi" id="sb-wa" placeholder="628xxxxxxxxxx" type="tel"></div>
       </div>
       <div id="f-panel" style="display:none">
         <div class="fsec">Data Panel</div>
         <div class="fg"><label class="fl">Nama Panel</label><input class="fi" id="p-nama" placeholder="Contoh: BotKu Panel" type="text"></div>
-        <div class="fg"><label class="fl">Password Panel</label><input class="fi" id="p-pass" placeholder="Buat password yang kuat" type="text"></div>
+        <div class="fg"><label class="fl">Nomor WA Pembeli</label><input class="fi" id="p-wa" placeholder="628xxxxxxxxxx" type="tel"></div>
       </div>
       <div id="f-script" style="display:none">
         <div class="alert-box">⚠️ Isi di tengah tanda <code>"..."</code> atau <code>'...'</code></div>
@@ -1518,16 +1518,16 @@ function goToPayment(){
   if(activeIdx===null)return;
   const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};let msg='';
   if(p.id==='sewa-bot'){
-    const grup=document.getElementById('sb-grup').value.trim();
     const link=document.getElementById('sb-link').value.trim();
+    const namaPembeli=document.getElementById('sb-nama').value.trim();
     const wa=document.getElementById('sb-wa').value.trim();
-    if(!grup||!link||!wa){showToast('⚠️ Lengkapi semua data!');return;}
-    msg=`🤖 *ORDER SEWA BOT ALYA AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Sewa Bot\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PEMBELIAN:*\nNama grup : ${grup}\nLink grup : ${link}\nNomer wa  : ${wa}\n\n🔗 Link grup buyer :\n${GRUP_BUYER}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+    if(!link||!namaPembeli||!wa){showToast('⚠️ Lengkapi semua data!');return;}
+    msg=`🤖 *ORDER SEWA BOT ALYA AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Sewa Bot\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PEMBELIAN:*\nLink grup WA  : ${link}\nNama pembeli  : ${namaPembeli}\nNomer pembeli : ${wa}\n\n🔗 Link grup buyer :\n${GRUP_BUYER}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
   }else if(p.id==='panel'){
     const nama=document.getElementById('p-nama').value.trim();
-    const pass=document.getElementById('p-pass').value.trim();
-    if(!nama||!pass){showToast('⚠️ Lengkapi semua data!');return;}
-    msg=`🖥️ *ORDER PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Panel Bot WA\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PANEL:*\nNama panel     : ${nama}\nPassword panel : ${pass}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
+    const wa=document.getElementById('p-wa').value.trim();
+    if(!nama||!wa){showToast('⚠️ Lengkapi semua data!');return;}
+    msg=`🖥️ *ORDER PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Panel Bot WA\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PANEL:*\nNama panel     : ${nama}\nNomor WA pembeli : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
   }else if(p.id==='script'){
     const owner=document.getElementById('sc-owner').value.trim();
     const namaOwn=document.getElementById('sc-namaowner').value.trim();
