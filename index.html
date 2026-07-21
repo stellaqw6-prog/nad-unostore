@@ -813,28 +813,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div><div class="o-sum-name" id="of-name"></div><div class="o-sum-var" id="of-var"></div></div>
         <div class="o-sum-price" id="of-price"></div>
       </div>
-      <div id="f-sewa">
-        <div class="fsec">Data Sewa Bot</div>
-        <div class="fg"><label class="fl">Link Grup WhatsApp Kamu</label><input class="fi" id="sb-link" placeholder="https://chat.whatsapp.com/..." type="url"></div>
-        <div class="fg"><label class="fl">Nama Kamu</label><input class="fi" id="sb-nama" placeholder="Nama lengkap kamu" type="text"></div>
-        <div class="fg"><label class="fl">Nomor WA Kamu</label><input class="fi" id="sb-wa" placeholder="628xxxxxxxxxx" type="tel"></div>
-      </div>
-      <div id="f-panel" style="display:none">
-        <div class="fsec">Data Panel</div>
-        <div class="fg"><label class="fl">Nama Panel</label><input class="fi" id="p-nama" placeholder="Contoh: BotKu Panel" type="text"></div>
-        <div class="fg"><label class="fl">Nomor WA Pembeli</label><input class="fi" id="p-wa" placeholder="628xxxxxxxxxx" type="tel"></div>
-      </div>
-      <div id="f-script" style="display:none">
-        <div class="alert-box">⚠️ Isi di tengah tanda <code>"..."</code> atau <code>'...'</code></div>
-        <div class="fsec">Konfigurasi Script</div>
-        <div class="fg"><label class="fl">global.owner</label><input class="fi" id="sc-owner" placeholder="628xxxxxxxxxx" type="tel"><div class="fhint">Nomor WA owner bot (tanpa +)</div></div>
-        <div class="fg"><label class="fl">global.namaOwner</label><input class="fi" id="sc-namaowner" placeholder="Nama kamu" type="text"></div>
-        <div class="fg"><label class="fl">global.packname</label><input class="fi" id="sc-packname" placeholder="Nama pack stiker" type="text"></div>
-        <div class="fg"><label class="fl">global.author</label><input class="fi" id="sc-author" placeholder="Nama author stiker" type="text"></div>
-        <div class="fg"><label class="fl">global.botname</label><input class="fi" id="sc-botname" placeholder="Nama bot utama" type="text"></div>
-        <div class="fg"><label class="fl">global.botname2</label><input class="fi" id="sc-botname2" placeholder="Nama bot alternatif" type="text"></div>
-        <div class="fg"><label class="fl">Nomer Bot (WA)</label><input class="fi" id="sc-nomerbot" placeholder="628xxxxxxxxxx" type="tel"><div class="fhint">Nomor WhatsApp yang dijadikan bot</div></div>
-      </div>
+      <div id="f-dynamic"></div>
       <button class="btn-order" onclick="goToPayment()"><span>💳</span> Lanjut ke Pembayaran</button>
       <div class="wa-note">Pilih metode pembayaran, lalu kirim konfirmasi ke admin via WhatsApp ✅</div>
     </div>
@@ -984,7 +963,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 const FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 const FIREBASE_TOKEN = '';
 // Expose ke window agar addon script bisa akses
-window.FIREBASE_URL = '-';
+window.FIREBASE_URL = 'https://store-minzy-default-rtdb.asia-southeast1.firebasedatabase.app';
 window.FIREBASE_TOKEN = FIREBASE_TOKEN;
 
 async function dbGet(key){
@@ -1038,6 +1017,43 @@ let allProductReviews={};
 
 const DEFAULT_PRODUCTS=[];
 let products=DEFAULT_PRODUCTS;
+
+/* =====================================================
+   FORMAT PEMBELIAN PER KATEGORI (bisa diubah dari Admin Panel)
+   Setiap kategori punya daftar field form + template pesan WA.
+   Placeholder yang tersedia di template: {produk} {durasi} {harga}
+   {grup_buyer} {store_name} + {key} setiap field custom di atas.
+   ===================================================== */
+const DEFAULT_ORDER_FORMAT={
+  'bot-wa':{
+    fields:[
+      {key:'link_grup',label:'Link Grup WhatsApp Kamu',type:'url',placeholder:'https://chat.whatsapp.com/...',required:true},
+      {key:'nama',label:'Nama Kamu',type:'text',placeholder:'Nama lengkap kamu',required:true},
+      {key:'wa',label:'Nomor WA Kamu',type:'tel',placeholder:'628xxxxxxxxxx',required:true},
+    ],
+    template:`🤖 *ORDER SEWA BOT ALYA AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : {produk}\n⏱️ Durasi  : {durasi}\n💰 Harga   : {harga}\n\n📋 *DATA PEMBELIAN:*\nLink grup WA  : {link_grup}\nNama pembeli  : {nama}\nNomer pembeli : {wa}\n\n🔗 Link grup buyer :\n{grup_buyer}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via {store_name}_`,
+  },
+  'panel':{
+    fields:[
+      {key:'nama_panel',label:'Nama Panel',type:'text',placeholder:'Contoh: BotKu Panel',required:true},
+      {key:'wa',label:'Nomor WA Pembeli',type:'tel',placeholder:'628xxxxxxxxxx',required:true},
+    ],
+    template:`🖥️ *ORDER PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : {produk}\n⏱️ Durasi  : {durasi}\n💰 Harga   : {harga}\n\n📋 *DATA PANEL:*\nNama panel       : {nama_panel}\nNomor WA pembeli : {wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via {store_name}_`,
+  },
+  'source-code':{
+    fields:[
+      {key:'owner',label:'global.owner (Nomor WA)',type:'tel',placeholder:'628xxxxxxxxxx',required:true},
+      {key:'namaowner',label:'global.namaOwner',type:'text',placeholder:'Nama kamu',required:true},
+      {key:'packname',label:'global.packname',type:'text',placeholder:'Nama pack stiker',required:false},
+      {key:'author',label:'global.author',type:'text',placeholder:'Nama author stiker',required:false},
+      {key:'botname',label:'global.botname',type:'text',placeholder:'Nama bot utama',required:true},
+      {key:'botname2',label:'global.botname2',type:'text',placeholder:'Nama bot alternatif',required:false},
+      {key:'nomerbot',label:'Nomor Bot (WA)',type:'tel',placeholder:'628xxxxxxxxxx',required:true},
+    ],
+    template:`📦 *ORDER SC ALYA AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk : {produk}\n💰 Harga  : {harga}\n\n📋 *KONFIGURASI SCRIPT:*\nglobal.owner = '{owner}'\nglobal.namaOwner = "{namaowner}"\nglobal.packname = '{packname}'\nglobal.author = '{author}'\nglobal.botname = '{botname}'\nglobal.botname2 = "{botname2}"\n\nNomer bot : {nomerbot}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via {store_name}_`,
+  },
+};
+let orderFormat=JSON.parse(JSON.stringify(DEFAULT_ORDER_FORMAT));
 
 /* =====================================================
    REVIEWS PER PRODUK
@@ -1488,8 +1504,11 @@ function closeProdBg(e){if(e.target===document.getElementById('prod-overlay'))cl
 function closeProd(){document.getElementById('prod-overlay').classList.remove('open');}
 
 /* =====================================================
-   ORDER FORM
+   ORDER FORM (dinamis — field & template baca dari orderFormat)
    ===================================================== */
+function getFormatFor(cat){
+  return orderFormat[cat] || orderFormat['bot-wa'] || {fields:[],template:'🛒 *ORDER {produk}*\n{durasi} — {harga}\n_Order via {store_name}_'};
+}
 function openOrderForm(){
   if(activeIdx===null)return;
   const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};
@@ -1497,12 +1516,18 @@ function openOrderForm(){
   document.getElementById('of-name').textContent=p.title;
   document.getElementById('of-var').textContent=v.name;
   document.getElementById('of-price').textContent=v.price;
-  ['f-sewa','f-panel','f-script'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  const formMap={'sewa-bot':'f-sewa','panel':'f-panel','script':'f-script'};
-  const tF=formMap[p.id];
-  if(tF){const el=document.getElementById(tF);if(el)el.style.display='block';}
-  else{const el=document.getElementById('f-sewa');if(el)el.style.display='block';}
-  // FIX: Reset checkout progress steps ke awal setiap buka form baru
+
+  const fmt=getFormatFor(p.cat);
+  const dyn=document.getElementById('f-dynamic');
+  dyn.innerHTML=`<div class="fsec">Data ${escapeHtml(p.title)}</div>`+fmt.fields.map(f=>{
+    const req=f.required?' <span style="color:var(--red)">*</span>':'';
+    if(f.type==='textarea'){
+      return `<div class="fg"><label class="fl">${escapeHtml(f.label)}${req}</label><textarea class="fi fta" id="of-f-${f.key}" placeholder="${escapeHtml(f.placeholder||'')}" rows="2"></textarea></div>`;
+    }
+    return `<div class="fg"><label class="fl">${escapeHtml(f.label)}${req}</label><input class="fi" id="of-f-${f.key}" placeholder="${escapeHtml(f.placeholder||'')}" type="${f.type||'text'}"></div>`;
+  }).join('');
+
+  // Reset checkout progress steps ke awal setiap buka form baru
   const cs2=document.getElementById('cstep-2');
   const cs3=document.getElementById('cstep-3');
   const cl2=document.getElementById('csline-2');
@@ -1516,35 +1541,26 @@ function closeOrder(){document.getElementById('order-overlay').classList.remove(
 
 function goToPayment(){
   if(activeIdx===null)return;
-  const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};let msg='';
-  if(p.id==='sewa-bot'){
-    const link=document.getElementById('sb-link').value.trim();
-    const namaPembeli=document.getElementById('sb-nama').value.trim();
-    const wa=document.getElementById('sb-wa').value.trim();
-    if(!link||!namaPembeli||!wa){showToast('⚠️ Lengkapi semua data!');return;}
-    msg=`🤖 *ORDER SEWA BOT ALYA AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Sewa Bot\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PEMBELIAN:*\nLink grup WA  : ${link}\nNama pembeli  : ${namaPembeli}\nNomer pembeli : ${wa}\n\n🔗 Link grup buyer :\n${GRUP_BUYER}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
-  }else if(p.id==='panel'){
-    const nama=document.getElementById('p-nama').value.trim();
-    const wa=document.getElementById('p-wa').value.trim();
-    if(!nama||!wa){showToast('⚠️ Lengkapi semua data!');return;}
-    msg=`🖥️ *ORDER PANEL BOT WA*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : Panel Bot WA\n⏱️ Durasi  : ${v.name}\n💰 Harga   : ${v.price}\n\n📋 *DATA PANEL:*\nNama panel     : ${nama}\nNomor WA pembeli : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
-  }else if(p.id==='script'){
-    const owner=document.getElementById('sc-owner').value.trim();
-    const namaOwn=document.getElementById('sc-namaowner').value.trim();
-    const packname=document.getElementById('sc-packname').value.trim();
-    const author=document.getElementById('sc-author').value.trim();
-    const botname=document.getElementById('sc-botname').value.trim();
-    const botname2=document.getElementById('sc-botname2').value.trim();
-    const nomerbot=document.getElementById('sc-nomerbot').value.trim();
-    if(!owner||!namaOwn||!botname||!nomerbot){showToast('⚠️ Data wajib: Owner, Nama Owner, Botname, Nomer Bot!');return;}
-    msg=`📦 *ORDER SC Alya AI*\n━━━━━━━━━━━━━━━━━━\n📦 Produk : SC Alya Ai v10.5 Premium\n💰 Harga  : ${v.price}\n\n📋 *KONFIGURASI SCRIPT:*\nglobal.owner = '${owner}'\nglobal.namaOwner = "${namaOwn}"\nglobal.packname = '${packname}'\nglobal.author = '${author}'\nglobal.botname = '${botname}'\nglobal.botname2 = "${botname2}"\n\nNomer bot : ${nomerbot}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via UnoTech Store_`;
-  }else{
-    const wa=document.getElementById('sb-wa')?.value?.trim()||'';
-    if(!wa){showToast('⚠️ Lengkapi nomor WA!');return;}
-    msg=`🛒 *ORDER ${p.title.toUpperCase()}*\n━━━━━━━━━━━━━━━━━━\n📦 Produk  : ${p.title}\n⏱️ Varian  : ${v.name}\n💰 Harga   : ${v.price}\nNomor WA  : ${wa}\n━━━━━━━━━━━━━━━━━━\n🛒 _Order via ${STORE_NAME}_`;
+  const p=products[activeIdx];const v=(p.varians&&p.varians[activeVar])||{name:'Default',price:p.price||'Rp0'};
+  const fmt=getFormatFor(p.cat);
+
+  const values={};
+  for(const f of fmt.fields){
+    const el=document.getElementById('of-f-'+f.key);
+    const val=(el?el.value:'').trim();
+    if(f.required && !val){showToast(`⚠️ ${f.label} wajib diisi!`);return;}
+    values[f.key]=val;
   }
+
+  const vars={
+    produk:p.title, durasi:v.name, harga:v.price,
+    grup_buyer:GRUP_BUYER, store_name:STORE_NAME,
+    ...values,
+  };
+  const msg=fmt.template.replace(/\{(\w+)\}/g,(m,key)=> (key in vars) ? vars[key] : '');
+
   pendingOrderMsg=msg;
-  pendingIsScript=(p.id==='script'||p.cat==='source-code');
+  pendingIsScript=(p.cat==='source-code');
   // Update checkout progress to step 3
   const cs2=document.getElementById('cstep-2');const cs3=document.getElementById('cstep-3');const cl2=document.getElementById('csline-2');
   if(cs2){cs2.classList.remove('active');cs2.classList.add('done');cs2.querySelector('.cs-step-circle').textContent='✓';}
@@ -2265,13 +2281,16 @@ async function loadStoreData(){
   }
 
   try{
-    const [info,kontak,prods,imgCfg,heroCfg,payCfg]=await Promise.all([
-      dbGet('store-info'),dbGet('store-kontak'),dbGet('store-produk'),dbGet('store-img-produk'),dbGet('store-hero-slides'),dbGet('store-payment'),
+    const [info,kontak,prods,imgCfg,heroCfg,payCfg,orderFmtCfg]=await Promise.all([
+      dbGet('store-info'),dbGet('store-kontak'),dbGet('store-produk'),dbGet('store-img-produk'),dbGet('store-hero-slides'),dbGet('store-payment'),dbGet('store-order-format'),
     ]);
     if(kontak?.adminWa)ADMIN_WA=kontak.adminWa;
     if(kontak?.grupBuyer)GRUP_BUYER=kontak.grupBuyer;
     if(info?.nama)STORE_NAME=info.nama;
     if(payCfg)PAYMENT_CFG={...PAYMENT_CFG,...payCfg};
+    if(orderFmtCfg && typeof orderFmtCfg === 'object'){
+      orderFormat={...JSON.parse(JSON.stringify(DEFAULT_ORDER_FORMAT)),...orderFmtCfg};
+    }
     let needRerender=false;
     if(prods&&prods.length){
       products=prods.map(p=>{const imgOverride=imgCfg?.[p.id];return{...p,imgUrl:imgOverride||p.imgUrl||''};});
@@ -4104,7 +4123,7 @@ function doDownloadScript(){
   const ADMIN_LIVE_KEYS = [
     'store-info', 'store-kontak', 'store-img-produk', 'store-hero-slides',
     'store-payment', 'store-marquee', 'store-drawer', 'store-tampilan',
-    'store-ai-cs', 'store-sc-config',
+    'store-ai-cs', 'store-sc-config', 'store-order-format',
   ];
   let _adminSyncUnsubs = [];
   let _adminSyncDebounce = null;
