@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnoTech Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section id="loading-screen">
+  <div class="ls-logo">
+    <div class="ls-avatar">U</div>
+    <div class="ls-name">UnoTech Store</div>
+    <div class="ls-sub">Premium Bot Store</div>
+  </div>
+  <div class="ls-bar"><div class="ls-bar-fill" id="ls-bar-fill"></div></div>
+  <div class="ls-dots"><div class="ls-dot"></div><div class="ls-dot"></div><div class="ls-dot"></div></div>
+</section>
+
+<canvas id="particle-canvas"></canvas>
+<canvas id="konfetti-canvas"></canvas>
+
+<aside class="ambient-glow ag-1"></aside>
+<aside class="ambient-glow ag-2"></aside>
+<aside id="cursor-glow"></aside>
+
+<aside id="float-notif">
+  <div class="fn-avatar" id="fn-av">R</div>
+  <div class="fn-text">
+    <div class="fn-name" id="fn-name">Reza dari Jakarta</div>
+    <div class="fn-product" id="fn-product">baru saja membeli Sewa Bot</div>
+    <div class="fn-badge">✅ Verified Purchase</div>
+  </div>
+</aside>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="avatar">U</div><span class="store-name-text">UnoTech Store</span>
+  </a>
+  <div class="nav-right">
+    <button class="btn-cs" onclick="contactAdmin()">Hubungi CS</button>
+    <div class="hamburger" onclick="openDrawer()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<aside class="marquee-bar">
+  <div class="marquee-inner">
+    <span>Bot WA — Rp5.000</span><span class="marquee-dot">•</span>
+    <span>SC Alya Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+    <span>⭐ Stok Unlimited</span><span class="marquee-dot">•</span>
+    <span>Bayar via DANA / GoPay / OVO / QRIS</span><span class="marquee-dot">•</span>
+    <span>Bot WA — Rp5.000</span><span class="marquee-dot">•</span>
+    <span>SC Alya Ai — Rp75.000</span><span class="marquee-dot">•</span>
+    <span>Panel Bot WA — Rp2.000</span><span class="marquee-dot">•</span>
+    <span>⭐ Stok Unlimited</span><span class="marquee-dot">•</span>
+    <span>Bayar via DANA / GoPay / OVO / QRIS</span><span class="marquee-dot">•</span>
+  </div>
+</aside>
+
+<section class="hero-slider" id="hero-slider">
+  <div class="hero-slides" id="hero-slides"></div>
+  <div class="hero-dots" id="hero-dots"></div>
+</section>
+
+<aside class="trust-bar">
+  <div class="trust-badge"><span class="trust-badge-icon">🛡️</span><span class="trust-badge-text"><strong>100%</strong> Aman</span></div>
+  <div class="trust-badge"><span class="trust-badge-icon">⭐</span><span class="trust-badge-text">Rating <strong>4.9</strong></span></div>
+  <div class="trust-badge"><span class="trust-badge-icon">👥</span><span class="trust-badge-text"><strong id="buyer-count-badge">1000+</strong> Pembeli</span></div>
+  <div class="trust-badge"><span class="trust-badge-icon">⚡</span><span class="trust-badge-text">Proses <strong><30 mnt</strong></span></div>
+  <div class="trust-badge"><span class="trust-badge-icon">🔄</span><span class="trust-badge-text">Update <strong>Gratis</strong></span></div>
+  <div class="trust-badge"><span class="trust-badge-icon">💬</span><span class="trust-badge-text">Support <strong>24/7</strong></span></div>
+</aside>
+
+<nav class="tabs-section">
+  <div class="tabs">
+    <button class="tab active" onclick="filterTab(this,'semua')">Semua</button>
+    <button class="tab" onclick="filterTab(this,'bot-wa')">Bot WA</button>
+    <button class="tab" onclick="filterTab(this,'panel')">Panel</button>
+    <button class="tab" onclick="filterTab(this,'source-code')">Source Code</button>
+  </div>
+</nav>
+
+<section class="products-section">
+  <header class="section-header">
+    <div class="section-label-premium" id="prod-count">3 Produk</div>
+    <div class="live-visitors"><span class="lv-dot"></span><span id="live-count">12</span> online</div>
+  </header>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<aside class="overlay" id="prod-overlay" onclick="closeProdBg(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeProd()">×</button>
+    <div class="modal-img bot" id="m-modal-img">
+      <div class="orb" style="width:70px;height:70px;top:10%;right:18%;background:radial-gradient(circle,rgba(167,100,255,.4),transparent 70%)"></div>
+      <div class="modal-img-text">
+        <div id="m-img-title" class="modal-img-title"></div>
+        <div class="modal-img-sub">UnoTech Store</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-price" id="m-price"></div>
+      <div class="modal-avail" id="m-avail"></div>
+      <div class="vlabel">Pilih Varian</div>
+      <div class="vgrid" id="m-varians"></div>
+      <div class="mactions">
+        <button class="btn-buy" onclick="openOrderForm()">🛒 Beli Sekarang</button>
+        <button class="btn-cek" onclick="contactAdmin()">Cek Order</button>
+      </div>
+      <div class="fdesc">
+        <div class="fdesc-title">Deskripsi</div>
+        <div class="fdesc-text" id="m-desc"></div>
+      </div>
+      <div class="vlabel">Keunggulan Produk</div>
+      <div class="fgrid" id="m-features"></div>
+      <div class="prod-reviews-section" id="m-reviews-section"></div>
+    </div>
+  </div>
+</aside>
+
+<aside class="order-overlay" id="order-overlay" onclick="closeOrderBg(event)">
+  <div class="order-sheet">
+    <div class="o-handle"></div>
+    <header class="o-header">
+      <div><div class="o-title">Form Pembelian</div><div class="o-sub" id="of-sub">Isi data dengan benar</div></div>
+      <button class="o-close" onclick="closeOrder()">×</button>
+    </header>
+    <div class="checkout-steps" id="checkout-steps">
+      <div class="cs-step done" id="cstep-1"><div class="cs-step-circle">✓</div><div class="cs-step-label">Produk</div></div>
+      <div class="cs-line done"></div>
+      <div class="cs-step active" id="cstep-2"><div class="cs-step-circle">2</div><div class="cs-step-label">Data</div></div>
+      <div class="cs-line" id="csline-2"></div>
+      <div class="cs-step" id="cstep-3"><div class="cs-step-circle">3</div><div class="cs-step-label">Bayar</div></div>
+    </div>
+    <div class="o-body">
+      <div class="o-summary">
+        <div><div class="o-sum-name" id="of-name"></div><div class="o-sum-var" id="of-var"></div></div>
+        <div class="o-sum-price" id="of-price"></div>
+      </div>
+      <div id="f-dynamic"></div>
+      <button class="btn-order" onclick="goToPayment()"><span>💳</span> Lanjut ke Pembayaran</button>
+      <div class="wa-note">Pilih metode pembayaran, lalu kirim konfirmasi ke admin via WhatsApp ✅</div>
+    </div>
+  </div>
+</aside>
+
+<section class="pay-overlay" id="pay-overlay" onclick="if(event.target===this)closePayOverlay()">
+  <div class="pay-sheet">
+    <div class="pay-handle"></div>
+    <header class="pay-header">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><div class="pay-title">💳 Pilih Pembayaran</div><div class="pay-sub">Selesaikan pembayaran lalu kirim bukti ke admin</div></div>
+        <button style="width:28px;height:28px;border-radius:50%;background:#16161f;border:1px solid rgba(124,58,237,.2);color:#8892a4;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closePayOverlay()">×</button>
+      </div>
+    </header>
+    <div class="pay-body">
+      <div class="pay-summary">
+        <div class="pay-summary-left" id="pay-sum-text">-</div>
+        <div class="pay-summary-price" id="pay-sum-price">-</div>
+      </div>
+      <div class="pay-method-label">Metode Pembayaran</div>
+      <div class="pay-methods" id="pay-methods-list"></div>
+      <div class="pay-instruct" id="pay-instruct"></div>
+      <div class="pay-after-msg" id="pay-after-msg-el"></div>
+      <div class="pay-proof-section" id="pay-proof-section">
+        <div class="pay-proof-label">📸 Upload Bukti Pembayaran <span style="color:var(--red)">*</span></div>
+        <div class="pay-proof-sub">Foto bukti transfer/screenshot wajib dilampirkan</div>
+        <div class="pay-proof-dropzone" id="pay-proof-dropzone" onclick="document.getElementById('pay-proof-input').click()">
+          <div class="pay-proof-dz-content" id="pay-proof-dz-content">
+            <div class="pay-proof-dz-icon">📂</div>
+            <div class="pay-proof-dz-text">Ketuk atau seret foto ke sini</div>
+            <div class="pay-proof-dz-hint">JPG, PNG — maks. 10MB</div>
+          </div>
+          <div class="pay-proof-preview" id="pay-proof-preview" style="display:none">
+            <img id="pay-proof-img" src="" alt="Bukti" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;">
+            <button class="pay-proof-remove" onclick="event.stopPropagation();removeProofImg()">✕</button>
+          </div>
+        </div>
+        <input type="file" id="pay-proof-input" accept="image/*" style="display:none" onchange="handleProofFileSelect(event)">
+        <div class="pay-proof-uploading" id="pay-proof-uploading" style="display:none">
+          <div class="spinner" style="width:18px;height:18px;border-width:2px"></div>
+          <span>Mengupload foto...</span>
+        </div>
+        <div class="pay-proof-success" id="pay-proof-success" style="display:none">✅ Foto berhasil diupload</div>
+        <div class="pay-proof-err" id="pay-proof-err" style="display:none"></div>
+      </div>
+      <button class="btn-pay-confirm" id="btn-pay-confirm" onclick="confirmPayAndSendWA()">📲 Konfirmasi Pesanan — Sudah Bayar</button>
+    </div>
+  </div>
+</section>
+
+<aside class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></aside>
+<aside class="drawer" id="drawer">
+  <header class="drawer-top">
+    <span class="drawer-title">Menu</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </header>
+  <ul class="drawer-menu" id="drawer-menu-list"></ul>
+  <footer class="drawer-footer">
+    <button class="btn-cs" style="padding:11px;font-size:12px" onclick="contactAdmin();closeDrawer()">💬 Hubungi CS</button>
+    <button class="btn-wa" onclick="openChannelWa()">📲 Channel WhatsApp</button>
+  </footer>
+</aside>
+
+<button id="chat-fab" onclick="toggleChat()">💬<span class="chat-badge" id="chat-notif">1</span></button>
+<aside id="chat-window">
+  <header class="chat-head">
+    <div class="chat-head-info">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <div class="chat-head-name">Una <span class="chat-ai-badge">AI</span></div>
+        <div class="chat-head-status"><span class="chat-status-dot"></span>CS Online · UnoTech Store</div>
+      </div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">×</button>
+  </header>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-wa-cta"><button class="chat-wa-btn" onclick="lanjutWhatsApp()">📲 Lanjut Chat via WhatsApp</button></div>
+  <div class="chat-input-row">
+    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Tanya Una sesuatu..." onkeydown="chatKeydown(event)" oninput="autoResizeChat(this)"></textarea>
+    <button class="chat-send" onclick="sendChatMsg()">➤</button>
+  </div>
+</aside>
+
+<section class="inapp-overlay" id="renew-overlay" onclick="if(event.target===this)closeRenewModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <header class="inapp-header">
+      <div class="inapp-header-left"><div class="inapp-icon">🔄</div><div><div class="inapp-title">Perpanjang Panel</div><div class="inapp-sub">Tambah durasi panel aktif</div></div></div>
+      <button class="inapp-close" onclick="closeRenewModal()">×</button>
+    </header>
+    <div class="inapp-body" id="renew-body"></div>
+  </div>
+</section>
+
+<section class="inapp-overlay" id="renew-bot-overlay" onclick="if(event.target===this)closeRenewBotModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <header class="inapp-header">
+      <div class="inapp-header-left"><div class="inapp-icon">🤖</div><div><div class="inapp-title">Perpanjang Sewa Bot</div><div class="inapp-sub">Tambah durasi sewa bot WhatsApp</div></div></div>
+      <button class="inapp-close" onclick="closeRenewBotModal()">×</button>
+    </header>
+    <div class="inapp-body" id="renew-bot-body"></div>
+  </div>
+</section>
+
+<section class="inapp-overlay" id="track-overlay" onclick="if(event.target===this)closeTrackModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <header class="inapp-header">
+      <div class="inapp-header-left"><div class="inapp-icon">🔍</div><div><div class="inapp-title">Cek Order</div><div class="inapp-sub">Cek status order kamu</div></div></div>
+      <button class="inapp-close" onclick="closeTrackModal()">×</button>
+    </header>
+    <div class="inapp-body" id="track-body"></div>
+  </div>
+</section>
+
+<section class="inapp-overlay" id="ulasan-overlay" onclick="if(event.target===this)closeUlasanModal()">
+  <div class="inapp-sheet">
+    <div class="inapp-handle"></div>
+    <header class="inapp-header">
+      <div class="inapp-header-left"><div class="inapp-icon">⭐</div><div><div class="inapp-title">Ulasan</div><div class="inapp-sub">Rating & testimoni semua produk</div></div></div>
+      <button class="inapp-close" onclick="closeUlasanModal()">×</button>
+    </header>
+    <div class="inapp-body" id="ulasan-body"></div>
+  </div>
+</section>
+
+<div id="toast"></div>
+
+<footer class="bottom-nav" id="bottom-nav">
+  <div class="bn-item active" id="bn-store" onclick="bnSwitch('store')">
+    <div class="bn-icon">🏠</div>
+    <div class="bn-label">Store</div>
+  </div>
+  <div class="bn-item" id="bn-downloader" onclick="bnSwitch('downloader');openVdl()">
+    <div class="bn-icon">⬇️</div>
+    <div class="bn-label">Downloader</div>
+  </div>
+  <div class="bn-item" id="bn-gchat" onclick="bnSwitch('gchat');openGchat()">
+    <div class="bn-icon">💬</div>
+    <div class="bn-label">Chat Global</div>
+    <div class="bn-badge" id="gchat-badge" style="display:none">!</div>
+  </div>
+  <div class="bn-item" id="bn-cs" onclick="contactAdmin()">
+    <div class="bn-icon">🎧</div>
+    <div class="bn-label">CS</div>
+  </div>
+</footer>
+
+<aside class="vdl-overlay" id="vdl-overlay" onclick="if(event.target===this)closeVdl()">
+  <div class="vdl-sheet">
+    <div class="vdl-handle"></div>
+    <header class="vdl-header">
+      <div class="vdl-title">⬇️ Video Downloader</div>
+      <button style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closeVdl()">×</button>
+    </header>
+    <div class="vdl-body">
+      <div class="vdl-platform-tabs">
+        <div class="vdl-tab active" id="vdl-tab-tiktok" onclick="vdlSetPlatform('tiktok')">
+          <div class="vdl-tab-icon">🎵</div>TikTok
+        </div>
+        <div class="vdl-tab" id="vdl-tab-instagram" onclick="vdlSetPlatform('instagram')">
+          <div class="vdl-tab-icon">📸</div>Instagram
+        </div>
+        <div class="vdl-tab" id="vdl-tab-youtube" onclick="vdlSetPlatform('youtube')">
+          <div class="vdl-tab-icon">▶️</div>YouTube
+        </div>
+      </div>
+      <div class="vdl-input-row">
+        <input class="vdl-input" id="vdl-url-input" placeholder="Tempel link video di sini..." type="url">
+        <button class="vdl-btn" onclick="vdlProcess()">Ambil</button>
+      </div>
+      <div class="vdl-loading" id="vdl-loading">
+        <div class="spinner"></div>
+        <div style="font-size:12px;color:var(--muted)" id="vdl-loading-txt">Mencari server terbaik...</div>
+      </div>
+      <div class="vdl-err" id="vdl-err"></div>
+      <div class="vdl-result" id="vdl-result">
+        <div class="vdl-preview" id="vdl-preview">
+          <div class="vdl-preview-icon" id="vdl-preview-icon">🎬</div>
+        </div>
+        <div class="vdl-info">
+          <div class="vdl-info-title" id="vdl-info-title"></div>
+          <div class="vdl-info-meta" id="vdl-info-meta"></div>
+        </div>
+        <div class="vdl-dl-btns" id="vdl-dl-btns"></div>
+      </div>
+      <div class="vdl-history" id="vdl-history" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="vdl-history-title" style="margin-bottom:0">Riwayat Download</div>
+          <button style="font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;font-family:'Sora',sans-serif" onclick="vdlClearHistory()">🗑 Hapus</button>
+        </div>
+        <div id="vdl-hist-list"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<aside class="gchat-overlay" id="gchat-overlay" onclick="if(event.target===this)closeGchat()">
+  <div class="gchat-sheet">
+    <div class="gchat-handle"></div>
+    <header class="gchat-header">
+      <div class="gchat-title">
+        💬 Chat Global
+        <span class="gchat-online-badge" id="gchat-online-badge">Online</span>
+      </div>
+      <button style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="closeGchat()">×</button>
+    </header>
+    <div class="gchat-messages" id="gchat-messages">
+      <div class="gchat-empty"><div class="ei">💬</div><div>Jadilah yang pertama chat!</div></div>
+    </div>
+    <div class="gchat-input-row" id="gchat-input-row">
+      <textarea class="gchat-input" id="gchat-input" rows="1" placeholder="Ketik pesan..." onkeydown="gchatKeydown(event)" oninput="autoResizeGchat(this)"></textarea>
+      <button class="gchat-send" onclick="gchatSend()">➤</button>
+    </div>
+  </div>
+</aside>
+
+<aside class="gchat-nick-modal" id="gchat-nick-modal">
+  <div class="gchat-nick-box">
+    <h3>👋 Pilih Nama Chat</h3>
+    <p>Nama ini yang akan terlihat oleh semua orang di Chat Global</p>
+    <input class="fi" id="gchat-nick-input" placeholder="Nama kamu..." maxlength="20" style="width:100%;margin-bottom:10px" onkeydown="if(event.key==='Enter')saveGchatNick()">
+    <button class="btn-order" onclick="saveGchatNick()" style="margin-top:4px">✅ Mulai Chat</button>
+  </div>
+</aside>
+
+<aside class="dl-script-overlay" id="dl-script-overlay">
+  <div class="dl-script-box">
+    <div id="dl-step-wait">
+      <div class="dl-script-icon">⏳</div>
+      <div class="dl-script-title">Order Terkirim!</div>
+      <div class="dl-script-sub">Order kamu sudah masuk ke admin 🎉<br>Kirim bukti transfer ke WA admin.</div>
+      <div class="dl-script-info">
+        <div class="dl-script-info-row"><span>1️⃣</span><span>Kirim <strong>bukti transfer</strong> ke WA admin</span></div>
+        <div class="dl-script-info-row"><span>2️⃣</span><span>Admin verifikasi &amp; tandai <strong>Lunas</strong></span></div>
+        <div class="dl-script-info-row"><span>3️⃣</span><span>Tombol download <strong>langsung aktif</strong></span></div>
+      </div>
+      <button class="btn-dl-mediafire" style="background:linear-gradient(135deg,#16a34a,#22c55e)" onclick="lanjutWhatsApp()">
+        <span style="font-size:18px">📲</span> Kirim Bukti ke Admin WA
+      </button>
+      <button class="btn-dl-mediafire" id="btn-cek-lunas" onclick="cekStatusLunas()" style="background:var(--bg3);border:1.5px solid var(--purple);box-shadow:none;color:var(--purple-light);margin-bottom:0">
+        <span style="font-size:18px">🔄</span> Cek Status Pembayaran
+      </button>
+      <div class="dl-script-note" id="dl-status-note" style="margin-top:10px">💡 Tekan "Cek Status" setelah admin konfirmasi</div>
+      <button class="btn-dl-close" onclick="closeDlScriptModal()" style="margin-top:10px">Tutup — Cek Nanti</button>
+    </div>
+    <div id="dl-step-ready" style="display:none">
+      <div class="dl-script-icon">🎉</div>
+      <div class="dl-script-title">Pembayaran Dikonfirmasi!</div>
+      <div class="dl-script-sub">Silakan download scriptnya sekarang!</div>
+      <div class="dl-script-info">
+        <div class="dl-script-info-row"><span>📁</span><span>File: <strong id="dl-filename-label">alip_ai_MD_v11.0.0.zip</strong></span></div>
+        <div class="dl-script-info-row"><span>🤖</span><span>SC Alya Ai <span id="dl-version-label">v11.0.0</span> · Full Source</span></div>
+        <div class="dl-script-info-row"><span>☁️</span><span>Host: <strong>MediaFire</strong></span></div>
+      </div>
+      <button class="btn-dl-mediafire" onclick="doDownloadScript()">
+        <span style="font-size:20px">⬇️</span> Download dari MediaFire
+      </button>
+      <button class="btn-dl-close" onclick="closeDlScriptModal()" style="margin-top:8px">Tutup</button>
+    </div>
+  </div>
+</aside>
+
+<script src="js/config.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/products.js"></script>
+<script src="js/review.js"></script>
+<script src="js/payment.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/vdl.js"></script>
+<script src="js/gchat.js"></script>
+<script src="js/premium.js"></script>
+<script src="js/ui.js"></script>
+
+</body>
+</html>
+
